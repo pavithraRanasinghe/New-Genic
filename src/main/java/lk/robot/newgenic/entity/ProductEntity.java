@@ -38,6 +38,7 @@ public class ProductEntity {
     @Column(nullable = false)
     private boolean active;
     @ManyToOne
+    @JoinColumn(name = "fk_sub_category_id")
     private SubCategoryEntity subCategoryEntity;
 
     public ProductEntity() {

@@ -14,6 +14,10 @@ public class MainCategoryEntity {
     private String mainCategoryName;
     @Column
     private String mainCategoryDescription;
+    @ManyToOne
+    @JoinColumn(name = "fk_admin_id")
+    private AdminEntity adminEntity;
+
 
     public MainCategoryEntity() {
     }
@@ -21,10 +25,12 @@ public class MainCategoryEntity {
     public MainCategoryEntity(
             long mainCategoryId,
             String mainCategoryName,
-            String mainCategoryDescription) {
+            String mainCategoryDescription,
+            AdminEntity adminEntity) {
         this.mainCategoryId = mainCategoryId;
         this.mainCategoryName = mainCategoryName;
         this.mainCategoryDescription = mainCategoryDescription;
+        this.adminEntity = adminEntity;
     }
 
     @Override
@@ -33,6 +39,7 @@ public class MainCategoryEntity {
                 "mainCategoryId=" + mainCategoryId +
                 ", mainCategoryName='" + mainCategoryName + '\'' +
                 ", mainCategoryDescription='" + mainCategoryDescription + '\'' +
+                ", adminEntity=" + adminEntity +
                 '}';
     }
 
@@ -58,5 +65,13 @@ public class MainCategoryEntity {
 
     public void setMainCategoryDescription(String mainCategoryDescription) {
         this.mainCategoryDescription = mainCategoryDescription;
+    }
+
+    public AdminEntity getAdminEntity() {
+        return adminEntity;
+    }
+
+    public void setAdminEntity(AdminEntity adminEntity) {
+        this.adminEntity = adminEntity;
     }
 }

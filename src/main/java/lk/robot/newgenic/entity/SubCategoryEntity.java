@@ -15,7 +15,8 @@ public class SubCategoryEntity {
     @Column
     private String subCategoryDescription;
     @ManyToOne
-    private MainSubCategory mainSubCategory;
+    @JoinColumn(name = "fk_main_sub_category_id")
+    private MainSubCategoryEntity mainSubCategoryEntity;
 
     public SubCategoryEntity() {
     }
@@ -24,11 +25,11 @@ public class SubCategoryEntity {
             long subCategoryId,
             String subCategoryName,
             String subCategoryDescription,
-            MainSubCategory mainSubCategory) {
+            MainSubCategoryEntity mainSubCategoryEntity) {
         this.subCategoryId = subCategoryId;
         this.subCategoryName = subCategoryName;
         this.subCategoryDescription = subCategoryDescription;
-        this.mainSubCategory = mainSubCategory;
+        this.mainSubCategoryEntity = mainSubCategoryEntity;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class SubCategoryEntity {
                 "subCategoryId=" + subCategoryId +
                 ", subCategoryName='" + subCategoryName + '\'' +
                 ", subCategoryDescription='" + subCategoryDescription + '\'' +
-                ", mainSubCategory=" + mainSubCategory +
+                ", mainSubCategory=" + mainSubCategoryEntity +
                 '}';
     }
 
@@ -65,11 +66,11 @@ public class SubCategoryEntity {
         this.subCategoryDescription = subCategoryDescription;
     }
 
-    public MainSubCategory getMainSubCategory() {
-        return mainSubCategory;
+    public MainSubCategoryEntity getMainSubCategory() {
+        return mainSubCategoryEntity;
     }
 
-    public void setMainSubCategory(MainSubCategory mainSubCategory) {
-        this.mainSubCategory = mainSubCategory;
+    public void setMainSubCategory(MainSubCategoryEntity mainSubCategoryEntity) {
+        this.mainSubCategoryEntity = mainSubCategoryEntity;
     }
 }

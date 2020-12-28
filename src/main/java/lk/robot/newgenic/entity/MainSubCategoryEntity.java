@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "main_sub_category")
-public class MainSubCategory {
+public class MainSubCategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,12 +15,13 @@ public class MainSubCategory {
     @Column
     private String mainSubCategoryDescription;
     @ManyToOne
+    @JoinColumn(name = "fk_main_sub_category_id")
     private MainCategoryEntity mainCategoryEntity;
 
-    public MainSubCategory() {
+    public MainSubCategoryEntity() {
     }
 
-    public MainSubCategory(
+    public MainSubCategoryEntity(
             long mainSubCategoryId,
             String mainSubCategoryName,
             String mainSubCategoryDescription,
