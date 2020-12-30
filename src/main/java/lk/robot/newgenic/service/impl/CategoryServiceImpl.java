@@ -1,17 +1,19 @@
 package lk.robot.newgenic.service.impl;
 
+import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.SubCategoryDTO;
 import lk.robot.newgenic.dto.response.CategoryResponseDTO;
 import lk.robot.newgenic.dto.response.MainSubCategoryResponseDTO;
 import lk.robot.newgenic.entity.MainCategoryEntity;
 import lk.robot.newgenic.entity.MainSubCategoryEntity;
+import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.entity.SubCategoryEntity;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.CategoryRepository;
 import lk.robot.newgenic.repository.MainSubCategoryRepository;
+import lk.robot.newgenic.repository.ProductRepository;
 import lk.robot.newgenic.repository.SubCategoryRepository;
 import lk.robot.newgenic.service.CategoryService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -26,16 +29,21 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     private MainSubCategoryRepository mainSubCategoryRepository;
     private SubCategoryRepository subCategoryRepository;
+    private ProductRepository productRepository;
 
-    @Autowired
     public CategoryServiceImpl(
             CategoryRepository categoryRepository,
             MainSubCategoryRepository mainSubCategoryRepository,
-            SubCategoryRepository subCategoryRepository) {
+            SubCategoryRepository subCategoryRepository,
+            ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
         this.mainSubCategoryRepository = mainSubCategoryRepository;
         this.subCategoryRepository = subCategoryRepository;
+        this.productRepository = productRepository;
     }
+
+    @Autowired
+
 
     @Override
     public ResponseEntity<?> getAll() {
@@ -93,6 +101,59 @@ public class CategoryServiceImpl implements CategoryService {
         }catch (Exception e){
             throw new CustomException("Category search failed");
         }
+    }
+
+    @Override
+    public ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId) {
+        try{
+            if(mainSubCategoryId != 0){
+                Optional<MainSubCategoryEntity> mainSubCategory = mainSubCategoryRepository.findById(mainSubCategoryId);
+                if (mainSubCategory.isPresent()){
+                    List<SubCategoryEntity> subCategoryList = subCategoryRepository.findByMainSubCategoryEntity(mainSubCategory.get());
+                    if (!subCategoryList.isEmpty()){
+                        List<ProductDTO> productList = new ArrayList<>();
+                        for (SubCategoryEntity subCategoryEntity:subCategoryList) {
+                            List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntity(subCategoryEntity);
+                            if (!productEntityList.isEmpty()){
+                                for (ProductEntity productEntity:productEntityList) {
+                                    ProductDTO productDTO = entityToDto(productEntity);
+                                    productList.add(productDTO);
+                                }
+                            }else{
+                                return new ResponseEntity<>("Product list not found",HttpStatus.NOT_FOUND);
+                            }
+                        }
+                        return new ResponseEntity<>(productList, HttpStatus.OK);
+                    }else{
+                        return new ResponseEntity<>("Sub category list not found",HttpStatus.NOT_FOUND);
+                    }
+                }else {
+                    return new ResponseEntity<>("Main sub category not found",HttpStatus.NOT_FOUND);
+                }
+            }else {
+                return new ResponseEntity<>("Main sub category id required",HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+            throw new CustomException("Something went wrong in main sub category product search");
+        }
+    }
+
+    private ProductDTO entityToDto(ProductEntity productEntity){
+        return new ProductDTO(
+                productEntity.getProductId(),
+                productEntity.getProductCode(),
+                productEntity.getName(),
+                productEntity.getDescription(),
+                productEntity.getStock(),
+                productEntity.getColor(),
+                productEntity.getSize(),
+                productEntity.getGender(),
+                productEntity.getBuyingPrice(),
+                productEntity.getSalePrice(),
+                productEntity.getRetailPrice(),
+                productEntity.getAddedDate(),
+                productEntity.isActive()
+        );
     }
 
 }

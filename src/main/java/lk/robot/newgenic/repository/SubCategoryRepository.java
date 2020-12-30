@@ -9,4 +9,6 @@ import java.util.List;
 public interface SubCategoryRepository extends JpaRepository<SubCategoryEntity,Long> {
 
     List<SubCategoryEntity> findByMainSubCategoryEntity(MainSubCategoryEntity main);
+
+    List<SubCategoryEntity> findAllByMainSubCategoryEntity(MainSubCategoryEntity mainSubCategoryEntity);
 }

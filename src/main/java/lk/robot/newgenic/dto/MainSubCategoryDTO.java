@@ -1,15 +1,15 @@
 package lk.robot.newgenic.dto;
 
-public class MainSubCategory {
+public class MainSubCategoryDTO {
 
     private long main_sub_category_id;
     private String main_sub_category_name;
     private String main_sub_category_description;
 
-    public MainSubCategory() {
+    public MainSubCategoryDTO() {
     }
 
-    public MainSubCategory(long main_sub_category_id, String main_sub_category_name, String main_sub_category_description) {
+    public MainSubCategoryDTO(long main_sub_category_id, String main_sub_category_name, String main_sub_category_description) {
         this.main_sub_category_id = main_sub_category_id;
         this.main_sub_category_name = main_sub_category_name;
         this.main_sub_category_description = main_sub_category_description;

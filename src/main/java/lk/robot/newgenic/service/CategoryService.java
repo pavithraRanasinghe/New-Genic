@@ -8,4 +8,6 @@ import java.util.List;
 public interface CategoryService {
 
     ResponseEntity<?> getAll();
+
+    ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId);
 }

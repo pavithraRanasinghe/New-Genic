@@ -18,9 +18,7 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-
     private ProductRepository productRepository;
-
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
