@@ -24,7 +24,12 @@ public class CategoryController {
     }
 
     @GetMapping("/mainSubCategoryProducts/{mainSubCategoryid}")
-    public ResponseEntity<?> getSubCategoryProducts(@PathVariable long mainSubCategoryid){
+    public ResponseEntity<?> getMainSubCategoryProducts(@PathVariable long mainSubCategoryid){
         return categoryService.getMainSubCategoryProducts(mainSubCategoryid);
+    }
+
+    @GetMapping("/subCategoryProducts/{subCategoryid}")
+    public ResponseEntity<?> getSubCategoryProducts(@PathVariable long subCategoryid){
+        return categoryService.getSubCategoryProducts(subCategoryid);
     }
 }

@@ -10,4 +10,6 @@ public interface CategoryService {
     ResponseEntity<?> getAll();
 
     ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId);
+
+    ResponseEntity<?> getSubCategoryProducts(long subCategoryId);
 }

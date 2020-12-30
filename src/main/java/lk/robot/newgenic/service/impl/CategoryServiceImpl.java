@@ -138,6 +138,30 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> getSubCategoryProducts(long subCategoryId) {
+        if (subCategoryId != 0){
+            Optional<SubCategoryEntity> subCategoryEntity = subCategoryRepository.findById(subCategoryId);
+            if (subCategoryEntity.isPresent()){
+                List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntity(subCategoryEntity.get());
+                if (!productEntityList.isEmpty()){
+                    List<ProductDTO> productList = new ArrayList<>();
+                    for (ProductEntity productEntity:productEntityList) {
+                        ProductDTO productDTO = entityToDto(productEntity);
+                        productList.add(productDTO);
+                    }
+                    return new ResponseEntity<>(productList,HttpStatus.OK);
+                }else {
+                    return new ResponseEntity<>("Products not found",HttpStatus.NOT_FOUND);
+                }
+            }else {
+                return new ResponseEntity<>("Sub category not found",HttpStatus.NOT_FOUND);
+            }
+        }else {
+            return new ResponseEntity<>("Sub category id required",HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private ProductDTO entityToDto(ProductEntity productEntity){
         return new ProductDTO(
                 productEntity.getProductId(),
