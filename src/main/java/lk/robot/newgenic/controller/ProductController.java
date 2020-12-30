@@ -29,4 +29,11 @@ public class ProductController {
     public ResponseEntity<?> fantechProductcs(){
         return productService.fantechProduct();
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> filterproduct( ){
+        // TODO: 31/12/2020 After complete feedback page
+        return null;
+    }
+
 }
