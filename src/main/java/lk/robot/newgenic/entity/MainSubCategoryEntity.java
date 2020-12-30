@@ -15,7 +15,7 @@ public class MainSubCategoryEntity {
     @Column
     private String mainSubCategoryDescription;
     @ManyToOne
-    @JoinColumn(name = "fk_main_sub_category_id")
+    @JoinColumn(name = "fk_main_category_id")
     private MainCategoryEntity mainCategoryEntity;
 
     public MainSubCategoryEntity() {
