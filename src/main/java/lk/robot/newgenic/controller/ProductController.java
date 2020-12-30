@@ -24,4 +24,9 @@ public class ProductController {
     public ResponseEntity<?> getAll(){
         return productService.newArrivals();
     }
+
+    @GetMapping("/fantech")
+    public ResponseEntity<?> fantechProductcs(){
+        return productService.fantechProduct();
+    }
 }

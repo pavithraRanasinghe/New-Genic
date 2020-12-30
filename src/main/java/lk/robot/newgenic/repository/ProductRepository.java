@@ -11,4 +11,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
 
     @Query("select p from ProductEntity p order by p.addedDate desc")
     List<ProductEntity> newArrivals(Pageable pageable);
+
+    List<ProductEntity> findAllByBrand(String brand);
 }

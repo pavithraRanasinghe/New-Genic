@@ -8,4 +8,6 @@ import java.util.List;
 public interface ProductService {
 
     ResponseEntity<?> newArrivals();
+
+    ResponseEntity<?> fantechProduct();
 }
