@@ -1,5 +1,7 @@
 package lk.robot.newgenic.entity;
 
+import lk.robot.newgenic.enums.Gender;
+
 import javax.persistence.*;
 import java.util.Date;
 

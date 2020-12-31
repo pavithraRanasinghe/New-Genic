@@ -1,6 +1,7 @@
 package lk.robot.newgenic.service.impl;
 
 import lk.robot.newgenic.dto.ProductDTO;
+import lk.robot.newgenic.dto.Request.FilterDTO;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.ProductRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -64,6 +66,39 @@ public class ProductServiceImpl implements ProductService {
         }
         catch (Exception e){
             throw new CustomException("Something went wrong in fantech products");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> filterProducts(FilterDTO filterDTO) {
+        try{
+            if(filterDTO != null){
+                productRepository.filterProducts(
+                        filterDTO.getBrand(),
+                        filterDTO.getMinPrice(),
+                        filterDTO.getMaxPrice(),
+                        filterDTO.getColor());
+            }else{
+                return new ResponseEntity<>("Filter options required",HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+            throw new CustomException("Product Filter failed");
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> getDetail(long productId) {
+        if (productId != 0){
+            Optional<ProductEntity> productEntity = productRepository.findById(productId);
+            if(productEntity.isPresent()){
+                ProductDTO productDTO = entityToDto(productEntity.get());
+                return new ResponseEntity<>(productDTO,HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("Product not found",HttpStatus.NOT_FOUND);
+            }
+        }else {
+            return new ResponseEntity<>("Product ID not found",HttpStatus.BAD_REQUEST);
         }
     }
 

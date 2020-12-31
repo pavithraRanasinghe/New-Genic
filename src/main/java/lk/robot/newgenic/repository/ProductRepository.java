@@ -16,4 +16,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
     List<ProductEntity> findAllByBrand(String brand);
 
     List<ProductEntity> findBySubCategoryEntity(SubCategoryEntity subCategoryEntity);
+
+    @Query("select p from ProductEntity p WHERE p.brand = :brand AND p.retailPrice >= :minPrice AND p.retailPrice <= :maxPrice AND p.color =:color")
+    List<ProductEntity> filterProducts(String brand,double minPrice,double maxPrice,String color);
 }

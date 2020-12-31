@@ -1,6 +1,8 @@
 package lk.robot.newgenic.dto;
 
 
+import lk.robot.newgenic.enums.Gender;
+
 import java.util.Date;
 
 public class ProductDTO {
