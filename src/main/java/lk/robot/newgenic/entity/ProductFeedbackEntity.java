@@ -1,19 +1,22 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
-@Table(name = "item_feedback")
+@Table(name = "product_feedback")
 public class ProductFeedbackEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_feedback_id")
-    private long itemFeedbackId;
+    @Column(name = "product_feedback_id")
+    private long productFeedbackId;
     @Column(nullable = false,length = 4)
     private int rate;
     @Column
     private String message;
+    @Column(name = "added_date")
+    private Date addedDate;
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
     private UserEntity userEntity;
@@ -24,31 +27,21 @@ public class ProductFeedbackEntity {
     public ProductFeedbackEntity() {
     }
 
-    public ProductFeedbackEntity(long itemFeedbackId, int rate, String message, UserEntity userEntity, ProductEntity productEntity) {
-        this.itemFeedbackId = itemFeedbackId;
+    public ProductFeedbackEntity(long productFeedbackId, int rate, String message, Date addedDate, UserEntity userEntity, ProductEntity productEntity) {
+        this.productFeedbackId = productFeedbackId;
         this.rate = rate;
         this.message = message;
+        this.addedDate = addedDate;
         this.userEntity = userEntity;
         this.productEntity = productEntity;
     }
 
-    @Override
-    public String toString() {
-        return "ItemFeedbackEntity{" +
-                "itemFeedbackId=" + itemFeedbackId +
-                ", rate=" + rate +
-                ", message='" + message + '\'' +
-                ", userEntity=" + userEntity +
-                ", productEntity=" + productEntity +
-                '}';
+    public long getProductFeedbackId() {
+        return productFeedbackId;
     }
 
-    public long getItemFeedbackId() {
-        return itemFeedbackId;
-    }
-
-    public void setItemFeedbackId(long itemFeedbackId) {
-        this.itemFeedbackId = itemFeedbackId;
+    public void setProductFeedbackId(long productFeedbackId) {
+        this.productFeedbackId = productFeedbackId;
     }
 
     public int getRate() {
@@ -67,6 +60,14 @@ public class ProductFeedbackEntity {
         this.message = message;
     }
 
+    public Date getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Date addedDate) {
+        this.addedDate = addedDate;
+    }
+
     public UserEntity getUserEntity() {
         return userEntity;
     }
@@ -81,5 +82,17 @@ public class ProductFeedbackEntity {
 
     public void setProductEntity(ProductEntity productEntity) {
         this.productEntity = productEntity;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductFeedbackEntity{" +
+                "productFeedbackId=" + productFeedbackId +
+                ", rate=" + rate +
+                ", message='" + message + '\'' +
+                ", addedDate=" + addedDate +
+                ", userEntity=" + userEntity +
+                ", productEntity=" + productEntity +
+                '}';
     }
 }

@@ -19,7 +19,6 @@ public class FeedbackController {
 
     @GetMapping("view/{productId}")
     public ResponseEntity<?> getFeedback(@PathVariable long productId){
-        // TODO: 31/12/2020 Complete View Feedback API
         return feedbackService.getFeedback(productId);
     }
 }
