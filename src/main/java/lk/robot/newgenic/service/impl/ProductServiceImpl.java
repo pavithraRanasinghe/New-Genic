@@ -6,6 +6,7 @@ import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.ProductRepository;
 import lk.robot.newgenic.service.ProductService;
+import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
             if (!list.isEmpty()){
                 List<ProductDTO> newArrivalList = new ArrayList<>();
                 for (ProductEntity productEntity:list) {
-                    ProductDTO productDTO = entityToDto(productEntity);
+                    ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
                     newArrivalList.add(productDTO);
                 }
                 return new ResponseEntity<>(newArrivalList,HttpStatus.OK);
@@ -52,11 +53,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<?> fantechProduct() {
         try{
-            List<ProductEntity> fantech = productRepository.findAllByBrand("Fantech");
+            List<ProductEntity> fantech = productRepository.findAllByBrandAndActive("Fantech",true);
             if (!fantech.isEmpty()){
                 List<ProductDTO> fantechList = new ArrayList<>();
                 for (ProductEntity productEntity:fantech) {
-                    ProductDTO productDTO = entityToDto(productEntity);
+                    ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
                     fantechList.add(productDTO);
                 }
                 return new ResponseEntity<>(fantechList,HttpStatus.OK);
@@ -92,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
         if (productId != 0){
             Optional<ProductEntity> productEntity = productRepository.findById(productId);
             if(productEntity.isPresent()){
-                ProductDTO productDTO = entityToDto(productEntity.get());
+                ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity.get());
                 return new ResponseEntity<>(productDTO,HttpStatus.OK);
             }else{
                 return new ResponseEntity<>("Product not found",HttpStatus.NOT_FOUND);
@@ -100,23 +101,5 @@ public class ProductServiceImpl implements ProductService {
         }else {
             return new ResponseEntity<>("Product ID not found",HttpStatus.BAD_REQUEST);
         }
-    }
-
-    private ProductDTO entityToDto(ProductEntity productEntity){
-        return new ProductDTO(
-                productEntity.getProductId(),
-                productEntity.getProductCode(),
-                productEntity.getName(),
-                productEntity.getDescription(),
-                productEntity.getStock(),
-                productEntity.getColor(),
-                productEntity.getSize(),
-                productEntity.getGender(),
-                productEntity.getBuyingPrice(),
-                productEntity.getSalePrice(),
-                productEntity.getRetailPrice(),
-                productEntity.getAddedDate(),
-                productEntity.isActive()
-        );
     }
 }

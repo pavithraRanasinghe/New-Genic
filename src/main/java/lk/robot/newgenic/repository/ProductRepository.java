@@ -10,13 +10,14 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
 
-    @Query("select p from ProductEntity p order by p.addedDate desc")
+    @Query("select p from ProductEntity p where p.active=true order by p.addedDate desc")
     List<ProductEntity> newArrivals(Pageable pageable);
 
-    List<ProductEntity> findAllByBrand(String brand);
+    List<ProductEntity> findAllByBrandAndActive(String brand,boolean active);
 
-    List<ProductEntity> findBySubCategoryEntity(SubCategoryEntity subCategoryEntity);
+    List<ProductEntity> findBySubCategoryEntityAndActive(SubCategoryEntity subCategoryEntity,boolean active);
 
     @Query("select p from ProductEntity p WHERE p.brand = :brand AND p.retailPrice >= :minPrice AND p.retailPrice <= :maxPrice AND p.color =:color")
     List<ProductEntity> filterProducts(String brand,double minPrice,double maxPrice,String color);
+
 }

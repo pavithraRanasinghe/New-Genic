@@ -9,6 +9,7 @@ import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.FeedbackRepository;
 import lk.robot.newgenic.repository.ProductRepository;
 import lk.robot.newgenic.service.FeedbackService;
+import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                                 feedbackEntity.getRate(),
                                 feedbackEntity.getMessage(),
                                 feedbackEntity.getAddedDate(),
-                                userEntityToDto(feedbackEntity.getUserEntity())
+                                EntityToDto.userEntityToDto(feedbackEntity.getUserEntity())
                         );
 
                         feedbackList.add(productFeedbackResponseDTO);
@@ -62,12 +63,5 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
     }
 
-    private UserFeedbackDTO userEntityToDto(UserEntity userEntity){
-        return new UserFeedbackDTO(
-                userEntity.getUserId(),
-                userEntity.getFirstName(),
-                userEntity.getLastName(),
-                userEntity.getProfilePicture()
-        );
-    }
+
 }

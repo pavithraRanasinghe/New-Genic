@@ -14,6 +14,7 @@ import lk.robot.newgenic.repository.MainSubCategoryRepository;
 import lk.robot.newgenic.repository.ProductRepository;
 import lk.robot.newgenic.repository.SubCategoryRepository;
 import lk.robot.newgenic.service.CategoryService;
+import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -113,10 +114,10 @@ public class CategoryServiceImpl implements CategoryService {
                     if (!subCategoryList.isEmpty()){
                         List<ProductDTO> productList = new ArrayList<>();
                         for (SubCategoryEntity subCategoryEntity:subCategoryList) {
-                            List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntity(subCategoryEntity);
+                            List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity,true);
                             if (!productEntityList.isEmpty()){
                                 for (ProductEntity productEntity:productEntityList) {
-                                    ProductDTO productDTO = entityToDto(productEntity);
+                                    ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
                                     productList.add(productDTO);
                                 }
                             }else{
@@ -143,11 +144,11 @@ public class CategoryServiceImpl implements CategoryService {
         if (subCategoryId != 0){
             Optional<SubCategoryEntity> subCategoryEntity = subCategoryRepository.findById(subCategoryId);
             if (subCategoryEntity.isPresent()){
-                List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntity(subCategoryEntity.get());
+                List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity.get(),true);
                 if (!productEntityList.isEmpty()){
                     List<ProductDTO> productList = new ArrayList<>();
                     for (ProductEntity productEntity:productEntityList) {
-                        ProductDTO productDTO = entityToDto(productEntity);
+                        ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
                         productList.add(productDTO);
                     }
                     return new ResponseEntity<>(productList,HttpStatus.OK);
@@ -161,23 +162,4 @@ public class CategoryServiceImpl implements CategoryService {
             return new ResponseEntity<>("Sub category id required",HttpStatus.BAD_REQUEST);
         }
     }
-
-    private ProductDTO entityToDto(ProductEntity productEntity){
-        return new ProductDTO(
-                productEntity.getProductId(),
-                productEntity.getProductCode(),
-                productEntity.getName(),
-                productEntity.getDescription(),
-                productEntity.getStock(),
-                productEntity.getColor(),
-                productEntity.getSize(),
-                productEntity.getGender(),
-                productEntity.getBuyingPrice(),
-                productEntity.getSalePrice(),
-                productEntity.getRetailPrice(),
-                productEntity.getAddedDate(),
-                productEntity.isActive()
-        );
-    }
-
 }
