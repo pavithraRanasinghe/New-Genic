@@ -1,7 +1,9 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -27,6 +29,13 @@ public class UserEntity {
     private String password;
     @Column(name = "registered_date")
     private Date registeredDate;
+    @ManyToMany
+    @JoinTable(
+            name = "user_address_details",
+            joinColumns = {@JoinColumn (name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_address_id")}
+    )
+    private List<UserAddressEntity> userAddress = new ArrayList<>();
 
     public UserEntity() {
     }
