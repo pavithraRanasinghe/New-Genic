@@ -30,7 +30,7 @@ public class OrderEntity {
     @JoinColumn(name = "fk_delivery_id")
     private DeliveryEntity deliveryEntity;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_id",referencedColumnName = "order_id")
+    @JoinColumn(name = "payment_id",referencedColumnName = "payment_id")
     private PaymentEntity paymentEntity;
     @ManyToOne
     @JoinColumn(name = "fk_user_address_id")

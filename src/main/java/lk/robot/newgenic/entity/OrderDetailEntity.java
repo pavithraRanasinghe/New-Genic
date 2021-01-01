@@ -26,7 +26,7 @@ public class OrderDetailEntity {
     @JoinColumn(name = "fk_order_id")
     private OrderEntity orderEntity;
     @OneToOne
-    @JoinColumn(name = "return_request_id",referencedColumnName = "order_detail_id")
+    @JoinColumn(name = "return_request_id",referencedColumnName = "return_request_id")
     private ReturnEntity returnEntity;
 
 }
