@@ -17,6 +17,8 @@ public class ProductFeedbackEntity {
     private String message;
     @Column(name = "added_date")
     private Date addedDate;
+    @Column(name = "added_time")
+    private Date addedTime;
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
     private UserEntity userEntity;
@@ -27,11 +29,12 @@ public class ProductFeedbackEntity {
     public ProductFeedbackEntity() {
     }
 
-    public ProductFeedbackEntity(long productFeedbackId, int rate, String message, Date addedDate, UserEntity userEntity, ProductEntity productEntity) {
+    public ProductFeedbackEntity(long productFeedbackId, int rate, String message, Date addedDate, Date addedTime, UserEntity userEntity, ProductEntity productEntity) {
         this.productFeedbackId = productFeedbackId;
         this.rate = rate;
         this.message = message;
         this.addedDate = addedDate;
+        this.addedTime = addedTime;
         this.userEntity = userEntity;
         this.productEntity = productEntity;
     }
@@ -68,6 +71,14 @@ public class ProductFeedbackEntity {
         this.addedDate = addedDate;
     }
 
+    public Date getAddedTime() {
+        return addedTime;
+    }
+
+    public void setAddedTime(Date addedTime) {
+        this.addedTime = addedTime;
+    }
+
     public UserEntity getUserEntity() {
         return userEntity;
     }
@@ -91,6 +102,7 @@ public class ProductFeedbackEntity {
                 ", rate=" + rate +
                 ", message='" + message + '\'' +
                 ", addedDate=" + addedDate +
+                ", addedTime=" + addedTime +
                 ", userEntity=" + userEntity +
                 ", productEntity=" + productEntity +
                 '}';

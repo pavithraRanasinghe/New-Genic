@@ -37,6 +37,8 @@ public class ProductEntity {
     private double retailPrice;
     @Column(name = "added_date",nullable = false)
     private Date addedDate;
+    @Column(name = "added_time",nullable = false)
+    private Date addedTime;
     @Column(nullable = false)
     private boolean active;
     @ManyToOne
@@ -60,6 +62,7 @@ public class ProductEntity {
             double salePrice,
             double retailPrice,
             Date addedDate,
+            Date addedTime,
             boolean active,
             SubCategoryEntity subCategoryEntity) {
         this.productId = productId;
@@ -75,6 +78,7 @@ public class ProductEntity {
         this.salePrice = salePrice;
         this.retailPrice = retailPrice;
         this.addedDate = addedDate;
+        this.addedTime = addedTime;
         this.active = active;
         this.subCategoryEntity = subCategoryEntity;
     }
@@ -95,6 +99,7 @@ public class ProductEntity {
                 ", salePrice=" + salePrice +
                 ", retailPrice=" + retailPrice +
                 ", addedDate=" + addedDate +
+                ", addedTime=" + addedTime +
                 ", active=" + active +
                 ", subCategoryEntity=" + subCategoryEntity +
                 '}';
@@ -202,6 +207,14 @@ public class ProductEntity {
 
     public void setAddedDate(Date addedDate) {
         this.addedDate = addedDate;
+    }
+
+    public Date getAddedTime() {
+        return addedTime;
+    }
+
+    public void setAddedTime(Date addedTime) {
+        this.addedTime = addedTime;
     }
 
     public boolean isActive() {

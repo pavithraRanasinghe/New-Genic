@@ -15,6 +15,8 @@ public class ReturnEntity {
     private String reason;
     @Column(name = "request_date")
     private Date requestDate;
+    @Column(name = "request_time")
+    private Date requestTime;
     @Column
     private String img;
     @OneToOne(mappedBy = "returnEntity")
@@ -23,11 +25,13 @@ public class ReturnEntity {
     public ReturnEntity() {
     }
 
-    public ReturnEntity(long returnRequestId, String reason, Date requestDate, String img) {
+    public ReturnEntity(long returnRequestId, String reason, Date requestDate, Date requestTime, String img, OrderDetailEntity orderDetailEntity) {
         this.returnRequestId = returnRequestId;
         this.reason = reason;
         this.requestDate = requestDate;
+        this.requestTime = requestTime;
         this.img = img;
+        this.orderDetailEntity = orderDetailEntity;
     }
 
     public long getReturnRequestId() {
@@ -54,12 +58,12 @@ public class ReturnEntity {
         this.requestDate = requestDate;
     }
 
-    public String getImg() {
-        return img;
+    public Date getRequestTime() {
+        return requestTime;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setRequestTime(Date requestTime) {
+        this.requestTime = requestTime;
     }
 
     @Override
@@ -68,7 +72,26 @@ public class ReturnEntity {
                 "returnRequestId=" + returnRequestId +
                 ", reason='" + reason + '\'' +
                 ", requestDate=" + requestDate +
+                ", requestTime=" + requestTime +
                 ", img='" + img + '\'' +
+                ", orderDetailEntity=" + orderDetailEntity +
                 '}';
     }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public OrderDetailEntity getOrderDetailEntity() {
+        return orderDetailEntity;
+    }
+
+    public void setOrderDetailEntity(OrderDetailEntity orderDetailEntity) {
+        this.orderDetailEntity = orderDetailEntity;
+    }
+
 }

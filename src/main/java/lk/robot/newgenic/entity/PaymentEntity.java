@@ -17,17 +17,20 @@ public class PaymentEntity {
     private double deliverYPrice;
     @Column(name = "payment_date")
     private Date paymentDate;
+    @Column(name = "payment_time")
+    private Date paymentTime;
     @OneToOne(mappedBy = "paymentEntity")
     private OrderEntity orderEntity;
 
     public PaymentEntity() {
     }
 
-    public PaymentEntity(long paymentId, double orderPrice, double deliverYPrice, Date paymentDate, OrderEntity orderEntity) {
+    public PaymentEntity(long paymentId, double orderPrice, double deliverYPrice, Date paymentDate, Date paymentTime, OrderEntity orderEntity) {
         this.paymentId = paymentId;
         this.orderPrice = orderPrice;
         this.deliverYPrice = deliverYPrice;
         this.paymentDate = paymentDate;
+        this.paymentTime = paymentTime;
         this.orderEntity = orderEntity;
     }
 
@@ -63,6 +66,14 @@ public class PaymentEntity {
         this.paymentDate = paymentDate;
     }
 
+    public Date getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(Date paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
     public OrderEntity getOrderEntity() {
         return orderEntity;
     }
@@ -78,6 +89,7 @@ public class PaymentEntity {
                 ", orderPrice=" + orderPrice +
                 ", deliverYPrice=" + deliverYPrice +
                 ", paymentDate=" + paymentDate +
+                ", paymentTime=" + paymentTime +
                 ", orderEntity=" + orderEntity +
                 '}';
     }

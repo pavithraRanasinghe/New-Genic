@@ -25,6 +25,8 @@ public class DeliveryEntity {
     private double cost_per_unit;
     @Column(name = "registration_date")
     private Date registrationDate;
+    @Column(name = "registration_time")
+    private Date registrationTime;
     @Column(name = "registration_number")
     private String registrationNumber;
     @ManyToOne
@@ -34,7 +36,7 @@ public class DeliveryEntity {
     public DeliveryEntity() {
     }
 
-    public DeliveryEntity(long deliveryId, String name, String address, String gmail, String mobile, String website, double cost_per_unit, Date registrationDate, String registrationNumber, AdminEntity adminEntity) {
+    public DeliveryEntity(long deliveryId, String name, String address, String gmail, String mobile, String website, double cost_per_unit, Date registrationDate, Date registrationTime, String registrationNumber, AdminEntity adminEntity) {
         this.deliveryId = deliveryId;
         this.name = name;
         this.address = address;
@@ -43,6 +45,7 @@ public class DeliveryEntity {
         this.website = website;
         this.cost_per_unit = cost_per_unit;
         this.registrationDate = registrationDate;
+        this.registrationTime = registrationTime;
         this.registrationNumber = registrationNumber;
         this.adminEntity = adminEntity;
     }
@@ -111,6 +114,14 @@ public class DeliveryEntity {
         this.registrationDate = registrationDate;
     }
 
+    public Date getRegistrationTime() {
+        return registrationTime;
+    }
+
+    public void setRegistrationTime(Date registrationTime) {
+        this.registrationTime = registrationTime;
+    }
+
     public String getRegistrationNumber() {
         return registrationNumber;
     }
@@ -138,6 +149,7 @@ public class DeliveryEntity {
                 ", website='" + website + '\'' +
                 ", cost_per_unit=" + cost_per_unit +
                 ", registrationDate=" + registrationDate +
+                ", registrationTime=" + registrationTime +
                 ", registrationNumber='" + registrationNumber + '\'' +
                 ", adminEntity=" + adminEntity +
                 '}';

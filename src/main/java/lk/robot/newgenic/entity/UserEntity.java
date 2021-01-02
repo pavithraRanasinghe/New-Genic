@@ -29,6 +29,8 @@ public class UserEntity {
     private String password;
     @Column(name = "registered_date")
     private Date registeredDate;
+    @Column(name = "registered_time")
+    private Date registeredTime;
     @ManyToMany
     @JoinTable(
             name = "user_address_details",
@@ -40,7 +42,7 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(long userId, String firstName, String lastName, String profilePicture, String gmail, String mobile, Date dob, String password, Date registeredDate) {
+    public UserEntity(long userId, String firstName, String lastName, String profilePicture, String gmail, String mobile, Date dob, String password, Date registeredDate, Date registeredTime, List<UserAddressEntity> userAddress) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -50,6 +52,8 @@ public class UserEntity {
         this.dob = dob;
         this.password = password;
         this.registeredDate = registeredDate;
+        this.registeredTime = registeredTime;
+        this.userAddress = userAddress;
     }
 
     @Override
@@ -64,6 +68,8 @@ public class UserEntity {
                 ", dob=" + dob +
                 ", password='" + password + '\'' +
                 ", registeredDate=" + registeredDate +
+                ", registeredTime=" + registeredTime +
+                ", userAddress=" + userAddress +
                 '}';
     }
 
@@ -137,5 +143,21 @@ public class UserEntity {
 
     public void setRegisteredDate(Date registeredDate) {
         this.registeredDate = registeredDate;
+    }
+
+    public Date getRegisteredTime() {
+        return registeredTime;
+    }
+
+    public void setRegisteredTime(Date registeredTime) {
+        this.registeredTime = registeredTime;
+    }
+
+    public List<UserAddressEntity> getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(List<UserAddressEntity> userAddress) {
+        this.userAddress = userAddress;
     }
 }
