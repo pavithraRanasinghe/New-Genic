@@ -1,6 +1,7 @@
 package lk.robot.newgenic.controller;
 
 import lk.robot.newgenic.dto.Request.UserSignUpDTO;
+import lk.robot.newgenic.jwt.AuthenticationRequest;
 import lk.robot.newgenic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,12 @@ public class UserController {
     @PostMapping("/signUp")
     public ResponseEntity<?> userSignUp(@RequestBody UserSignUpDTO userSignUpDTO) {
         ResponseEntity<?> responseEntity = userService.signUp(userSignUpDTO);
+        return responseEntity;
+    }
+
+    @PostMapping("/logIn")
+    public ResponseEntity<?> userLogin(@RequestBody AuthenticationRequest authenticationRequest){
+        ResponseEntity<?> responseEntity = userService.logIn(authenticationRequest);
         return responseEntity;
     }
 }
