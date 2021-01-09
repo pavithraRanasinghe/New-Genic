@@ -1,7 +1,8 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "payment")
@@ -18,14 +19,19 @@ public class PaymentEntity {
     @Column(name = "payment_date")
     private Date paymentDate;
     @Column(name = "payment_time")
-    private Date paymentTime;
+    private Time paymentTime;
     @OneToOne(mappedBy = "paymentEntity")
     private OrderEntity orderEntity;
 
     public PaymentEntity() {
     }
 
-    public PaymentEntity(long paymentId, double orderPrice, double deliverYPrice, Date paymentDate, Date paymentTime, OrderEntity orderEntity) {
+    public PaymentEntity(long paymentId,
+                         double orderPrice,
+                         double deliverYPrice,
+                         Date paymentDate,
+                         Time paymentTime,
+                         OrderEntity orderEntity) {
         this.paymentId = paymentId;
         this.orderPrice = orderPrice;
         this.deliverYPrice = deliverYPrice;
@@ -66,11 +72,11 @@ public class PaymentEntity {
         this.paymentDate = paymentDate;
     }
 
-    public Date getPaymentTime() {
+    public Time getPaymentTime() {
         return paymentTime;
     }
 
-    public void setPaymentTime(Date paymentTime) {
+    public void setPaymentTime(Time paymentTime) {
         this.paymentTime = paymentTime;
     }
 

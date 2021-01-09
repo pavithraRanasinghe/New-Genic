@@ -1,7 +1,8 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "orders")
@@ -20,9 +21,9 @@ public class OrderEntity {
     @Column(name = "pick_up_date")
     private Date pickUpDate;
     @Column(name = "pick_up_time")
-    private Date pickUpTime;
-    @Column
-    private double weight;
+    private Time pickUpTime;
+    @Column(name = "total_weight")
+    private double totalWeight;
     @Column(name = "tracking_number")
     private String trackingNumber;
     @ManyToOne
@@ -41,14 +42,25 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
-    public OrderEntity(long orderId, String status, double orderPrice, double discount, Date pickUpDate, Date pickUpTime, double weight, String trackingNumber, UserEntity userEntity, DeliveryEntity deliveryEntity, PaymentEntity paymentEntity, UserAddressEntity userAddressEntity) {
+    public OrderEntity(long orderId,
+                       String status,
+                       double orderPrice,
+                       double discount,
+                       Date pickUpDate,
+                       Time pickUpTime,
+                       double totalWeight,
+                       String trackingNumber,
+                       UserEntity userEntity,
+                       DeliveryEntity deliveryEntity,
+                       PaymentEntity paymentEntity,
+                       UserAddressEntity userAddressEntity) {
         this.orderId = orderId;
         this.status = status;
         this.orderPrice = orderPrice;
         this.discount = discount;
         this.pickUpDate = pickUpDate;
         this.pickUpTime = pickUpTime;
-        this.weight = weight;
+        this.totalWeight = totalWeight;
         this.trackingNumber = trackingNumber;
         this.userEntity = userEntity;
         this.deliveryEntity = deliveryEntity;
@@ -96,20 +108,20 @@ public class OrderEntity {
         this.pickUpDate = pickUpDate;
     }
 
-    public Date getPickUpTime() {
+    public Time getPickUpTime() {
         return pickUpTime;
     }
 
-    public void setPickUpTime(Date pickUpTime) {
+    public void setPickUpTime(Time pickUpTime) {
         this.pickUpTime = pickUpTime;
     }
 
-    public double getWeight() {
-        return weight;
+    public double getTotalWeight() {
+        return totalWeight;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setTotalWeight(double totalWeight) {
+        this.totalWeight = totalWeight;
     }
 
     public String getTrackingNumber() {
@@ -161,7 +173,7 @@ public class OrderEntity {
                 ", discount=" + discount +
                 ", pickUpDate=" + pickUpDate +
                 ", pickUpTime=" + pickUpTime +
-                ", weight=" + weight +
+                ", totalWeight=" + totalWeight +
                 ", trackingNumber='" + trackingNumber + '\'' +
                 ", userEntity=" + userEntity +
                 ", deliveryEntity=" + deliveryEntity +

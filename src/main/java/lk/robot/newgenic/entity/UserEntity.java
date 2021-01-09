@@ -1,8 +1,9 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,11 +14,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private long userId;
-    @Column(name = "firstName")
+    @Column(name = "first_name")
     private String firstName;
-    @Column(name = "lastName")
+    @Column(name = "last_name")
     private String lastName;
-    @Column(name = "profilePicture")
+    @Column(name = "profile_picture")
     private String profilePicture;
     @Column(nullable = false)
     private String gmail;
@@ -26,11 +27,15 @@ public class UserEntity {
     @Column
     private Date dob;
     @Column
+    private String role;
+    @Column(unique = true)
+    private String username;
+    @Column
     private String password;
     @Column(name = "registered_date")
     private Date registeredDate;
     @Column(name = "registered_time")
-    private Date registeredTime;
+    private Time registeredTime;
     @ManyToMany
     @JoinTable(
             name = "user_address_details",
@@ -42,7 +47,19 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(long userId, String firstName, String lastName, String profilePicture, String gmail, String mobile, Date dob, String password, Date registeredDate, Date registeredTime, List<UserAddressEntity> userAddress) {
+    public UserEntity(long userId,
+                      String firstName,
+                      String lastName,
+                      String profilePicture,
+                      String gmail,
+                      String mobile,
+                      Date dob,
+                      String role,
+                      String username,
+                      String password,
+                      Date registeredDate,
+                      Time registeredTime,
+                      List<UserAddressEntity> userAddress) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -50,27 +67,12 @@ public class UserEntity {
         this.gmail = gmail;
         this.mobile = mobile;
         this.dob = dob;
+        this.role = role;
+        this.username = username;
         this.password = password;
         this.registeredDate = registeredDate;
         this.registeredTime = registeredTime;
         this.userAddress = userAddress;
-    }
-
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "userId=" + userId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", profilePicture='" + profilePicture + '\'' +
-                ", gmail='" + gmail + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", dob=" + dob +
-                ", password='" + password + '\'' +
-                ", registeredDate=" + registeredDate +
-                ", registeredTime=" + registeredTime +
-                ", userAddress=" + userAddress +
-                '}';
     }
 
     public long getUserId() {
@@ -129,6 +131,22 @@ public class UserEntity {
         this.dob = dob;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -145,11 +163,11 @@ public class UserEntity {
         this.registeredDate = registeredDate;
     }
 
-    public Date getRegisteredTime() {
+    public Time getRegisteredTime() {
         return registeredTime;
     }
 
-    public void setRegisteredTime(Date registeredTime) {
+    public void setRegisteredTime(Time registeredTime) {
         this.registeredTime = registeredTime;
     }
 
@@ -159,5 +177,24 @@ public class UserEntity {
 
     public void setUserAddress(List<UserAddressEntity> userAddress) {
         this.userAddress = userAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", gmail='" + gmail + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", dob=" + dob +
+                ", role='" + role + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", registeredDate=" + registeredDate +
+                ", registeredTime=" + registeredTime +
+                ", userAddress=" + userAddress +
+                '}';
     }
 }

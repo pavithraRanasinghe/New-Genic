@@ -1,8 +1,8 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "admin")
@@ -16,8 +16,8 @@ public class AdminEntity {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "user_name")
-    private String userName;
+    @Column(unique = true)
+    private String username;
     @Column
     private Date dob;
     @Column
@@ -28,44 +28,36 @@ public class AdminEntity {
     private String mobile;
     @Column
     private String password;
+    @Column(name = "registered_date")
+    private Date registeredDate;
+    @Column(name = "registered_time")
+    private Time registeredTime;
 
     public AdminEntity() {
     }
 
-    public AdminEntity(
-            long adminId,
-            String firstName,
-            String lastName,
-            String userName,
-            Date dob,
-            String gender,
-            String gmail,
-            String mobile,
-            String password) {
+    public AdminEntity(long adminId,
+                       String firstName,
+                       String lastName,
+                       String username,
+                       Date dob,
+                       String gender,
+                       String gmail,
+                       String mobile,
+                       String password,
+                       Date registeredDate,
+                       Time registeredTime) {
         this.adminId = adminId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = username;
         this.dob = dob;
         this.gender = gender;
         this.gmail = gmail;
         this.mobile = mobile;
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "AdminEntity{" +
-                "adminId=" + adminId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
-                ", dob=" + dob +
-                ", gender='" + gender + '\'' +
-                ", gmail='" + gmail + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        this.registeredDate = registeredDate;
+        this.registeredTime = registeredTime;
     }
 
     public long getAdminId() {
@@ -92,12 +84,12 @@ public class AdminEntity {
         this.lastName = lastName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Date getDob() {
@@ -138,5 +130,38 @@ public class AdminEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getRegisteredDate() {
+        return registeredDate;
+    }
+
+    public void setRegisteredDate(Date registeredDate) {
+        this.registeredDate = registeredDate;
+    }
+
+    public Time getRegisteredTime() {
+        return registeredTime;
+    }
+
+    public void setRegisteredTime(Time registeredTime) {
+        this.registeredTime = registeredTime;
+    }
+
+    @Override
+    public String toString() {
+        return "AdminEntity{" +
+                "adminId=" + adminId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", dob=" + dob +
+                ", gender='" + gender + '\'' +
+                ", gmail='" + gmail + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", password='" + password + '\'' +
+                ", registeredDate=" + registeredDate +
+                ", registeredTime=" + registeredTime +
+                '}';
     }
 }

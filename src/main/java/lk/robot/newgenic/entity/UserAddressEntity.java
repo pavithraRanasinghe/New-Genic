@@ -19,7 +19,7 @@ public class UserAddressEntity {
     @Column
     private String address;
     @Column
-    private String city;
+    private String district;
     @Column
     private String state;
     @Column
@@ -34,12 +34,21 @@ public class UserAddressEntity {
     public UserAddressEntity() {
     }
 
-    public UserAddressEntity(long userAddress_id, String firstName, String lastName, String address, String city, String state, String mobile, int postalCode, String type, List<UserEntity> userEntityList) {
+    public UserAddressEntity(long userAddress_id,
+                             String firstName,
+                             String lastName,
+                             String address,
+                             String district,
+                             String state,
+                             String mobile,
+                             int postalCode,
+                             String type,
+                             List<UserEntity> userEntityList) {
         this.userAddress_id = userAddress_id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-        this.city = city;
+        this.district = district;
         this.state = state;
         this.mobile = mobile;
         this.postalCode = postalCode;
@@ -79,12 +88,12 @@ public class UserAddressEntity {
         this.address = address;
     }
 
-    public String getCity() {
-        return city;
+    public String getDistrict() {
+        return district;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     public String getState() {
@@ -134,7 +143,7 @@ public class UserAddressEntity {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
-                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
                 ", state='" + state + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", postalCode=" + postalCode +

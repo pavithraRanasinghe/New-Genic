@@ -1,9 +1,9 @@
 package lk.robot.newgenic.entity;
 
-import org.hibernate.criterion.Order;
-
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
+
 
 @Entity
 @Table(name = "order_detail")
@@ -20,7 +20,7 @@ public class OrderDetailEntity {
     @Column(name = "order_date")
     private Date orderDate;
     @Column(name = "order_time")
-    private Date orderTime;
+    private Time orderTime;
     @ManyToOne
     @JoinColumn(name = "fk_product_id")
     private ProductEntity productEntity;
@@ -34,7 +34,14 @@ public class OrderDetailEntity {
     public OrderDetailEntity() {
     }
 
-    public OrderDetailEntity(long orderDetailId, int quantity, double orderPrice, Date orderDate, Date orderTime, ProductEntity productEntity, OrderEntity orderEntity, ReturnEntity returnEntity) {
+    public OrderDetailEntity(long orderDetailId,
+                             int quantity,
+                             double orderPrice,
+                             Date orderDate,
+                             Time orderTime,
+                             ProductEntity productEntity,
+                             OrderEntity orderEntity,
+                             ReturnEntity returnEntity) {
         this.orderDetailId = orderDetailId;
         this.quantity = quantity;
         this.orderPrice = orderPrice;
@@ -73,11 +80,11 @@ public class OrderDetailEntity {
         return orderDate;
     }
 
-    public Date getOrderTime() {
+    public Time getOrderTime() {
         return orderTime;
     }
 
-    public void setOrderTime(Date orderTime) {
+    public void setOrderTime(Time orderTime) {
         this.orderTime = orderTime;
     }
 

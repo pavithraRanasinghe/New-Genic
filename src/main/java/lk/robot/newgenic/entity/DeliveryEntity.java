@@ -1,7 +1,8 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "delivery")
@@ -26,7 +27,7 @@ public class DeliveryEntity {
     @Column(name = "registration_date")
     private Date registrationDate;
     @Column(name = "registration_time")
-    private Date registrationTime;
+    private Time registrationTime;
     @Column(name = "registration_number")
     private String registrationNumber;
     @ManyToOne
@@ -36,7 +37,17 @@ public class DeliveryEntity {
     public DeliveryEntity() {
     }
 
-    public DeliveryEntity(long deliveryId, String name, String address, String gmail, String mobile, String website, double cost_per_unit, Date registrationDate, Date registrationTime, String registrationNumber, AdminEntity adminEntity) {
+    public DeliveryEntity(long deliveryId,
+                          String name,
+                          String address,
+                          String gmail,
+                          String mobile,
+                          String website,
+                          double cost_per_unit,
+                          Date registrationDate,
+                          Time registrationTime,
+                          String registrationNumber,
+                          AdminEntity adminEntity) {
         this.deliveryId = deliveryId;
         this.name = name;
         this.address = address;
@@ -114,11 +125,11 @@ public class DeliveryEntity {
         this.registrationDate = registrationDate;
     }
 
-    public Date getRegistrationTime() {
+    public Time getRegistrationTime() {
         return registrationTime;
     }
 
-    public void setRegistrationTime(Date registrationTime) {
+    public void setRegistrationTime(Time registrationTime) {
         this.registrationTime = registrationTime;
     }
 

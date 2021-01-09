@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> newArrivals() {
 
         try {
-            List<ProductEntity> list = productRepository.newArrivals(PageRequest.of(0,14));
+            List<ProductEntity> list = productRepository.newArrivals(PageRequest.of(0,1));
             if (!list.isEmpty()){
                 List<ProductDTO> newArrivalList = new ArrayList<>();
                 for (ProductEntity productEntity:list) {

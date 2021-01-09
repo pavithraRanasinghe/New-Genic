@@ -1,7 +1,8 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "product_feedback")
@@ -18,7 +19,7 @@ public class ProductFeedbackEntity {
     @Column(name = "added_date")
     private Date addedDate;
     @Column(name = "added_time")
-    private Date addedTime;
+    private Time addedTime;
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
     private UserEntity userEntity;
@@ -29,7 +30,12 @@ public class ProductFeedbackEntity {
     public ProductFeedbackEntity() {
     }
 
-    public ProductFeedbackEntity(long productFeedbackId, int rate, String message, Date addedDate, Date addedTime, UserEntity userEntity, ProductEntity productEntity) {
+    public ProductFeedbackEntity(long productFeedbackId,
+                                 int rate, String message,
+                                 Date addedDate,
+                                 Time addedTime,
+                                 UserEntity userEntity,
+                                 ProductEntity productEntity) {
         this.productFeedbackId = productFeedbackId;
         this.rate = rate;
         this.message = message;
@@ -71,11 +77,11 @@ public class ProductFeedbackEntity {
         this.addedDate = addedDate;
     }
 
-    public Date getAddedTime() {
+    public Time getAddedTime() {
         return addedTime;
     }
 
-    public void setAddedTime(Date addedTime) {
+    public void setAddedTime(Time addedTime) {
         this.addedTime = addedTime;
     }
 

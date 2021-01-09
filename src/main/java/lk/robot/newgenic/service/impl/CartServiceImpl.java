@@ -46,8 +46,6 @@ public class CartServiceImpl implements CartService {
                     // TODO: 01/01/2021 Use token for fetch user
 
                     OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
-                    orderDetailEntity.setOrderDate(DateConverter.localDateToUtil(LocalDate.now()));
-                    orderDetailEntity.setOrderTime(DateConverter.localTimeToUtil(LocalTime.now()));
                     orderDetailEntity.setProductEntity(productEntity.get());
 
                 }else {

@@ -1,9 +1,8 @@
 package lk.robot.newgenic.entity;
 
-import lk.robot.newgenic.enums.Gender;
-
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "product")
@@ -29,6 +28,8 @@ public class ProductEntity {
     private String size;
     @Column
     private String gender;
+    @Column
+    private Double weight;
     @Column(name = "buying_price")
     private double buyingPrice;
     @Column(name = "sale_price")
@@ -38,9 +39,11 @@ public class ProductEntity {
     @Column(name = "added_date",nullable = false)
     private Date addedDate;
     @Column(name = "added_time",nullable = false)
-    private Date addedTime;
+    private Time addedTime;
     @Column(nullable = false)
     private boolean active;
+    @Column(name = "free_shipping")
+    private boolean freeShipping;
     @ManyToOne
     @JoinColumn(name = "fk_sub_category_id")
     private SubCategoryEntity subCategoryEntity;
@@ -58,12 +61,14 @@ public class ProductEntity {
             String color,
             String size,
             String gender,
+            double weight,
             double buyingPrice,
             double salePrice,
             double retailPrice,
             Date addedDate,
-            Date addedTime,
+            Time addedTime,
             boolean active,
+            boolean freeShipping,
             SubCategoryEntity subCategoryEntity) {
         this.productId = productId;
         this.productCode = productCode;
@@ -74,12 +79,14 @@ public class ProductEntity {
         this.color = color;
         this.size = size;
         this.gender = gender;
+        this.weight = weight;
         this.buyingPrice = buyingPrice;
         this.salePrice = salePrice;
         this.retailPrice = retailPrice;
         this.addedDate = addedDate;
         this.addedTime = addedTime;
         this.active = active;
+        this.freeShipping = freeShipping;
         this.subCategoryEntity = subCategoryEntity;
     }
 
@@ -95,12 +102,14 @@ public class ProductEntity {
                 ", color='" + color + '\'' +
                 ", size='" + size + '\'' +
                 ", gender='" + gender + '\'' +
+                ", weight=" + weight +
                 ", buyingPrice=" + buyingPrice +
                 ", salePrice=" + salePrice +
                 ", retailPrice=" + retailPrice +
                 ", addedDate=" + addedDate +
                 ", addedTime=" + addedTime +
                 ", active=" + active +
+                ", freeShipping=" + freeShipping +
                 ", subCategoryEntity=" + subCategoryEntity +
                 '}';
     }
@@ -175,6 +184,15 @@ public class ProductEntity {
 
     public void setGender(String gender) {
         this.gender = gender;
+
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 
     public double getBuyingPrice() {
@@ -209,11 +227,11 @@ public class ProductEntity {
         this.addedDate = addedDate;
     }
 
-    public Date getAddedTime() {
+    public Time getAddedTime() {
         return addedTime;
     }
 
-    public void setAddedTime(Date addedTime) {
+    public void setAddedTime(Time addedTime) {
         this.addedTime = addedTime;
     }
 
@@ -223,6 +241,14 @@ public class ProductEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isFreeShipping() {
+        return freeShipping;
+    }
+
+    public void setFreeShipping(boolean freeShipping) {
+        this.freeShipping = freeShipping;
     }
 
     public SubCategoryEntity getSubCategoryEntity() {
