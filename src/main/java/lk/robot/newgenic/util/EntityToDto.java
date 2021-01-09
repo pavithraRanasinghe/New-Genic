@@ -1,6 +1,7 @@
 package lk.robot.newgenic.util;
 
 import lk.robot.newgenic.dto.ProductDTO;
+import lk.robot.newgenic.dto.Request.UserSignUpDTO;
 import lk.robot.newgenic.dto.response.UserFeedbackDTO;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.entity.UserEntity;
@@ -32,5 +33,21 @@ public class EntityToDto {
                 userEntity.getLastName(),
                 userEntity.getProfilePicture()
         );
+    }
+
+    public static UserEntity userDtoToEntity(UserSignUpDTO userSignUpDTO){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setFirstName(userSignUpDTO.getFirstName());
+        userEntity.setLastName(userSignUpDTO.getLastName());
+        userEntity.setUsername(userSignUpDTO.getUserName());
+        userEntity.setGmail(userSignUpDTO.getGmail());
+        userEntity.setMobile(userSignUpDTO.getMobile());
+        userEntity.setDob(DateConverter.stringToDate(userSignUpDTO.getDob()));
+        userEntity.setPassword(userSignUpDTO.getPassword());
+        userEntity.setProfilePicture(userSignUpDTO.getProfilePicture());
+        userEntity.setRole(userSignUpDTO.getRole());
+
+        return userEntity;
+
     }
 }
