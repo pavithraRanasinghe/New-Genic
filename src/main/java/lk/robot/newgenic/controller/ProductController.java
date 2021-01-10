@@ -43,4 +43,5 @@ public class ProductController {
         return productService.getDetail(productId);
     }
 
+    // TODO: 10/01/2021 Related product - fetch using sub_category
 }

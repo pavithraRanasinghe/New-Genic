@@ -9,7 +9,6 @@ import lk.robot.newgenic.service.ProductService;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> newArrivals() {
 
         try {
-            List<ProductEntity> list = productRepository.newArrivals(PageRequest.of(0,1));
+            List<ProductEntity> list = productRepository.newArrivals(PageRequest.of(1,1));
             if (!list.isEmpty()){
                 List<ProductDTO> newArrivalList = new ArrayList<>();
                 for (ProductEntity productEntity:list) {

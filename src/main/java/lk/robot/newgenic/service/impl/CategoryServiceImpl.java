@@ -32,6 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
     private SubCategoryRepository subCategoryRepository;
     private ProductRepository productRepository;
 
+    @Autowired
     public CategoryServiceImpl(
             CategoryRepository categoryRepository,
             MainSubCategoryRepository mainSubCategoryRepository,
@@ -42,9 +43,6 @@ public class CategoryServiceImpl implements CategoryService {
         this.subCategoryRepository = subCategoryRepository;
         this.productRepository = productRepository;
     }
-
-    @Autowired
-
 
     @Override
     public ResponseEntity<?> getAll() {
