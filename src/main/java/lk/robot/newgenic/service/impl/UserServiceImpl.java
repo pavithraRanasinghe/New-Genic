@@ -1,6 +1,7 @@
 package lk.robot.newgenic.service.impl;
 
 import lk.robot.newgenic.dto.Request.UserSignUpDTO;
+import lk.robot.newgenic.dto.response.SignInResponseDTO;
 import lk.robot.newgenic.entity.UserEntity;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.jwt.AuthenticationRequest;
@@ -94,7 +95,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 if (accessToken.isEmpty()){
                     return new ResponseEntity<>("Token not created",HttpStatus.FORBIDDEN);
                 }
-                return new ResponseEntity<>(accessToken,HttpStatus.OK);
+                SignInResponseDTO signInResponseDTO = new SignInResponseDTO(
+                        accessToken,
+                        userEntity.get().getUserId(),
+                        userEntity.get().getUsername(),
+                        LocalDate.now(),
+                        LocalTime.now()
+                );
+                return new ResponseEntity<>(signInResponseDTO,HttpStatus.OK);
             }else{
                 return new ResponseEntity<>("Invalid login credential",HttpStatus.UNAUTHORIZED);
             }
