@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping("/product")
 @CrossOrigin
 public class ProductController {
 
@@ -43,5 +43,8 @@ public class ProductController {
         return productService.getDetail(productId);
     }
 
-    // TODO: 10/01/2021 Related product - fetch using sub_category
+    @GetMapping("/relatedProducts/{productId}")
+    public ResponseEntity<?> getRelatedProducts(@PathVariable long productId){
+        return productService.relatedProduct(productId);
+    }
 }

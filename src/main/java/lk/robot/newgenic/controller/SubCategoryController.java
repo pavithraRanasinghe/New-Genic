@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/sub_category")
+@RequestMapping("/sub_category")
 @CrossOrigin
 public class SubCategoryController {
 

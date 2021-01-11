@@ -11,4 +11,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity,L
 
     OrderDetailEntity findByOrderEntityAndProductEntity(OrderEntity orderEntity, ProductEntity productEntity);
 
+    List<OrderDetailEntity> findByOrderEntity(OrderEntity orderEntity);
+
 }

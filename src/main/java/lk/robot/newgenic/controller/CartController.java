@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/v1/cart")
+@RequestMapping("/cart")
 @CrossOrigin
 public class CartController {
 
@@ -21,7 +21,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> addToCart(@RequestBody CartRequestDTO cartRequestDTO, Principal principal){
         if (principal == null){
             return new ResponseEntity<>("Unauthorized to access", HttpStatus.UNAUTHORIZED);
@@ -29,5 +29,11 @@ public class CartController {
 
         long userId = Long.parseLong(principal.getName());
         return cartService.addToCart(cartRequestDTO,userId);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getCart(Principal principal){
+        long userId = Long.parseLong(principal.getName());
+        return cartService.getCart(userId);
     }
 }

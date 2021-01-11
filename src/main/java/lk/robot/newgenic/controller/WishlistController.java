@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/v1/wishlist")
+@RequestMapping("/wishlist")
 @CrossOrigin
 public class WishlistController {
 
@@ -25,7 +25,7 @@ public class WishlistController {
         if (principal == null){
             return new ResponseEntity<>("Unauthorized to access", HttpStatus.UNAUTHORIZED);
         }
-        long userId = Long.parseLong(String.valueOf(principal));
+        long userId = Long.parseLong(principal.getName());
         return wishlistService.addToWishlist(productId,userId);
     }
 
@@ -34,7 +34,7 @@ public class WishlistController {
         if (principal == null){
             return new ResponseEntity<>("Unauthorized to access", HttpStatus.UNAUTHORIZED);
         }
-        long userId = Long.parseLong(String.valueOf(principal));
+        long userId = Long.parseLong(principal.getName());
         return wishlistService.getWishList(userId);
     }
 

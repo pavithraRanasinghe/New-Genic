@@ -1,5 +1,6 @@
 package lk.robot.newgenic.service.impl;
 
+import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.Request.CartRequestDTO;
 import lk.robot.newgenic.entity.OrderDetailEntity;
 import lk.robot.newgenic.entity.OrderEntity;
@@ -13,6 +14,7 @@ import lk.robot.newgenic.repository.ProductRepository;
 import lk.robot.newgenic.repository.UserRepository;
 import lk.robot.newgenic.service.CartService;
 import lk.robot.newgenic.util.DateConverter;
+import lk.robot.newgenic.util.EntityToDto;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,6 +101,33 @@ public class CartServiceImpl implements CartService {
             }
         }catch (Exception e){
             throw new CustomException("Product add to cart failed");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getCart(long userId) {
+        try{
+            Optional<UserEntity> userEntity = userRepository.findById(userId);
+            OrderEntity orderEntity = orderRepository.
+                    findByUserEntityAndStatus(userEntity.get(), OrderStatus.CART.toString());
+            if (orderEntity != null){
+                List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
+                if (!orderDetailList.isEmpty()){
+                    List<ProductDTO> productList = new ArrayList<>();
+                    for (OrderDetailEntity orderDetailEntity :
+                            orderDetailList) {
+                        ProductDTO productDTO = EntityToDto.productEntityToDto(orderDetailEntity.getProductEntity());
+                        productList.add(productDTO);
+                    }
+                    return new ResponseEntity<>(productList,HttpStatus.OK);
+                }else {
+                    return new ResponseEntity<>("No cart for "+userEntity.get().getUsername(),HttpStatus.NOT_FOUND);
+                }
+            }else {
+                return new ResponseEntity<>("No cart for "+userEntity.get().getUsername(),HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            throw new CustomException("Failed to fetch cart");
         }
     }
 
