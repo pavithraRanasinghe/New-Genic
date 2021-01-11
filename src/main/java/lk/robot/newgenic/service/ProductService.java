@@ -17,4 +17,6 @@ public interface ProductService {
     ResponseEntity<?> filterProducts(FilterDTO filterDTO);
 
     ResponseEntity<?> getDetail(long productId);
+
+    ResponseEntity<?> relatedProduct(long productId);
 }

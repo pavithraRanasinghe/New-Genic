@@ -26,7 +26,8 @@ public class CartController {
         if (principal == null){
             return new ResponseEntity<>("Unauthorized to access", HttpStatus.UNAUTHORIZED);
         }
-        long userId = Long.parseLong(String.valueOf(principal));
+
+        long userId = Long.parseLong(principal.getName());
         return cartService.addToCart(cartRequestDTO,userId);
     }
 }

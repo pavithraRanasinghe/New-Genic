@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,6 +56,11 @@ public class CartServiceImpl implements CartService {
                     OrderEntity existCart = orderRepository.findByUserEntityAndStatus(userEntity.get(),
                             OrderStatus.CART.toString());
                     if(existCart != null && existCart.getUserEntity().equals(userEntity.get())){
+                        OrderDetailEntity existProduct = orderDetailRepository.
+                                findByOrderEntityAndProductEntity(existCart, productEntity.get());
+                        if (existProduct != null){
+                            return new ResponseEntity<>("Product already added to cart",HttpStatus.CONFLICT);
+                        }
                         existCart.setOrderPrice(existCart.getOrderPrice() + cartRequestDTO.getOrderPrice());
                         existCart.setTotalWeight(existCart.getTotalWeight() + cartRequestDTO.getWeight());
 
@@ -71,6 +77,7 @@ public class CartServiceImpl implements CartService {
                         OrderEntity orderEntity = new OrderEntity();
                         orderEntity.setOrderPrice(cartRequestDTO.getOrderPrice());
                         orderEntity.setStatus(OrderStatus.CART.toString());
+                        orderEntity.setTotalWeight(cartRequestDTO.getWeight());
                         orderEntity.setUserEntity(userEntity.get());
 
                         OrderEntity order = orderRepository.save(orderEntity);

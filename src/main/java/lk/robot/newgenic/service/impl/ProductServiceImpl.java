@@ -101,4 +101,32 @@ public class ProductServiceImpl implements ProductService {
             return new ResponseEntity<>("Product ID not found",HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public ResponseEntity<?> relatedProduct(long productId) {
+        try{
+            if (productId != 0){
+                Optional<ProductEntity> productEntity = productRepository.findById(productId);
+                if (productEntity.isPresent()){
+                    List<ProductEntity> productEntityList = productRepository.
+                            findBySubCategoryEntityAndActive(productEntity.get().getSubCategoryEntity(), true);
+                    if (!productEntityList.isEmpty()){
+                        List<ProductDTO> productList = new ArrayList<>();
+                        for (ProductEntity product :productEntityList) {
+                            productList.add(EntityToDto.productEntityToDto(product));
+                        }
+                        return new ResponseEntity<>(productList,HttpStatus.OK);
+                    }else {
+                        return new ResponseEntity<>("Related products not found",HttpStatus.NOT_FOUND);
+                    }
+                }else {
+                    return new ResponseEntity<>("Product not found",HttpStatus.NOT_FOUND);
+                }
+            }else {
+                return new ResponseEntity<>("Product id not found",HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+            throw new CustomException("Failed to fetch related products");
+        }
+    }
 }

@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             if (!userSignUpDTO.equals(null)) {
                 UserEntity userEntity = EntityToDto.userDtoToEntity(userSignUpDTO);
                 userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-                userEntity.setRegisteredDate(DateConverter.localDateToUtil(LocalDate.now()));
-                userEntity.setRegisteredTime(DateConverter.localTimeToUtil(LocalTime.now()));
+                userEntity.setRegisteredDate(DateConverter.localDateToSql(LocalDate.now()));
+                userEntity.setRegisteredTime(DateConverter.localTimeToSql(LocalTime.now()));
 
                 UserEntity save = userRepository.save(userEntity);
 
