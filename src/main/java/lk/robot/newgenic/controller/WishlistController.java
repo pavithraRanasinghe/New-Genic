@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/v1/wishlist")
 @CrossOrigin
@@ -18,9 +20,9 @@ public class WishlistController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addToWishList(){
-        // TODO: 31/12/2020 Use Token
-        return null;
+    public ResponseEntity<?> addToWishList(@PathVariable long productId, Principal principal){
+        long userId = Long.parseLong(String.valueOf(principal));
+        return wishlistService.addToWishlist(productId,userId);
     }
 
     @GetMapping("/{userId}")
