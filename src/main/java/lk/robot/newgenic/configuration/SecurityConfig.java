@@ -48,8 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
 
-                .antMatchers("/api/v1/user/signUp").permitAll()
-                .antMatchers("/api/v1/user/logIn").permitAll()
+                .antMatchers("/user/signUp").permitAll()
+                .antMatchers("/user/logIn").permitAll()
 
                 .anyRequest()
                 .authenticated();

@@ -31,7 +31,8 @@ public class ProductFeedbackEntity {
     }
 
     public ProductFeedbackEntity(long productFeedbackId,
-                                 int rate, String message,
+                                 int rate,
+                                 String message,
                                  Date addedDate,
                                  Time addedTime,
                                  UserEntity userEntity,
