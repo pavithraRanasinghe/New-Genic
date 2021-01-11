@@ -2,6 +2,7 @@ package lk.robot.newgenic.controller;
 
 import lk.robot.newgenic.service.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,12 @@ public class WishlistController {
         return wishlistService.addToWishlist(productId,userId);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getWishList(@PathVariable long userId){
+    @GetMapping()
+    public ResponseEntity<?> getWishList(Principal principal){
+        if (principal == null){
+            return new ResponseEntity<>("Unauthorized to access", HttpStatus.UNAUTHORIZED);
+        }
+        long userId = Long.parseLong(String.valueOf(principal));
         return wishlistService.getWishList(userId);
     }
 
