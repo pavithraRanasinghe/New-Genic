@@ -9,11 +9,11 @@ import java.time.ZoneId;
 
 public class DateConverter {
 
-    public static Time localTimeToUtil(LocalTime localtime){
+    public static Time localTimeToSql(LocalTime localtime){
         return Time.valueOf(localtime);
     }
 
-    public static Date localDateToUtil(LocalDate localDate){
+    public static Date localDateToSql(LocalDate localDate){
         return Date.valueOf(localDate);
     }
 

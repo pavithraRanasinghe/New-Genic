@@ -22,6 +22,9 @@ public class WishlistController {
 
     @PostMapping
     public ResponseEntity<?> addToWishList(@PathVariable long productId, Principal principal){
+        if (principal == null){
+            return new ResponseEntity<>("Unauthorized to access", HttpStatus.UNAUTHORIZED);
+        }
         long userId = Long.parseLong(String.valueOf(principal));
         return wishlistService.addToWishlist(productId,userId);
     }

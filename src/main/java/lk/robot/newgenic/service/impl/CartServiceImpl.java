@@ -1,13 +1,19 @@
 package lk.robot.newgenic.service.impl;
 
+import lk.robot.newgenic.dto.Request.CartRequestDTO;
 import lk.robot.newgenic.entity.OrderDetailEntity;
+import lk.robot.newgenic.entity.OrderEntity;
 import lk.robot.newgenic.entity.ProductEntity;
+import lk.robot.newgenic.entity.UserEntity;
+import lk.robot.newgenic.enums.OrderStatus;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.OrderDetailRepository;
 import lk.robot.newgenic.repository.OrderRepository;
 import lk.robot.newgenic.repository.ProductRepository;
+import lk.robot.newgenic.repository.UserRepository;
 import lk.robot.newgenic.service.CartService;
 import lk.robot.newgenic.util.DateConverter;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +29,7 @@ import java.util.Optional;
 public class CartServiceImpl implements CartService {
 
     private ProductRepository productRepository;
+    private UserRepository userRepository;
     private OrderRepository orderRepository;
     private OrderDetailRepository orderDetailRepository;
 
@@ -30,26 +37,54 @@ public class CartServiceImpl implements CartService {
     public CartServiceImpl(
             ProductRepository productRepository,
             OrderRepository orderRepository,
-            OrderDetailRepository orderDetailRepository) {
+            OrderDetailRepository orderDetailRepository,
+            UserRepository userRepository) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public ResponseEntity<?> addToCart(long productId) {
+    public ResponseEntity<?> addToCart(CartRequestDTO cartRequestDTO, long userId) {
         try{
-            if (productId != 0){
-                Optional<ProductEntity> productEntity = productRepository.findById(productId);
-                if (productEntity.isPresent()){
+            if (cartRequestDTO.getProductId() != 0){
+                Optional<ProductEntity> productEntity = productRepository.findById(cartRequestDTO.getProductId());
+                Optional<UserEntity> userEntity = userRepository.findById(userId);
+                if (productEntity.isPresent() && userEntity.isPresent()){
+                    OrderEntity existCart = orderRepository.findByUserEntityAndStatus(userEntity.get(),
+                            OrderStatus.CART.toString());
+                    if(existCart != null && existCart.getUserEntity().equals(userEntity.get())){
+                        existCart.setOrderPrice(existCart.getOrderPrice() + cartRequestDTO.getOrderPrice());
+                        existCart.setTotalWeight(existCart.getTotalWeight() + cartRequestDTO.getWeight());
 
-                    // TODO: 01/01/2021 Use token for fetch user
+                        OrderEntity order = orderRepository.save(existCart);
+                        if (!order.equals(null)){
+                            OrderDetailEntity orderDetailEntity = setValuesToOrderDetail(order, cartRequestDTO, productEntity.get());
 
-                    OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
-                    orderDetailEntity.setProductEntity(productEntity.get());
+                            OrderDetailEntity save = orderDetailRepository.save(orderDetailEntity);
+                            return new ResponseEntity<>("Product add to cart successful",HttpStatus.OK);
+                        }else {
+                            return new ResponseEntity<>("Product add to cart failed",HttpStatus.INTERNAL_SERVER_ERROR);
+                        }
+                    }else{
+                        OrderEntity orderEntity = new OrderEntity();
+                        orderEntity.setOrderPrice(cartRequestDTO.getOrderPrice());
+                        orderEntity.setStatus(OrderStatus.CART.toString());
+                        orderEntity.setUserEntity(userEntity.get());
 
+                        OrderEntity order = orderRepository.save(orderEntity);
+                        if (!order.equals(null)){
+                            OrderDetailEntity orderDetailEntity = setValuesToOrderDetail(order, cartRequestDTO, productEntity.get());
+                            OrderDetailEntity save = orderDetailRepository.save(orderDetailEntity);
+
+                            return new ResponseEntity<>("Product add to cart successful",HttpStatus.OK);
+                        }else{
+                            return new ResponseEntity<>("Product add to cart failed",HttpStatus.INTERNAL_SERVER_ERROR);
+                        }
+                    }
                 }else {
-                    return new ResponseEntity<>("Product not found",HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>("Product or user not found",HttpStatus.NOT_FOUND);
                 }
             }else{
                 return new ResponseEntity<>("Product ID not found", HttpStatus.BAD_REQUEST);
@@ -57,6 +92,19 @@ public class CartServiceImpl implements CartService {
         }catch (Exception e){
             throw new CustomException("Product add to cart failed");
         }
-        return null;
+    }
+
+    private OrderDetailEntity setValuesToOrderDetail(OrderEntity order,
+                                                     CartRequestDTO cartRequestDTO,
+                                                     ProductEntity productEntity){
+        OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+        orderDetailEntity.setQuantity(cartRequestDTO.getQty());
+        orderDetailEntity.setOrderPrice(cartRequestDTO.getOrderPrice());
+        orderDetailEntity.setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
+        orderDetailEntity.setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
+        orderDetailEntity.setProductEntity(productEntity);
+        orderDetailEntity.setOrderEntity(order);
+
+        return orderDetailEntity;
     }
 }
