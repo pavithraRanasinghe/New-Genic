@@ -36,13 +36,6 @@ public class UserEntity {
     private Date registeredDate;
     @Column(name = "registered_time")
     private Time registeredTime;
-    @ManyToMany
-    @JoinTable(
-            name = "user_address_details",
-            joinColumns = {@JoinColumn (name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_address_id")}
-    )
-    private List<UserAddressEntity> userAddress = new ArrayList<>();
 
     public UserEntity() {
     }
@@ -58,8 +51,7 @@ public class UserEntity {
                       String username,
                       String password,
                       Date registeredDate,
-                      Time registeredTime,
-                      List<UserAddressEntity> userAddress) {
+                      Time registeredTime) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -72,7 +64,6 @@ public class UserEntity {
         this.password = password;
         this.registeredDate = registeredDate;
         this.registeredTime = registeredTime;
-        this.userAddress = userAddress;
     }
 
     public long getUserId() {
@@ -171,14 +162,6 @@ public class UserEntity {
         this.registeredTime = registeredTime;
     }
 
-    public List<UserAddressEntity> getUserAddress() {
-        return userAddress;
-    }
-
-    public void setUserAddress(List<UserAddressEntity> userAddress) {
-        this.userAddress = userAddress;
-    }
-
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -194,7 +177,6 @@ public class UserEntity {
                 ", password='" + password + '\'' +
                 ", registeredDate=" + registeredDate +
                 ", registeredTime=" + registeredTime +
-                ", userAddress=" + userAddress +
                 '}';
     }
 }

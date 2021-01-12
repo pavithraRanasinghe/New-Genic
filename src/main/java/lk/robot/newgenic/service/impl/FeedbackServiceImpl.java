@@ -56,7 +56,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                                 feedbackEntity.getRate(),
                                 feedbackEntity.getMessage(),
                                 feedbackEntity.getAddedDate(),
-                                EntityToDto.userEntityToDto(feedbackEntity.getUserEntity())
+                                EntityToDto.userEntityToUserFeedbackDto(feedbackEntity.getUserEntity())
                         );
 
                         feedbackList.add(productFeedbackResponseDTO);

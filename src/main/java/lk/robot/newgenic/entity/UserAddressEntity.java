@@ -28,8 +28,6 @@ public class UserAddressEntity {
     private int postalCode;
     @Column
     private String type;
-    @ManyToMany(mappedBy = "userAddress")
-    private List<UserEntity> userEntityList  = new ArrayList<>();
 
     public UserAddressEntity() {
     }
@@ -42,8 +40,7 @@ public class UserAddressEntity {
                              String state,
                              String mobile,
                              int postalCode,
-                             String type,
-                             List<UserEntity> userEntityList) {
+                             String type) {
         this.userAddress_id = userAddress_id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -53,7 +50,6 @@ public class UserAddressEntity {
         this.mobile = mobile;
         this.postalCode = postalCode;
         this.type = type;
-        this.userEntityList = userEntityList;
     }
 
     public long getUserAddress_id() {
@@ -128,14 +124,6 @@ public class UserAddressEntity {
         this.type = type;
     }
 
-    public List<UserEntity> getUserEntityList() {
-        return userEntityList;
-    }
-
-    public void setUserEntityList(List<UserEntity> userEntityList) {
-        this.userEntityList = userEntityList;
-    }
-
     @Override
     public String toString() {
         return "UserAddressEntity{" +
@@ -148,7 +136,6 @@ public class UserAddressEntity {
                 ", mobile='" + mobile + '\'' +
                 ", postalCode=" + postalCode +
                 ", type='" + type + '\'' +
-                ", userEntityList=" + userEntityList +
                 '}';
     }
 }

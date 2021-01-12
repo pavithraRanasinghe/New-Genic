@@ -1,5 +1,6 @@
 package lk.robot.newgenic.controller;
 
+import lk.robot.newgenic.dto.Request.UserDetailDTO;
 import lk.robot.newgenic.dto.Request.UserSignUpDTO;
 import lk.robot.newgenic.jwt.AuthenticationRequest;
 import lk.robot.newgenic.service.UserService;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/user")
@@ -31,5 +34,11 @@ public class UserController {
     public ResponseEntity<?> userLogin(@RequestBody AuthenticationRequest authenticationRequest){
         ResponseEntity<?> responseEntity = userService.logIn(authenticationRequest);
         return responseEntity;
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO, Principal principal){
+        long userId = Long.parseLong(principal.getName());
+        return userService.updateUser(userDetailDTO,userId);
     }
 }

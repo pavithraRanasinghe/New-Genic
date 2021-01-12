@@ -22,14 +22,15 @@ public class DeliveryEntity {
     private String mobile;
     @Column
     private String website;
-    @Column
-    private double cost_per_unit;
     @Column(name = "registration_date")
     private Date registrationDate;
     @Column(name = "registration_time")
     private Time registrationTime;
     @Column(name = "registration_number")
     private String registrationNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "delivery_cost_id",referencedColumnName = "delivery_cost_id")
+    private DeliveryCostEntity deliveryCostEntity;
     @ManyToOne
     @JoinColumn(name = "fk_admin_id")
     private AdminEntity adminEntity;
@@ -43,10 +44,10 @@ public class DeliveryEntity {
                           String gmail,
                           String mobile,
                           String website,
-                          double cost_per_unit,
                           Date registrationDate,
                           Time registrationTime,
                           String registrationNumber,
+                          DeliveryCostEntity deliveryCostEntity,
                           AdminEntity adminEntity) {
         this.deliveryId = deliveryId;
         this.name = name;
@@ -54,10 +55,10 @@ public class DeliveryEntity {
         this.gmail = gmail;
         this.mobile = mobile;
         this.website = website;
-        this.cost_per_unit = cost_per_unit;
         this.registrationDate = registrationDate;
         this.registrationTime = registrationTime;
         this.registrationNumber = registrationNumber;
+        this.deliveryCostEntity = deliveryCostEntity;
         this.adminEntity = adminEntity;
     }
 
@@ -109,14 +110,6 @@ public class DeliveryEntity {
         this.website = website;
     }
 
-    public double getCost_per_unit() {
-        return cost_per_unit;
-    }
-
-    public void setCost_per_unit(double cost_per_unit) {
-        this.cost_per_unit = cost_per_unit;
-    }
-
     public Date getRegistrationDate() {
         return registrationDate;
     }
@@ -141,6 +134,14 @@ public class DeliveryEntity {
         this.registrationNumber = registrationNumber;
     }
 
+    public DeliveryCostEntity getDeliveryCostEntity() {
+        return deliveryCostEntity;
+    }
+
+    public void setDeliveryCostEntity(DeliveryCostEntity deliveryCostEntity) {
+        this.deliveryCostEntity = deliveryCostEntity;
+    }
+
     public AdminEntity getAdminEntity() {
         return adminEntity;
     }
@@ -158,10 +159,10 @@ public class DeliveryEntity {
                 ", gmail='" + gmail + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", website='" + website + '\'' +
-                ", cost_per_unit=" + cost_per_unit +
                 ", registrationDate=" + registrationDate +
                 ", registrationTime=" + registrationTime +
                 ", registrationNumber='" + registrationNumber + '\'' +
+                ", deliveryCostEntity=" + deliveryCostEntity +
                 ", adminEntity=" + adminEntity +
                 '}';
     }

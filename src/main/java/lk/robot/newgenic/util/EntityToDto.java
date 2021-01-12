@@ -26,7 +26,7 @@ public class EntityToDto {
         );
     }
 
-    public static UserFeedbackDTO userEntityToDto(UserEntity userEntity){
+    public static UserFeedbackDTO userEntityToUserFeedbackDto(UserEntity userEntity){
         return new UserFeedbackDTO(
                 userEntity.getUserId(),
                 userEntity.getFirstName(),
