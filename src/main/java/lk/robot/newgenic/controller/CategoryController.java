@@ -23,13 +23,13 @@ public class CategoryController {
         return categoryService.getAll();
     }
 
-    @GetMapping("/mainSubCategoryProducts/{mainSubCategoryid}")
-    public ResponseEntity<?> getMainSubCategoryProducts(@PathVariable long mainSubCategoryid){
-        return categoryService.getMainSubCategoryProducts(mainSubCategoryid);
+    @GetMapping("/mainSubCategoryProducts/{mainSubCategoryId}")
+    public ResponseEntity<?> getMainSubCategoryProducts(@PathVariable long mainSubCategoryId,@RequestParam int index,@RequestParam int size){
+        return categoryService.getMainSubCategoryProducts(mainSubCategoryId,index,size);
     }
 
-    @GetMapping("/subCategoryProducts/{subCategoryid}")
-    public ResponseEntity<?> getSubCategoryProducts(@PathVariable long subCategoryid){
-        return categoryService.getSubCategoryProducts(subCategoryid);
+    @GetMapping("/subCategoryProducts/{subCategoryId}")
+    public ResponseEntity<?> getSubCategoryProducts(@PathVariable long subCategoryId,@RequestParam int index,@RequestParam int size){
+        return categoryService.getSubCategoryProducts(subCategoryId,index,size);
     }
 }

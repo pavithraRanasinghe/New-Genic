@@ -17,10 +17,6 @@ public class OrderDetailEntity {
     private int quantity;
     @Column(name = "order_price")
     private double orderPrice;
-    @Column(name = "order_date")
-    private Date orderDate;
-    @Column(name = "order_time")
-    private Time orderTime;
     @ManyToOne
     @JoinColumn(name = "fk_product_id")
     private ProductEntity productEntity;
@@ -37,16 +33,12 @@ public class OrderDetailEntity {
     public OrderDetailEntity(long orderDetailId,
                              int quantity,
                              double orderPrice,
-                             Date orderDate,
-                             Time orderTime,
                              ProductEntity productEntity,
                              OrderEntity orderEntity,
                              ReturnEntity returnEntity) {
         this.orderDetailId = orderDetailId;
         this.quantity = quantity;
         this.orderPrice = orderPrice;
-        this.orderDate = orderDate;
-        this.orderTime = orderTime;
         this.productEntity = productEntity;
         this.orderEntity = orderEntity;
         this.returnEntity = returnEntity;
@@ -74,22 +66,6 @@ public class OrderDetailEntity {
 
     public void setOrderPrice(double orderPrice) {
         this.orderPrice = orderPrice;
-    }
-
-    public Date getOrderDate() {
-        return orderDate;
-    }
-
-    public Time getOrderTime() {
-        return orderTime;
-    }
-
-    public void setOrderTime(Time orderTime) {
-        this.orderTime = orderTime;
-    }
-
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
     }
 
     public ProductEntity getProductEntity() {
@@ -122,8 +98,6 @@ public class OrderDetailEntity {
                 "orderDetailId=" + orderDetailId +
                 ", quantity=" + quantity +
                 ", orderPrice=" + orderPrice +
-                ", orderDate=" + orderDate +
-                ", orderTime=" + orderTime +
                 ", productEntity=" + productEntity +
                 ", orderEntity=" + orderEntity +
                 ", returnEntity=" + returnEntity +

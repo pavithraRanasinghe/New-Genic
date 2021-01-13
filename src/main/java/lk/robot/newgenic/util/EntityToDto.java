@@ -22,7 +22,8 @@ public class EntityToDto {
                 productEntity.getSalePrice(),
                 productEntity.getRetailPrice(),
                 productEntity.getAddedDate(),
-                productEntity.isActive()
+                productEntity.isActive(),
+                productEntity.isFreeShipping()
         );
     }
 

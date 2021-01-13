@@ -20,6 +20,7 @@ public class ProductDTO {
     private double retailPrice;
     private Date addedDate;
     private boolean active;
+    private boolean isFreeShipping;
 
     public ProductDTO() {
     }
@@ -37,7 +38,8 @@ public class ProductDTO {
             double salePrice,
             double retailPrice,
             Date addedDate,
-            boolean active) {
+            boolean active,
+            boolean isFreeShipping) {
         this.productId = productId;
         this.productCode = productCode;
         this.name = name;
@@ -51,6 +53,7 @@ public class ProductDTO {
         this.retailPrice = retailPrice;
         this.addedDate = addedDate;
         this.active = active;
+        this.isFreeShipping = isFreeShipping;
     }
 
     public long getProductId() {

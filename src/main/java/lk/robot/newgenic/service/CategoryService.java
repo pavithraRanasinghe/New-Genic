@@ -9,7 +9,7 @@ public interface CategoryService {
 
     ResponseEntity<?> getAll();
 
-    ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId);
+    ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId,int index,int size);
 
-    ResponseEntity<?> getSubCategoryProducts(long subCategoryId);
+    ResponseEntity<?> getSubCategoryProducts(long subCategoryId,int index,int size);
 }

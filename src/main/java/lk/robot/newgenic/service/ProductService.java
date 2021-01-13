@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    ResponseEntity<?> newArrivals();
+    ResponseEntity<?> newArrivals(int index,int size);
 
     ResponseEntity<?> fantechProduct();
 
@@ -18,5 +18,5 @@ public interface ProductService {
 
     ResponseEntity<?> getDetail(long productId);
 
-    ResponseEntity<?> relatedProduct(long productId);
+    ResponseEntity<?> relatedProduct(long productId,int index,int size);
 }

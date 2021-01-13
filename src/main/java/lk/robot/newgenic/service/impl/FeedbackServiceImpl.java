@@ -15,6 +15,7 @@ import lk.robot.newgenic.util.DateConverter;
 import lk.robot.newgenic.util.EntityToDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,11 +43,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public ResponseEntity<?> getFeedback(long productId) {
+    public ResponseEntity<?> getFeedback(long productId,int index,int size) {
         try{
             Optional<ProductEntity> productEntity = productRepository.findById(productId);
             if(productEntity.isPresent()){
-                List<ProductFeedbackEntity> productFeedbackList = feedbackRepository.findByProductEntity(productEntity.get());
+                List<ProductFeedbackEntity> productFeedbackList = feedbackRepository.findByProductEntityAndApproved(productEntity.get(),true, PageRequest.of(index, size));
                 if (!productFeedbackList.isEmpty()){
                     List<ProductFeedbackResponseDTO> feedbackList = new ArrayList<>();
                     for (ProductFeedbackEntity feedbackEntity:productFeedbackList) {

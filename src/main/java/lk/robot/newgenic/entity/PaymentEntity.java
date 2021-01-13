@@ -15,11 +15,19 @@ public class PaymentEntity {
     @Column(name = "order_price")
     private double orderPrice;
     @Column(name = "delivery_price")
-    private double deliverYPrice;
+    private double deliveryPrice;
+    @Column(name = "free_delivery_price")
+    private double freeDeliveryPrice;
+    @Column(name = "discount_price")
+    private double discountPrice;
+    @Column
+    private double refund;
     @Column(name = "payment_date")
     private Date paymentDate;
     @Column(name = "payment_time")
     private Time paymentTime;
+    @Column(name = "is_paid")
+    private boolean isPaid;
     @OneToOne(mappedBy = "paymentEntity")
     private OrderEntity orderEntity;
 
@@ -28,15 +36,23 @@ public class PaymentEntity {
 
     public PaymentEntity(long paymentId,
                          double orderPrice,
-                         double deliverYPrice,
+                         double deliveryPrice,
+                         double freeDeliveryPrice,
+                         double discountPrice,
+                         double refund,
                          Date paymentDate,
                          Time paymentTime,
+                         boolean isPaid,
                          OrderEntity orderEntity) {
         this.paymentId = paymentId;
         this.orderPrice = orderPrice;
-        this.deliverYPrice = deliverYPrice;
+        this.deliveryPrice = deliveryPrice;
+        this.freeDeliveryPrice = freeDeliveryPrice;
+        this.discountPrice = discountPrice;
+        this.refund = refund;
         this.paymentDate = paymentDate;
         this.paymentTime = paymentTime;
+        this.isPaid = isPaid;
         this.orderEntity = orderEntity;
     }
 
@@ -56,12 +72,12 @@ public class PaymentEntity {
         this.orderPrice = orderPrice;
     }
 
-    public double getDeliverYPrice() {
-        return deliverYPrice;
+    public double getDeliveryPrice() {
+        return deliveryPrice;
     }
 
-    public void setDeliverYPrice(double deliverYPrice) {
-        this.deliverYPrice = deliverYPrice;
+    public void setDeliveryPrice(double deliveryPrice) {
+        this.deliveryPrice = deliveryPrice;
     }
 
     public Date getPaymentDate() {
@@ -88,14 +104,50 @@ public class PaymentEntity {
         this.orderEntity = orderEntity;
     }
 
+    public double getFreeDeliveryPrice() {
+        return freeDeliveryPrice;
+    }
+
+    public void setFreeDeliveryPrice(double freeDeliveryPrice) {
+        this.freeDeliveryPrice = freeDeliveryPrice;
+    }
+
+    public double getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(double discountPrice) {
+        this.discountPrice = discountPrice;
+    }
+
+    public double getRefund() {
+        return refund;
+    }
+
+    public void setRefund(double refund) {
+        this.refund = refund;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
+    }
+
     @Override
     public String toString() {
         return "PaymentEntity{" +
                 "paymentId=" + paymentId +
                 ", orderPrice=" + orderPrice +
-                ", deliverYPrice=" + deliverYPrice +
+                ", deliveryPrice=" + deliveryPrice +
+                ", freeDeliveryPrice=" + freeDeliveryPrice +
+                ", discountPrice=" + discountPrice +
+                ", refund=" + refund +
                 ", paymentDate=" + paymentDate +
                 ", paymentTime=" + paymentTime +
+                ", isPaid=" + isPaid +
                 ", orderEntity=" + orderEntity +
                 '}';
     }

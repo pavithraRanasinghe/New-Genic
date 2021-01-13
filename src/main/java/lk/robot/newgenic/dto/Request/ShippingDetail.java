@@ -1,29 +1,29 @@
 package lk.robot.newgenic.dto.Request;
 
-public class ShippingDetailDTO {
+public class ShippingDetail {
 
     private String firstName;
     private String lastName;
     private String address;
-    private String state;
+    private String city;
     private String district;
     private int postalCode;
     private String mobile;
 
-    public ShippingDetailDTO() {
+    public ShippingDetail() {
     }
 
-    public ShippingDetailDTO(String firstName,
-                             String lastName,
-                             String address,
-                             String state,
-                             String district,
-                             int postalCode,
-                             String mobile) {
+    public ShippingDetail(String firstName,
+                          String lastName,
+                          String address,
+                          String city,
+                          String district,
+                          int postalCode,
+                          String mobile) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-        this.state = state;
+        this.city = city;
         this.district = district;
         this.postalCode = postalCode;
         this.mobile = mobile;
@@ -53,12 +53,12 @@ public class ShippingDetailDTO {
         this.address = address;
     }
 
-    public String getState() {
-        return state;
+    public String getCity() {
+        return city;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getDistrict() {
@@ -91,7 +91,7 @@ public class ShippingDetailDTO {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
-                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
                 ", postalCode=" + postalCode +
                 ", mobile='" + mobile + '\'' +

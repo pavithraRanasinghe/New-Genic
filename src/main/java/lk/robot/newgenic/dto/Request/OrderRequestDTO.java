@@ -3,29 +3,29 @@ package lk.robot.newgenic.dto.Request;
 public class OrderRequestDTO {
     private long productId;
     private int qty;
-    private double salePrice;
     private double retailPrice;
-    private BillingDetailDTO billingDetailDTO;
-    private ShippingDetailDTO shippingDetailDTO;
     private long deliveryId;
+    private double deliveryCost;
+    private BillingDetail billingDetail;
+    private ShippingDetail shippingDetail;
 
     public OrderRequestDTO() {
     }
 
     public OrderRequestDTO(long productId,
                            int qty,
-                           double salePrice,
                            double retailPrice,
-                           BillingDetailDTO billingDetailDTO,
-                           ShippingDetailDTO shippingDetailDTO,
-                           long deliveryId) {
+                           long deliveryId,
+                           double deliveryCost,
+                           BillingDetail billingDetail,
+                           ShippingDetail shippingDetail) {
         this.productId = productId;
         this.qty = qty;
-        this.salePrice = salePrice;
         this.retailPrice = retailPrice;
-        this.billingDetailDTO = billingDetailDTO;
-        this.shippingDetailDTO = shippingDetailDTO;
         this.deliveryId = deliveryId;
+        this.deliveryCost = deliveryCost;
+        this.billingDetail = billingDetail;
+        this.shippingDetail = shippingDetail;
     }
 
     public long getProductId() {
@@ -44,14 +44,6 @@ public class OrderRequestDTO {
         this.qty = qty;
     }
 
-    public double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
-    }
-
     public double getRetailPrice() {
         return retailPrice;
     }
@@ -60,20 +52,20 @@ public class OrderRequestDTO {
         this.retailPrice = retailPrice;
     }
 
-    public BillingDetailDTO getBillingDetailDTO() {
-        return billingDetailDTO;
+    public BillingDetail getBillingDetail() {
+        return billingDetail;
     }
 
-    public void setBillingDetailDTO(BillingDetailDTO billingDetailDTO) {
-        this.billingDetailDTO = billingDetailDTO;
+    public void setBillingDetail(BillingDetail billingDetail) {
+        this.billingDetail = billingDetail;
     }
 
-    public ShippingDetailDTO getShippingDetailDTO() {
-        return shippingDetailDTO;
+    public ShippingDetail getShippingDetail() {
+        return shippingDetail;
     }
 
-    public void setShippingDetailDTO(ShippingDetailDTO shippingDetailDTO) {
-        this.shippingDetailDTO = shippingDetailDTO;
+    public void setShippingDetail(ShippingDetail shippingDetail) {
+        this.shippingDetail = shippingDetail;
     }
 
     public long getDeliveryId() {
@@ -84,16 +76,24 @@ public class OrderRequestDTO {
         this.deliveryId = deliveryId;
     }
 
+    public double getDeliveryCost() {
+        return deliveryCost;
+    }
+
+    public void setDeliveryCost(double deliveryCost) {
+        this.deliveryCost = deliveryCost;
+    }
+
     @Override
     public String toString() {
         return "OrderRequestDTO{" +
                 "productId=" + productId +
                 ", qty=" + qty +
-                ", salePrice=" + salePrice +
                 ", retailPrice=" + retailPrice +
-                ", billingDetailDTO=" + billingDetailDTO +
-                ", shippingDetailDTO=" + shippingDetailDTO +
                 ", deliveryId=" + deliveryId +
+                ", deliveryCost=" + deliveryCost +
+                ", billingDetailDTO=" + billingDetail +
+                ", shippingDetailDTO=" + shippingDetail +
                 '}';
     }
 }

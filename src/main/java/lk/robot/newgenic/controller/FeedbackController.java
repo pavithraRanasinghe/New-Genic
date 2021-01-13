@@ -20,9 +20,9 @@ public class FeedbackController {
         this.feedbackService = feedbackService;
     }
 
-    @GetMapping("view/{productId}")
-    public ResponseEntity<?> getFeedback(@PathVariable long productId){
-        return feedbackService.getFeedback(productId);
+    @GetMapping("/{productId}")
+    public ResponseEntity<?> getFeedback(@PathVariable long productId,@RequestParam int index,@RequestParam int size){
+        return feedbackService.getFeedback(productId,index,size);
     }
 
     @PostMapping

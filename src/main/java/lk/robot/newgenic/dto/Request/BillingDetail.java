@@ -1,27 +1,27 @@
 package lk.robot.newgenic.dto.Request;
 
-public class BillingDetailDTO {
+public class BillingDetail {
 
     private String firstName;
     private String lastName;
     private String address;
-    private String state;
+    private String city;
     private String district;
     private String mobile;
 
-    public BillingDetailDTO() {
+    public BillingDetail() {
     }
 
-    public BillingDetailDTO(String firstName,
-                            String lastName,
-                            String address,
-                            String state,
-                            String district,
-                            String mobile) {
+    public BillingDetail(String firstName,
+                         String lastName,
+                         String address,
+                         String city,
+                         String district,
+                         String mobile) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-        this.state = state;
+        this.city = city;
         this.district = district;
         this.mobile = mobile;
     }
@@ -50,12 +50,12 @@ public class BillingDetailDTO {
         this.address = address;
     }
 
-    public String getState() {
-        return state;
+    public String getCity() {
+        return city;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getDistrict() {
@@ -80,7 +80,7 @@ public class BillingDetailDTO {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
-                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
                 ", mobile='" + mobile + '\'' +
                 '}';

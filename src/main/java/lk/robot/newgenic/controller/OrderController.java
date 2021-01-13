@@ -20,9 +20,9 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping
+    @PostMapping("/placeOrder")
     public ResponseEntity<?> placeOrder(@RequestBody OrderRequestDTO orderRequestDTO, Principal principal){
         long userId = Long.parseLong(principal.getName());
-        return orderService.placeOrder(orderRequestDTO);
+        return orderService.placeOrder(orderRequestDTO,userId);
     }
 }

@@ -10,7 +10,7 @@ public class UserDetailDTO {
     private String profilePicture;
     private String address;
     private String district;
-    private String state;
+    private String city;
     private int postalCode;
 
     public UserDetailDTO() {
@@ -24,7 +24,7 @@ public class UserDetailDTO {
                          String profilePicture,
                          String address,
                          String district,
-                         String state,
+                         String city,
                          int postalCode) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,7 +34,7 @@ public class UserDetailDTO {
         this.profilePicture = profilePicture;
         this.address = address;
         this.district = district;
-        this.state = state;
+        this.city = city;
         this.postalCode = postalCode;
     }
 
@@ -102,12 +102,12 @@ public class UserDetailDTO {
         this.district = district;
     }
 
-    public String getState() {
-        return state;
+    public String getCity() {
+        return city;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public int getPostalCode() {
@@ -129,7 +129,7 @@ public class UserDetailDTO {
                 ", profilePicture='" + profilePicture + '\'' +
                 ", address='" + address + '\'' +
                 ", district='" + district + '\'' +
-                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
                 ", postalCode=" + postalCode +
                 '}';
     }

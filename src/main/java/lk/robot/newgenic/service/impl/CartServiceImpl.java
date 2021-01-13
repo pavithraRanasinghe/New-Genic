@@ -64,7 +64,6 @@ public class CartServiceImpl implements CartService {
                         if (existProduct != null){
                             return new ResponseEntity<>("Product already added to cart",HttpStatus.CONFLICT);
                         }
-                        existCart.setOrderPrice(existCart.getOrderPrice() + cartRequestDTO.getOrderPrice());
                         existCart.setTotalWeight(existCart.getTotalWeight() + cartRequestDTO.getWeight());
 
                         OrderEntity order = orderRepository.save(existCart);
@@ -78,7 +77,6 @@ public class CartServiceImpl implements CartService {
                         }
                     }else{
                         OrderEntity orderEntity = new OrderEntity();
-                        orderEntity.setOrderPrice(cartRequestDTO.getOrderPrice());
                         orderEntity.setStatus(OrderStatus.CART.toString());
                         orderEntity.setTotalWeight(cartRequestDTO.getWeight());
                         orderEntity.setUserEntity(userEntity.get());
@@ -137,8 +135,6 @@ public class CartServiceImpl implements CartService {
         OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
         orderDetailEntity.setQuantity(cartRequestDTO.getQty());
         orderDetailEntity.setOrderPrice(cartRequestDTO.getOrderPrice());
-        orderDetailEntity.setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
-        orderDetailEntity.setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
         orderDetailEntity.setProductEntity(productEntity);
         orderDetailEntity.setOrderEntity(order);
 

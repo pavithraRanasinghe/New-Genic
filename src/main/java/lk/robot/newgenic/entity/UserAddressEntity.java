@@ -21,7 +21,7 @@ public class UserAddressEntity {
     @Column
     private String district;
     @Column
-    private String state;
+    private String city;
     @Column
     private String mobile;
     @Column(name = "postal_code")
@@ -37,7 +37,7 @@ public class UserAddressEntity {
                              String lastName,
                              String address,
                              String district,
-                             String state,
+                             String city,
                              String mobile,
                              int postalCode,
                              String type) {
@@ -46,7 +46,7 @@ public class UserAddressEntity {
         this.lastName = lastName;
         this.address = address;
         this.district = district;
-        this.state = state;
+        this.city = city;
         this.mobile = mobile;
         this.postalCode = postalCode;
         this.type = type;
@@ -92,12 +92,12 @@ public class UserAddressEntity {
         this.district = district;
     }
 
-    public String getState() {
-        return state;
+    public String getCity() {
+        return city;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getMobile() {
@@ -132,7 +132,7 @@ public class UserAddressEntity {
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
                 ", district='" + district + '\'' +
-                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", postalCode=" + postalCode +
                 ", type='" + type + '\'' +

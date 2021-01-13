@@ -44,6 +44,7 @@ public class ProductEntity {
     private boolean active;
     @Column(name = "free_shipping")
     private boolean freeShipping;
+
     @ManyToOne
     @JoinColumn(name = "fk_sub_category_id")
     private SubCategoryEntity subCategoryEntity;

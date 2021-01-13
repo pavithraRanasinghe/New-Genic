@@ -60,6 +60,8 @@ public class DeliveryCostEntity {
     private double monaragala;
     @Column
     private double badulla;
+    @Column(name = "cost_per_extra")
+    private double costPerExtra;
     @OneToOne(mappedBy = "deliveryCostEntity")
     private DeliveryEntity deliveryEntity;
 
@@ -91,7 +93,8 @@ public class DeliveryCostEntity {
                               double batticaloa,
                               double ampara,
                               double monaragala,
-                              double badulla) {
+                              double badulla,
+                              double costPerExtra) {
         this.deliveryCostId = deliveryCostId;
         this.galle = galle;
         this.matara = matara;
@@ -118,11 +121,12 @@ public class DeliveryCostEntity {
         this.ampara = ampara;
         this.monaragala = monaragala;
         this.badulla = badulla;
+        this.costPerExtra = costPerExtra;
     }
 
     @Override
     public String toString() {
-        return "DeliveryCost{" +
+        return "DeliveryCostEntity{" +
                 "deliveryCostId=" + deliveryCostId +
                 ", galle=" + galle +
                 ", matara=" + matara +
@@ -149,6 +153,8 @@ public class DeliveryCostEntity {
                 ", ampara=" + ampara +
                 ", monaragala=" + monaragala +
                 ", badulla=" + badulla +
+                ", costPerExtra=" + costPerExtra +
+                ", deliveryEntity=" + deliveryEntity +
                 '}';
     }
 
@@ -358,5 +364,21 @@ public class DeliveryCostEntity {
 
     public void setBadulla(double badulla) {
         this.badulla = badulla;
+    }
+
+    public double getCostPerExtra() {
+        return costPerExtra;
+    }
+
+    public void setCostPerExtra(double costPerExtra) {
+        this.costPerExtra = costPerExtra;
+    }
+
+    public DeliveryEntity getDeliveryEntity() {
+        return deliveryEntity;
+    }
+
+    public void setDeliveryEntity(DeliveryEntity deliveryEntity) {
+        this.deliveryEntity = deliveryEntity;
     }
 }

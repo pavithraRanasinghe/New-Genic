@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
                             UserAddressEntity addressDetail = detailEntity.getUserAddressEntity();
                             addressDetail.setAddress(userDetailDTO.getAddress());
                             addressDetail.setDistrict(userDetailDTO.getDistrict());
-                            addressDetail.setState(userDetailDTO.getState());
+                            addressDetail.setCity(userDetailDTO.getCity());
                             addressDetail.setPostalCode(userDetailDTO.getPostalCode());
                             addressDetail.setFirstName(user.getFirstName());
                             addressDetail.setLastName(user.getLastName());
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
                     UserAddressEntity userAddress = new UserAddressEntity();
                     userAddress.setAddress(userDetailDTO.getAddress());
                     userAddress.setDistrict(userDetailDTO.getDistrict());
-                    userAddress.setState(userDetailDTO.getState());
+                    userAddress.setCity(userDetailDTO.getCity());
                     userAddress.setPostalCode(userDetailDTO.getPostalCode());
                     userAddress.setFirstName(user.getFirstName());
                     userAddress.setLastName(user.getLastName());

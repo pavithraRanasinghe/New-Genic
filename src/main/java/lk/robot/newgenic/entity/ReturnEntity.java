@@ -17,20 +17,21 @@ public class ReturnEntity {
     private Date requestDate;
     @Column(name = "request_time")
     private Date requestTime;
-    @Column
-    private String img;
     @OneToOne(mappedBy = "returnEntity")
     private OrderDetailEntity orderDetailEntity;
 
     public ReturnEntity() {
     }
 
-    public ReturnEntity(long returnRequestId, String reason, Date requestDate, Date requestTime, String img, OrderDetailEntity orderDetailEntity) {
+    public ReturnEntity(long returnRequestId,
+                        String reason,
+                        Date requestDate,
+                        Date requestTime,
+                        OrderDetailEntity orderDetailEntity) {
         this.returnRequestId = returnRequestId;
         this.reason = reason;
         this.requestDate = requestDate;
         this.requestTime = requestTime;
-        this.img = img;
         this.orderDetailEntity = orderDetailEntity;
     }
 
@@ -66,26 +67,6 @@ public class ReturnEntity {
         this.requestTime = requestTime;
     }
 
-    @Override
-    public String toString() {
-        return "ReturnEntity{" +
-                "returnRequestId=" + returnRequestId +
-                ", reason='" + reason + '\'' +
-                ", requestDate=" + requestDate +
-                ", requestTime=" + requestTime +
-                ", img='" + img + '\'' +
-                ", orderDetailEntity=" + orderDetailEntity +
-                '}';
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
     public OrderDetailEntity getOrderDetailEntity() {
         return orderDetailEntity;
     }
@@ -94,4 +75,14 @@ public class ReturnEntity {
         this.orderDetailEntity = orderDetailEntity;
     }
 
+    @Override
+    public String toString() {
+        return "ReturnEntity{" +
+                "returnRequestId=" + returnRequestId +
+                ", reason='" + reason + '\'' +
+                ", requestDate=" + requestDate +
+                ", requestTime=" + requestTime +
+                ", orderDetailEntity=" + orderDetailEntity +
+                '}';
+    }
 }

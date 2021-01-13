@@ -16,6 +16,7 @@ import lk.robot.newgenic.repository.SubCategoryRepository;
 import lk.robot.newgenic.service.CategoryService;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -103,7 +104,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId) {
+    public ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId,int index,int size) {
         try{
             if(mainSubCategoryId != 0){
                 Optional<MainSubCategoryEntity> mainSubCategory = mainSubCategoryRepository.findById(mainSubCategoryId);
@@ -112,7 +113,7 @@ public class CategoryServiceImpl implements CategoryService {
                     if (!subCategoryList.isEmpty()){
                         List<ProductDTO> productList = new ArrayList<>();
                         for (SubCategoryEntity subCategoryEntity:subCategoryList) {
-                            List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity,true);
+                            List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity,true, PageRequest.of(index, size));
                             if (!productEntityList.isEmpty()){
                                 for (ProductEntity productEntity:productEntityList) {
                                     ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
@@ -138,11 +139,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<?> getSubCategoryProducts(long subCategoryId) {
+    public ResponseEntity<?> getSubCategoryProducts(long subCategoryId,int index,int size) {
         if (subCategoryId != 0){
             Optional<SubCategoryEntity> subCategoryEntity = subCategoryRepository.findById(subCategoryId);
             if (subCategoryEntity.isPresent()){
-                List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity.get(),true);
+                List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity.get(),true,PageRequest.of(index, size));
                 if (!productEntityList.isEmpty()){
                     List<ProductDTO> productList = new ArrayList<>();
                     for (ProductEntity productEntity:productEntityList) {

@@ -29,10 +29,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> newArrivals() {
+    public ResponseEntity<?> newArrivals(int index,int size) {
 
         try {
-            List<ProductEntity> list = productRepository.newArrivals(PageRequest.of(1,1));
+            List<ProductEntity> list = productRepository.newArrivals(PageRequest.of(index, size));
             if (!list.isEmpty()){
                 List<ProductDTO> newArrivalList = new ArrayList<>();
                 for (ProductEntity productEntity:list) {
@@ -103,13 +103,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> relatedProduct(long productId) {
+    public ResponseEntity<?> relatedProduct(long productId,int index,int size) {
         try{
             if (productId != 0){
                 Optional<ProductEntity> productEntity = productRepository.findById(productId);
                 if (productEntity.isPresent()){
                     List<ProductEntity> productEntityList = productRepository.
-                            findBySubCategoryEntityAndActive(productEntity.get().getSubCategoryEntity(), true);
+                            findBySubCategoryEntityAndActive(productEntity.get().getSubCategoryEntity(), true,PageRequest.of(index, size));
                     if (!productEntityList.isEmpty()){
                         List<ProductDTO> productList = new ArrayList<>();
                         for (ProductEntity product :productEntityList) {

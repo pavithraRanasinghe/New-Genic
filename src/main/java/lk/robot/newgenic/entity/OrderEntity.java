@@ -14,14 +14,14 @@ public class OrderEntity {
     private long orderId;
     @Column
     private String status;
-    @Column(name = "order_price")
-    private double orderPrice;
-    @Column
-    private double discount;
     @Column(name = "pick_up_date")
     private Date pickUpDate;
     @Column(name = "pick_up_time")
     private Time pickUpTime;
+    @Column(name = "order_date")
+    private Date orderDate;
+    @Column(name = "order_time")
+    private Time orderTime;
     @Column(name = "total_weight")
     private double totalWeight;
     @Column(name = "tracking_number")
@@ -36,36 +36,46 @@ public class OrderEntity {
     @JoinColumn(name = "payment_id",referencedColumnName = "payment_id")
     private PaymentEntity paymentEntity;
     @ManyToOne
-    @JoinColumn(name = "fk_user_address_id")
-    private UserAddressEntity userAddressEntity;
+    @JoinColumn(name = "fk_shipping_detail_id")
+    private UserAddressEntity shippingDetails;
+    @ManyToOne
+    @JoinColumn(name = "fk_billing_detail_id")
+    private UserAddressEntity billingDetail;
+    @ManyToOne
+    @JoinColumn(name = "fk_discount_method_id")
+    private DiscountMethodEntity discountMethodEntity;
 
     public OrderEntity() {
     }
 
     public OrderEntity(long orderId,
                        String status,
-                       double orderPrice,
-                       double discount,
                        Date pickUpDate,
                        Time pickUpTime,
+                       Date orderDate,
+                       Time orderTime,
                        double totalWeight,
                        String trackingNumber,
                        UserEntity userEntity,
                        DeliveryEntity deliveryEntity,
                        PaymentEntity paymentEntity,
-                       UserAddressEntity userAddressEntity) {
+                       UserAddressEntity shippingDetails,
+                       UserAddressEntity billingDetail,
+                       DiscountMethodEntity discountMethodEntity) {
         this.orderId = orderId;
         this.status = status;
-        this.orderPrice = orderPrice;
-        this.discount = discount;
         this.pickUpDate = pickUpDate;
         this.pickUpTime = pickUpTime;
+        this.orderDate = orderDate;
+        this.orderTime = orderTime;
         this.totalWeight = totalWeight;
         this.trackingNumber = trackingNumber;
         this.userEntity = userEntity;
         this.deliveryEntity = deliveryEntity;
         this.paymentEntity = paymentEntity;
-        this.userAddressEntity = userAddressEntity;
+        this.billingDetail = billingDetail;
+        this.shippingDetails = shippingDetails;
+        this.discountMethodEntity = discountMethodEntity;
     }
 
     public long getOrderId() {
@@ -84,22 +94,6 @@ public class OrderEntity {
         this.status = status;
     }
 
-    public double getOrderPrice() {
-        return orderPrice;
-    }
-
-    public void setOrderPrice(double orderPrice) {
-        this.orderPrice = orderPrice;
-    }
-
-    public double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount = discount;
-    }
-
     public Date getPickUpDate() {
         return pickUpDate;
     }
@@ -114,6 +108,22 @@ public class OrderEntity {
 
     public void setPickUpTime(Time pickUpTime) {
         this.pickUpTime = pickUpTime;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public Time getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(Time orderTime) {
+        this.orderTime = orderTime;
     }
 
     public double getTotalWeight() {
@@ -156,12 +166,28 @@ public class OrderEntity {
         this.paymentEntity = paymentEntity;
     }
 
-    public UserAddressEntity getUserAddressEntity() {
-        return userAddressEntity;
+    public UserAddressEntity getShippingDetails() {
+        return shippingDetails;
     }
 
-    public void setUserAddressEntity(UserAddressEntity userAddressEntity) {
-        this.userAddressEntity = userAddressEntity;
+    public void setShippingDetails(UserAddressEntity shippingDetails) {
+        this.shippingDetails = shippingDetails;
+    }
+
+    public UserAddressEntity getBillingDetail() {
+        return billingDetail;
+    }
+
+    public void setBillingDetail(UserAddressEntity billingDetail) {
+        this.billingDetail = billingDetail;
+    }
+
+    public DiscountMethodEntity getDiscountMethodEntity() {
+        return discountMethodEntity;
+    }
+
+    public void setDiscountMethodEntity(DiscountMethodEntity discountMethodEntity) {
+        this.discountMethodEntity = discountMethodEntity;
     }
 
     @Override
@@ -169,16 +195,18 @@ public class OrderEntity {
         return "OrderEntity{" +
                 "orderId=" + orderId +
                 ", status='" + status + '\'' +
-                ", orderPrice=" + orderPrice +
-                ", discount=" + discount +
                 ", pickUpDate=" + pickUpDate +
                 ", pickUpTime=" + pickUpTime +
+                ", orderDate=" + orderDate +
+                ", orderTime=" + orderTime +
                 ", totalWeight=" + totalWeight +
                 ", trackingNumber='" + trackingNumber + '\'' +
                 ", userEntity=" + userEntity +
                 ", deliveryEntity=" + deliveryEntity +
                 ", paymentEntity=" + paymentEntity +
-                ", userAddressEntity=" + userAddressEntity +
+                ", shippingDetails=" + shippingDetails +
+                ", billingDetail=" + billingDetail +
+                ", discountMethodEntity=" + discountMethodEntity +
                 '}';
     }
 }
