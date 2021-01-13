@@ -36,4 +36,10 @@ public class CartController {
         long userId = Long.parseLong(principal.getName());
         return cartService.getCart(userId);
     }
+
+    @GetMapping("/cartOrderDetail")
+    public ResponseEntity<?> cartOrderDetail(Principal principal){
+        long userId = Long.parseLong(principal.getName());
+        return cartService.cartOrder(userId);
+    }
 }

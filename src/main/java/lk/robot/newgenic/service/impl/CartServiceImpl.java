@@ -1,29 +1,23 @@
 package lk.robot.newgenic.service.impl;
 
+import lk.robot.newgenic.dto.DeliveryDTO;
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.Request.CartRequestDTO;
-import lk.robot.newgenic.entity.OrderDetailEntity;
-import lk.robot.newgenic.entity.OrderEntity;
-import lk.robot.newgenic.entity.ProductEntity;
-import lk.robot.newgenic.entity.UserEntity;
+import lk.robot.newgenic.dto.response.CartOrderResponse;
+import lk.robot.newgenic.entity.*;
+import lk.robot.newgenic.enums.DiscountType;
 import lk.robot.newgenic.enums.OrderStatus;
 import lk.robot.newgenic.exception.CustomException;
-import lk.robot.newgenic.repository.OrderDetailRepository;
-import lk.robot.newgenic.repository.OrderRepository;
-import lk.robot.newgenic.repository.ProductRepository;
-import lk.robot.newgenic.repository.UserRepository;
+import lk.robot.newgenic.repository.*;
 import lk.robot.newgenic.service.CartService;
-import lk.robot.newgenic.util.DateConverter;
 import lk.robot.newgenic.util.EntityToDto;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,17 +30,23 @@ public class CartServiceImpl implements CartService {
     private UserRepository userRepository;
     private OrderRepository orderRepository;
     private OrderDetailRepository orderDetailRepository;
+    private DiscountMethodRepository discountMethodRepository;
+    private DeliveryRepository deliveryRepository;
 
     @Autowired
     public CartServiceImpl(
             ProductRepository productRepository,
             OrderRepository orderRepository,
             OrderDetailRepository orderDetailRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            DiscountMethodRepository discountMethodRepository,
+            DeliveryRepository deliveryRepository) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.userRepository = userRepository;
+        this.discountMethodRepository = discountMethodRepository;
+        this.deliveryRepository = deliveryRepository;
     }
 
     @Override
@@ -129,15 +129,66 @@ public class CartServiceImpl implements CartService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> cartOrder(long userId) {
+        try{
+            ResponseEntity<?> cartResponse = getCart(userId);
+            List<ProductDTO> cart = (List<ProductDTO>) cartResponse.getBody();
+            List<DeliveryEntity> all = deliveryRepository.findAll();
+            CartOrderResponse cartOrderResponse = new CartOrderResponse();
+            double cartPrice = 0;
+            double totalWeight = 0;
+            for (ProductDTO productDTO :
+                    cart) {
+                cartPrice = cartPrice + productDTO.getRetailPrice();
+                totalWeight = totalWeight + productDTO.getWeight();
+                if (!productDTO.isFreeShipping()){
+                    cartOrderResponse.setCartFreeShipping(false);
+                }
+            }
+            DiscountMethodEntity discountMethod = discountMethodRepository.getDiscountMethod(PageRequest.of(0, 1));
+            if (discountMethod.getPriceLimit() <= cartPrice){
+                if (discountMethod.getType().equals(DiscountType.DISCOUNT)){
+                    cartOrderResponse.setDiscount(cartPrice * discountMethod.getDiscount()/100);
+                    cartOrderResponse.setCartFreeShipping(false);
+                }else if (discountMethod.getType().equals(DiscountType.FREE_SHIPPING)){
+                    cartOrderResponse.setCartFreeShipping(true);
+                }
+            }
+
+            List<DeliveryDTO> deliveryDTOList = setDeliveryEntityToDto(all);
+            cartOrderResponse.setDeliveryDTOList(deliveryDTOList);
+            cartOrderResponse.setProductDTOList(cart);
+            cartOrderResponse.setCartPrice(cartPrice);
+            cartOrderResponse.setTotalWeight(totalWeight);
+            return new ResponseEntity<>(cartOrderResponse,HttpStatus.OK);
+        }catch (Exception e){
+            throw new CustomException("Failed to load cart order");
+        }
+    }
+
     private OrderDetailEntity setValuesToOrderDetail(OrderEntity order,
                                                      CartRequestDTO cartRequestDTO,
                                                      ProductEntity productEntity){
         OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
         orderDetailEntity.setQuantity(cartRequestDTO.getQty());
-        orderDetailEntity.setOrderPrice(cartRequestDTO.getOrderPrice());
+        orderDetailEntity.setOrderPrice(cartRequestDTO.getPrice()*cartRequestDTO.getQty());
         orderDetailEntity.setProductEntity(productEntity);
         orderDetailEntity.setOrderEntity(order);
 
         return orderDetailEntity;
+    }
+
+    private List<DeliveryDTO> setDeliveryEntityToDto(List<DeliveryEntity> deliveryEntityList){
+        List<DeliveryDTO> list = new ArrayList<>();
+        for (DeliveryEntity deliveryEntity :
+                deliveryEntityList) {
+            list.add(new DeliveryDTO(
+                    deliveryEntity.getDeliveryId(),
+                    deliveryEntity.getName(),
+                    deliveryEntity.getDeliveryCostEntity()
+            ));
+        }
+        return list;
     }
 }

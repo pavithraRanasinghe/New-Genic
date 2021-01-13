@@ -3,7 +3,7 @@ package lk.robot.newgenic.dto.Request;
 public class CartRequestDTO {
     private long productId;
     private int qty;
-    private double orderPrice;
+    private double price;
     private double weight;
 
     public CartRequestDTO() {
@@ -12,11 +12,11 @@ public class CartRequestDTO {
 
     public CartRequestDTO(long productId,
                           int qty,
-                          double orderPrice,
+                          double price,
                           double weight) {
         this.productId = productId;
         this.qty = qty;
-        this.orderPrice = orderPrice;
+        this.price = price;
         this.weight = weight;
     }
 
@@ -36,12 +36,12 @@ public class CartRequestDTO {
         this.qty = qty;
     }
 
-    public double getOrderPrice() {
-        return orderPrice;
+    public double getPrice() {
+        return price;
     }
 
-    public void setOrderPrice(double orderPrice) {
-        this.orderPrice = orderPrice;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public double getWeight() {
@@ -57,7 +57,7 @@ public class CartRequestDTO {
         return "CartRequestDTO{" +
                 "productId=" + productId +
                 ", qty=" + qty +
-                ", orderPrice=" + orderPrice +
+                ", price=" + price +
                 ", weight=" + weight +
                 '}';
     }

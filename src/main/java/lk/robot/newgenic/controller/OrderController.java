@@ -1,5 +1,6 @@
 package lk.robot.newgenic.controller;
 
+import lk.robot.newgenic.dto.Request.CartOrderRequestDTO;
 import lk.robot.newgenic.dto.Request.OrderRequestDTO;
 import lk.robot.newgenic.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,11 @@ public class OrderController {
     public ResponseEntity<?> placeOrder(@RequestBody OrderRequestDTO orderRequestDTO, Principal principal){
         long userId = Long.parseLong(principal.getName());
         return orderService.placeOrder(orderRequestDTO,userId);
+    }
+
+    @PostMapping("/cartOrder")
+    public ResponseEntity<?> cartOrder(@RequestBody CartOrderRequestDTO cartOrderRequestDTO,Principal principal){
+        long userId = Long.parseLong(principal.getName());
+        return orderService.cartOrderPlace(cartOrderRequestDTO,userId);
     }
 }

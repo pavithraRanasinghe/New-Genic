@@ -1,6 +1,7 @@
 package lk.robot.newgenic.service.impl;
 
 import lk.robot.newgenic.dto.Request.BillingDetail;
+import lk.robot.newgenic.dto.Request.CartOrderRequestDTO;
 import lk.robot.newgenic.dto.Request.OrderRequestDTO;
 import lk.robot.newgenic.dto.Request.ShippingDetail;
 import lk.robot.newgenic.entity.*;
@@ -127,6 +128,58 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> cartOrderPlace(CartOrderRequestDTO cartOrderRequestDTO, long userId) {
+        try{
+            Optional<UserEntity> user = userRepository.findById(userId);
+            Optional<OrderEntity> cart = orderRepository.findById(cartOrderRequestDTO.getCartId());
+            Optional<DeliveryEntity> deliveryEntity = deliveryRepository.findById(cartOrderRequestDTO.getDeliveryId());
+            if (cart != null){
+                UserAddressEntity billingDetail = userAddressRepository.save(setBillingDetails(cartOrderRequestDTO.getBillingDetail()));
+                UserAddressEntity shippingDetail = userAddressRepository.save(setShippingDetails(cartOrderRequestDTO.getShippingDetail()));
+                UserAddressDetailEntity billingAddressDetail = new UserAddressDetailEntity();
+                UserAddressDetailEntity shippingAddressDetail = new UserAddressDetailEntity();
+                billingAddressDetail.setUserEntity(user.get());
+                billingAddressDetail.setUserAddressEntity(billingDetail);
+                shippingAddressDetail.setUserEntity(user.get());
+                shippingAddressDetail.setUserAddressEntity(shippingDetail);
+                userAddressDetailRepository.save(billingAddressDetail);
+                userAddressDetailRepository.save(shippingAddressDetail);
+                if (billingDetail != null && shippingDetail != null){
+                    PaymentEntity paymentEntity = setCartPaymentDetails(cartOrderRequestDTO);
+                    PaymentEntity payment = paymentRepository.save(paymentEntity);
+
+                    if (payment != null){
+                        cart.get().setStatus(OrderStatus.PENDING.toString());
+                        cart.get().setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
+                        cart.get().setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
+                        cart.get().setTotalWeight(cartOrderRequestDTO.getTotalWeight());
+                        cart.get().setUserEntity(user.get());
+                        cart.get().setDeliveryEntity(deliveryEntity.get());
+                        cart.get().setPaymentEntity(payment);
+                        cart.get().setBillingDetail(billingDetail);
+                        cart.get().setShippingDetails(shippingDetail);
+
+                        OrderEntity save = orderRepository.save(cart.get());
+                        if (save != null){
+                            return new ResponseEntity<>("Order successful",HttpStatus.OK);
+                        }else {
+                            return new ResponseEntity<>("Order not saved",HttpStatus.BAD_REQUEST);
+                        }
+                    }else{
+                        return new ResponseEntity<>("Payment not saved",HttpStatus.BAD_REQUEST);
+                    }
+                }else {
+                    return new ResponseEntity<>("Billing or Shipping details not saved",HttpStatus.BAD_REQUEST);
+                }
+            }else {
+                return new ResponseEntity<>("Cart not found",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            throw new CustomException("Cart Order failed");
+        }
+    }
+
     private UserAddressEntity setBillingDetails(BillingDetail billingDetail) {
         UserAddressEntity userAddressEntity = new UserAddressEntity();
         userAddressEntity.setFirstName(billingDetail.getFirstName());
@@ -162,6 +215,18 @@ public class OrderServiceImpl implements OrderService {
             paymentEntity.setFreeDeliveryPrice(orderRequestDTO.getDeliveryCost());
         } else {
             paymentEntity.setDeliveryPrice(orderRequestDTO.getDeliveryCost());
+        }
+        return paymentEntity;
+    }
+
+    private PaymentEntity setCartPaymentDetails(CartOrderRequestDTO cartOrderRequestDTO){
+        PaymentEntity paymentEntity = new PaymentEntity();
+        paymentEntity.setOrderPrice(cartOrderRequestDTO.getCartPrice());
+        paymentEntity.setPaid(false);
+        if (cartOrderRequestDTO.isFreeShipping()){
+            paymentEntity.setFreeDeliveryPrice(cartOrderRequestDTO.getDeliveryCost());
+        }else{
+            paymentEntity.setDeliveryPrice(cartOrderRequestDTO.getDeliveryCost());
         }
         return paymentEntity;
     }

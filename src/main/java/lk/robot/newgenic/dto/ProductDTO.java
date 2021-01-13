@@ -15,6 +15,7 @@ public class ProductDTO {
     private String color;
     private String size;
     private String gender;
+    private double weight;
     private double buyingPrice;
     private double salePrice;
     private double retailPrice;
@@ -34,6 +35,7 @@ public class ProductDTO {
             String color,
             String size,
             String gender,
+            double weight,
             double buyingPrice,
             double salePrice,
             double retailPrice,
@@ -48,6 +50,7 @@ public class ProductDTO {
         this.color = color;
         this.size = size;
         this.gender = gender;
+        this.weight = weight;
         this.buyingPrice = buyingPrice;
         this.salePrice = salePrice;
         this.retailPrice = retailPrice;
@@ -120,6 +123,14 @@ public class ProductDTO {
         this.gender = gender;
     }
 
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
     public double getBuyingPrice() {
         return buyingPrice;
     }
@@ -171,11 +182,22 @@ public class ProductDTO {
                 ", color='" + color + '\'' +
                 ", size='" + size + '\'' +
                 ", gender='" + gender + '\'' +
+                ", weight=" + weight +
                 ", buyingPrice=" + buyingPrice +
                 ", salePrice=" + salePrice +
                 ", retailPrice=" + retailPrice +
                 ", addedDate=" + addedDate +
                 ", active=" + active +
+                ", isFreeShipping=" + isFreeShipping +
                 '}';
     }
+
+    public boolean isFreeShipping() {
+        return isFreeShipping;
+    }
+
+    public void setFreeShipping(boolean freeShipping) {
+        isFreeShipping = freeShipping;
+    }
+
 }
