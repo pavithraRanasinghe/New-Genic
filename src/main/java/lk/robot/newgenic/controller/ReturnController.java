@@ -4,10 +4,7 @@ import lk.robot.newgenic.dto.Request.ReturnRequestDTO;
 import lk.robot.newgenic.service.ReturnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -23,8 +20,14 @@ public class ReturnController {
     }
 
     @PostMapping
-    public ResponseEntity<?> returnRequest(@RequestBody ReturnRequestDTO returnRequestDTO, Principal principal){
+    public ResponseEntity<?> returnRequest(@RequestBody ReturnRequestDTO returnRequestDTO, Principal principal) {
         long userId = Long.parseLong(principal.getName());
-        return returnService.returnRequest(returnRequestDTO,userId);
+        return returnService.returnRequest(returnRequestDTO, userId);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getReturn(Principal principal) {
+        long userId = Long.parseLong(principal.getName());
+        return returnService.getReturn(userId);
     }
 }

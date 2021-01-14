@@ -1,7 +1,8 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 @Table(name = "return_request")
@@ -16,7 +17,7 @@ public class ReturnEntity {
     @Column(name = "request_date")
     private Date requestDate;
     @Column(name = "request_time")
-    private Date requestTime;
+    private Time requestTime;
     @Column
     private String action;
     @OneToOne(mappedBy = "returnEntity")
@@ -28,7 +29,7 @@ public class ReturnEntity {
     public ReturnEntity(long returnRequestId,
                         String reason,
                         Date requestDate,
-                        Date requestTime,
+                        Time requestTime,
                         OrderDetailEntity orderDetailEntity,
                         String action) {
         this.returnRequestId = returnRequestId;
@@ -63,11 +64,11 @@ public class ReturnEntity {
         this.requestDate = requestDate;
     }
 
-    public Date getRequestTime() {
+    public Time getRequestTime() {
         return requestTime;
     }
 
-    public void setRequestTime(Date requestTime) {
+    public void setRequestTime(Time requestTime) {
         this.requestTime = requestTime;
     }
 

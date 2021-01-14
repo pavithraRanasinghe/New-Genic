@@ -1,6 +1,7 @@
 package lk.robot.newgenic.service.impl;
 
 import lk.robot.newgenic.dto.Request.ReturnRequestDTO;
+import lk.robot.newgenic.dto.response.ReturnResponseDTO;
 import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.enums.ReturnAction;
 import lk.robot.newgenic.exception.CustomException;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,5 +77,47 @@ public class ReturnServiceImpl implements ReturnService {
         }catch (Exception e){
             throw new CustomException("Return request failed");
         }
+    }
+
+    @Override
+    public ResponseEntity<?> getReturn(long userId) {
+        try{
+            Optional<UserEntity> user = userRepository.findById(userId);
+            List<OrderEntity> orderList = orderRepository.findByUserEntity(user.get());
+            List<ReturnResponseDTO> responseList = new ArrayList<>();
+            if (!orderList.isEmpty()){
+                for (OrderEntity orderEntity :
+                        orderList) {
+                    List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
+                    for (OrderDetailEntity orderDetailEntity :
+                            orderDetailList) {
+                        ReturnEntity returnEntity = orderDetailEntity.getReturnEntity();
+                        if (returnEntity != null){
+                            responseList.add(setReturnDetails(returnEntity,orderDetailEntity));
+                        }
+                    }
+                }
+                return new ResponseEntity<>(responseList,HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("No orders for you",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            throw new CustomException("Failed to load returns");
+        }
+    }
+
+    private ReturnResponseDTO setReturnDetails(ReturnEntity returnEntity,OrderDetailEntity detailEntity){
+        return new ReturnResponseDTO(
+                returnEntity.getReturnRequestId(),
+                returnEntity.getReason(),
+                returnEntity.getRequestDate(),
+                returnEntity.getRequestTime(),
+                returnEntity.getAction(),
+                detailEntity.getProductEntity().getProductId(),
+                detailEntity.getOrderEntity().getOrderId(),
+                detailEntity.getProductEntity().getName(),
+                detailEntity.getQuantity(),
+                detailEntity.getOrderPrice()
+        );
     }
 }
