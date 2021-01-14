@@ -4,6 +4,8 @@ import lk.robot.newgenic.dto.Request.BillingDetail;
 import lk.robot.newgenic.dto.Request.CartOrderRequestDTO;
 import lk.robot.newgenic.dto.Request.OrderRequestDTO;
 import lk.robot.newgenic.dto.Request.ShippingDetail;
+import lk.robot.newgenic.dto.response.OrderProductDetail;
+import lk.robot.newgenic.dto.response.OrderResponseDTO;
 import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.enums.AddressType;
 import lk.robot.newgenic.enums.OrderStatus;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -180,6 +184,32 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> getOrders(long userId) {
+        try{
+            Optional<UserEntity> user = userRepository.findById(userId);
+            List<OrderEntity> orders = orderRepository.findByUserEntity(user.get());
+            List<OrderResponseDTO> orderResponseList = new ArrayList<>();
+            if (!orders.isEmpty()){
+                for (OrderEntity orderEntity :
+                        orders) {
+                    List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
+                    List<OrderProductDetail> productDetailList = new ArrayList<>();
+                    for (OrderDetailEntity detailEntity :
+                            orderDetailList) {
+                        productDetailList.add(setProductDetail(detailEntity));
+                    }
+                    orderResponseList.add(setOrderDetails(orderEntity,productDetailList));
+                }
+                return new ResponseEntity<>(orderResponseList,HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("Orders not found",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            throw new CustomException("Failed to load orders");
+        }
+    }
+
     private UserAddressEntity setBillingDetails(BillingDetail billingDetail) {
         UserAddressEntity userAddressEntity = new UserAddressEntity();
         userAddressEntity.setFirstName(billingDetail.getFirstName());
@@ -229,5 +259,29 @@ public class OrderServiceImpl implements OrderService {
             paymentEntity.setDeliveryPrice(cartOrderRequestDTO.getDeliveryCost());
         }
         return paymentEntity;
+    }
+
+    private OrderResponseDTO setOrderDetails(OrderEntity orderEntity,List<OrderProductDetail> productDetailList){
+        return new OrderResponseDTO(
+                orderEntity.getOrderId(),
+                orderEntity.getOrderDate(),
+                orderEntity.getOrderTime(),
+                orderEntity.getTrackingNumber(),
+                orderEntity.getStatus(),
+                orderEntity.getPaymentEntity().getOrderPrice(),
+                orderEntity.getPaymentEntity().getDiscountPrice(),
+                orderEntity.getPaymentEntity().getDeliveryPrice(),
+                productDetailList
+        );
+    }
+
+    private OrderProductDetail setProductDetail(OrderDetailEntity detailEntity){
+        return new OrderProductDetail(
+                detailEntity.getProductEntity().getProductId(),
+                detailEntity.getProductEntity().getName(),
+                detailEntity.getProductEntity().getProductCode(),
+                detailEntity.getQuantity(),
+                detailEntity.getOrderPrice()
+        );
     }
 }

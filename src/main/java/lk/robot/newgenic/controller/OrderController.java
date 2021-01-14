@@ -32,4 +32,10 @@ public class OrderController {
         long userId = Long.parseLong(principal.getName());
         return orderService.cartOrderPlace(cartOrderRequestDTO,userId);
     }
+
+    @GetMapping()
+    public ResponseEntity<?> getOrders(Principal principal){
+        long userId = Long.parseLong(principal.getName());
+        return orderService.getOrders(userId);
+    }
 }

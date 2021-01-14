@@ -6,10 +6,7 @@ import lk.robot.newgenic.jwt.AuthenticationRequest;
 import lk.robot.newgenic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -36,7 +33,7 @@ public class UserController {
         return responseEntity;
     }
 
-    @PostMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO, Principal principal){
         long userId = Long.parseLong(principal.getName());
         return userService.updateUser(userDetailDTO,userId);

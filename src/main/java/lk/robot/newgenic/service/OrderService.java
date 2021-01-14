@@ -9,4 +9,6 @@ public interface OrderService {
     ResponseEntity<?> placeOrder(OrderRequestDTO orderRequestDTO,long userId);
 
     ResponseEntity<?> cartOrderPlace(CartOrderRequestDTO cartOrderRequestDTO,long userId);
+
+    ResponseEntity<?> getOrders(long userId);
 }
