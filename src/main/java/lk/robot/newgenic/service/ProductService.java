@@ -19,4 +19,6 @@ public interface ProductService {
     ResponseEntity<?> getDetail(long productId);
 
     ResponseEntity<?> relatedProduct(long productId,int index,int size);
+
+    ResponseEntity<?> searchProduct(String keyword,int index,int size);
 }

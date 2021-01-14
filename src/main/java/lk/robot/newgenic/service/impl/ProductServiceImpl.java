@@ -129,4 +129,17 @@ public class ProductServiceImpl implements ProductService {
             throw new CustomException("Failed to fetch related products");
         }
     }
+
+    @Override
+    public ResponseEntity<?> searchProduct(String keyword, int index, int size) {
+        try{
+            if (keyword !=null){
+                return null;
+            }else{
+                return new ResponseEntity<>("Keyword not found",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            throw new CustomException("Search failed");
+        }
+    }
 }

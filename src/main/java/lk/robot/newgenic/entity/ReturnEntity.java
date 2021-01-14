@@ -17,6 +17,8 @@ public class ReturnEntity {
     private Date requestDate;
     @Column(name = "request_time")
     private Date requestTime;
+    @Column
+    private String action;
     @OneToOne(mappedBy = "returnEntity")
     private OrderDetailEntity orderDetailEntity;
 
@@ -27,12 +29,14 @@ public class ReturnEntity {
                         String reason,
                         Date requestDate,
                         Date requestTime,
-                        OrderDetailEntity orderDetailEntity) {
+                        OrderDetailEntity orderDetailEntity,
+                        String action) {
         this.returnRequestId = returnRequestId;
         this.reason = reason;
         this.requestDate = requestDate;
         this.requestTime = requestTime;
         this.orderDetailEntity = orderDetailEntity;
+        this.action = action;
     }
 
     public long getReturnRequestId() {
@@ -67,6 +71,14 @@ public class ReturnEntity {
         this.requestTime = requestTime;
     }
 
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
     public OrderDetailEntity getOrderDetailEntity() {
         return orderDetailEntity;
     }
@@ -82,6 +94,7 @@ public class ReturnEntity {
                 ", reason='" + reason + '\'' +
                 ", requestDate=" + requestDate +
                 ", requestTime=" + requestTime +
+                ", action='" + action + '\'' +
                 ", orderDetailEntity=" + orderDetailEntity +
                 '}';
     }
