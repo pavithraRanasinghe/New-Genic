@@ -49,6 +49,10 @@ public class ProductEntity {
     @JoinColumn(name = "fk_sub_category_id")
     private SubCategoryEntity subCategoryEntity;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_deal_id")
+    private DealEntity dealEntity;
+
     public ProductEntity() {
     }
 
@@ -70,7 +74,8 @@ public class ProductEntity {
             Time addedTime,
             boolean active,
             boolean freeShipping,
-            SubCategoryEntity subCategoryEntity) {
+            SubCategoryEntity subCategoryEntity,
+            DealEntity dealEntity) {
         this.productId = productId;
         this.productCode = productCode;
         this.name = name;
@@ -89,30 +94,7 @@ public class ProductEntity {
         this.active = active;
         this.freeShipping = freeShipping;
         this.subCategoryEntity = subCategoryEntity;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductEntity{" +
-                "productId=" + productId +
-                ", productCode='" + productCode + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", brand='" + brand + '\'' +
-                ", stock=" + stock +
-                ", color='" + color + '\'' +
-                ", size='" + size + '\'' +
-                ", gender='" + gender + '\'' +
-                ", weight=" + weight +
-                ", buyingPrice=" + buyingPrice +
-                ", salePrice=" + salePrice +
-                ", retailPrice=" + retailPrice +
-                ", addedDate=" + addedDate +
-                ", addedTime=" + addedTime +
-                ", active=" + active +
-                ", freeShipping=" + freeShipping +
-                ", subCategoryEntity=" + subCategoryEntity +
-                '}';
+        this.dealEntity = dealEntity;
     }
 
     public long getProductId() {
@@ -258,5 +240,38 @@ public class ProductEntity {
 
     public void setSubCategoryEntity(SubCategoryEntity subCategoryEntity) {
         this.subCategoryEntity = subCategoryEntity;
+    }
+
+    public DealEntity getDealEntity() {
+        return dealEntity;
+    }
+
+    public void setDealEntity(DealEntity dealEntity) {
+        this.dealEntity = dealEntity;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductEntity{" +
+                "productId=" + productId +
+                ", productCode='" + productCode + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", brand='" + brand + '\'' +
+                ", stock=" + stock +
+                ", color='" + color + '\'' +
+                ", size='" + size + '\'' +
+                ", gender='" + gender + '\'' +
+                ", weight=" + weight +
+                ", buyingPrice=" + buyingPrice +
+                ", salePrice=" + salePrice +
+                ", retailPrice=" + retailPrice +
+                ", addedDate=" + addedDate +
+                ", addedTime=" + addedTime +
+                ", active=" + active +
+                ", freeShipping=" + freeShipping +
+                ", subCategoryEntity=" + subCategoryEntity +
+                ", dealEntity=" + dealEntity +
+                '}';
     }
 }

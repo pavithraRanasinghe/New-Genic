@@ -22,6 +22,7 @@ public class ProductDTO {
     private Date addedDate;
     private boolean active;
     private boolean isFreeShipping;
+    private double discount;
 
     public ProductDTO() {
     }
@@ -41,7 +42,8 @@ public class ProductDTO {
             double retailPrice,
             Date addedDate,
             boolean active,
-            boolean isFreeShipping) {
+            boolean isFreeShipping,
+            double discount) {
         this.productId = productId;
         this.productCode = productCode;
         this.name = name;
@@ -57,6 +59,7 @@ public class ProductDTO {
         this.addedDate = addedDate;
         this.active = active;
         this.isFreeShipping = isFreeShipping;
+        this.discount = discount;
     }
 
     public long getProductId() {
@@ -171,6 +174,14 @@ public class ProductDTO {
         this.active = active;
     }
 
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
     @Override
     public String toString() {
         return "ProductDTO{" +
@@ -189,6 +200,7 @@ public class ProductDTO {
                 ", addedDate=" + addedDate +
                 ", active=" + active +
                 ", isFreeShipping=" + isFreeShipping +
+                ", discount=" + discount +
                 '}';
     }
 

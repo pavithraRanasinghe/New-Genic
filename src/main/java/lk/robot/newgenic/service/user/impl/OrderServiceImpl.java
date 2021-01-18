@@ -64,6 +64,7 @@ public class OrderServiceImpl implements OrderService {
                 Optional<UserEntity> user = userRepository.findById(userId);
                 Optional<ProductEntity> productEntity = productRepository.findById(orderRequestDTO.getProductId());
                 if (productEntity.isPresent()) {
+
                     Optional<DeliveryEntity> deliveryEntity = deliveryRepository.findById(orderRequestDTO.getDeliveryId());
                     if (deliveryEntity.isPresent()) {
 

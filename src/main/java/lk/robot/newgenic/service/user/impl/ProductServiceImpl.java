@@ -2,8 +2,11 @@ package lk.robot.newgenic.service.user.impl;
 
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.Request.FilterDTO;
+import lk.robot.newgenic.entity.DealEntity;
 import lk.robot.newgenic.entity.ProductEntity;
+import lk.robot.newgenic.enums.DealStatus;
 import lk.robot.newgenic.exception.CustomException;
+import lk.robot.newgenic.repository.DealRepository;
 import lk.robot.newgenic.repository.ProductRepository;
 import lk.robot.newgenic.service.user.ProductService;
 import lk.robot.newgenic.util.EntityToDto;
@@ -21,11 +24,13 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;
+    private DealRepository dealRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              DealRepository dealRepository) {
         this.productRepository = productRepository;
-
+        this.dealRepository = dealRepository;
     }
 
     @Override
@@ -139,6 +144,30 @@ public class ProductServiceImpl implements ProductService {
             }
         } catch (Exception e) {
             throw new CustomException("Search failed");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getSaleProducts(int index, int size) {
+        try{
+            DealEntity dealEntity = dealRepository.findByDealStatus(DealStatus.ACTIVE.toString());
+            if (dealEntity != null){
+                List<ProductEntity> products = productRepository.findByDealEntity(dealEntity,PageRequest.of(index,size));
+                if (!products.isEmpty()){
+                    List<ProductDTO> productList = new ArrayList<>();
+                    for (ProductEntity productEntity :
+                            products) {
+                        productList.add(EntityToDto.productEntityToDto(productEntity));
+                    }
+                    return new ResponseEntity<>(productList,HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>("No products found",HttpStatus.NOT_FOUND);
+                }
+            }else {
+                return new ResponseEntity<>("Deals not found",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            throw new CustomException("Failed to get sale products");
         }
     }
 }

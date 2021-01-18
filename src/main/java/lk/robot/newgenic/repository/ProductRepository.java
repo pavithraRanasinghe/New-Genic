@@ -1,5 +1,6 @@
 package lk.robot.newgenic.repository;
 
+import lk.robot.newgenic.entity.DealEntity;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.entity.SubCategoryEntity;
 import org.springframework.data.domain.Pageable;
@@ -22,5 +23,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
 
     @Query(value="SELECT * FROM product WHERE MATCH(name,description,brand,color) AGAINST(?1)",nativeQuery = true)
     List<ProductEntity> searchProducts(String keyword);
+
+    List<ProductEntity> findByDealEntity(DealEntity dealEntity,Pageable pageable);
 
 }

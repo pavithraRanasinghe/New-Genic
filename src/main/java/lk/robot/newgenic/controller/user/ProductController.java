@@ -73,4 +73,13 @@ public class ProductController {
         LOGGER.info("response - allUser | searchProducts | searchResult: {}",searchProduct.getStatusCode());
         return searchProduct;
     }
+
+    @GetMapping("/sale")
+    public ResponseEntity<?> getSaleProducts(@RequestParam int index,
+                                             @RequestParam int size){
+        LOGGER.info("request - allUsers | getSaleProducts | index: {} | size: {}",index,size);
+        ResponseEntity<?> saleProducts = productService.getSaleProducts(index, size);
+        LOGGER.info("response - allUsers | getSaleProducts | saleProducts: {}",saleProducts.getBody().toString());
+        return saleProducts;
+    }
 }
