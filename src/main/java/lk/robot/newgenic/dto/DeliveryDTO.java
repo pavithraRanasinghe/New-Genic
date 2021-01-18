@@ -1,19 +1,22 @@
 package lk.robot.newgenic.dto;
 
+import lk.robot.newgenic.dto.response.DeliveryCostDTO;
 import lk.robot.newgenic.entity.DeliveryCostEntity;
 
 public class DeliveryDTO {
     private long deliveryId;
     private String name;
-    private DeliveryCostEntity costEntity;
+    private DeliveryCostDTO deliveryCostDTO;
 
     public DeliveryDTO() {
     }
 
-    public DeliveryDTO(long deliveryId, String name, DeliveryCostEntity costEntity) {
+    public DeliveryDTO(long deliveryId,
+                       String name,
+                       DeliveryCostDTO deliveryCostDTO) {
         this.deliveryId = deliveryId;
         this.name = name;
-        this.costEntity = costEntity;
+        this.deliveryCostDTO = deliveryCostDTO;
     }
 
     public long getDeliveryId() {
@@ -32,12 +35,12 @@ public class DeliveryDTO {
         this.name = name;
     }
 
-    public DeliveryCostEntity getCostEntity() {
-        return costEntity;
+    public DeliveryCostDTO getDeliveryCostDTO() {
+        return deliveryCostDTO;
     }
 
-    public void setCostEntity(DeliveryCostEntity costEntity) {
-        this.costEntity = costEntity;
+    public void setDeliveryCostDTO(DeliveryCostDTO deliveryCostDTO) {
+        this.deliveryCostDTO = deliveryCostDTO;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class DeliveryDTO {
         return "DeliveryDTO{" +
                 "deliveryId=" + deliveryId +
                 ", name='" + name + '\'' +
-                ", costEntity=" + costEntity +
+                ", deliveryCostDTO=" + deliveryCostDTO +
                 '}';
     }
 }

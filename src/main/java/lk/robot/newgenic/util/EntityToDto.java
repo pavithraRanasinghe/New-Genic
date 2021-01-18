@@ -2,7 +2,9 @@ package lk.robot.newgenic.util;
 
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.Request.UserSignUpDTO;
+import lk.robot.newgenic.dto.response.DeliveryCostDTO;
 import lk.robot.newgenic.dto.response.UserFeedbackDTO;
+import lk.robot.newgenic.entity.DeliveryCostEntity;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.entity.UserEntity;
 
@@ -18,6 +20,7 @@ public class EntityToDto {
                 productEntity.getColor(),
                 productEntity.getSize(),
                 productEntity.getGender(),
+                productEntity.getWeight(),
                 productEntity.getBuyingPrice(),
                 productEntity.getSalePrice(),
                 productEntity.getRetailPrice(),
@@ -50,5 +53,37 @@ public class EntityToDto {
 
         return userEntity;
 
+    }
+
+    public static DeliveryCostDTO deliveryCostEntityToDTO(DeliveryCostEntity deliveryCostEntity){
+        return new DeliveryCostDTO(
+                deliveryCostEntity.getDeliveryCostId(),
+                deliveryCostEntity.getGalle(),
+                deliveryCostEntity.getMatara(),
+                deliveryCostEntity.getHambantota(),
+                deliveryCostEntity.getKaluthra(),
+                deliveryCostEntity.getColombo(),
+                deliveryCostEntity.getGampaha(),
+                deliveryCostEntity.getPuttalm(),
+                deliveryCostEntity.getKurunegala(),
+                deliveryCostEntity.getJaffna(),
+                deliveryCostEntity.getKilinochchi(),
+                deliveryCostEntity.getMannar(),
+                deliveryCostEntity.getMullaitivu(),
+                deliveryCostEntity.getVavuniya(),
+                deliveryCostEntity.getAnuradhapura(),
+                deliveryCostEntity.getPolonnaruwa(),
+                deliveryCostEntity.getMatale(),
+                deliveryCostEntity.getKandy(),
+                deliveryCostEntity.getNuwaraEliya(),
+                deliveryCostEntity.getRatnapura(),
+                deliveryCostEntity.getKegalle(),
+                deliveryCostEntity.getTrincomalee(),
+                deliveryCostEntity.getBatticaloa(),
+                deliveryCostEntity.getAmpara(),
+                deliveryCostEntity.getMonaragala(),
+                deliveryCostEntity.getBadulla(),
+                deliveryCostEntity.getCostPerExtra()
+        );
     }
 }

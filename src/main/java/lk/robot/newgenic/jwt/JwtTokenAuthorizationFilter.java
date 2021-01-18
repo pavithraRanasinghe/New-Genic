@@ -59,7 +59,7 @@ public class JwtTokenAuthorizationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }catch (Exception e){
-            throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
+            throw new IllegalStateException(String.format("Token %token cannot be trusted", token));
         }
         filterChain.doFilter(request,response);
     }

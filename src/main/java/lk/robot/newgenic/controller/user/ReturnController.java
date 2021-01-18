@@ -1,7 +1,10 @@
 package lk.robot.newgenic.controller.user;
 
 import lk.robot.newgenic.dto.Request.ReturnRequestDTO;
+import lk.robot.newgenic.entity.ReturnEntity;
 import lk.robot.newgenic.service.user.ReturnService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,7 @@ import java.security.Principal;
 public class ReturnController {
 
     private ReturnService returnService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReturnController.class);
 
     @Autowired
     public ReturnController(ReturnService returnService) {
@@ -20,14 +24,21 @@ public class ReturnController {
     }
 
     @PostMapping
-    public ResponseEntity<?> returnRequest(@RequestBody ReturnRequestDTO returnRequestDTO, Principal principal) {
+    public ResponseEntity<?> returnRequest(@RequestBody ReturnRequestDTO returnRequestDTO,
+                                           Principal principal) {
+        LOGGER.info("request - registeredUser | returnRequest | returnRequest: {} | userId: {} |",returnRequestDTO,principal.getName());
         long userId = Long.parseLong(principal.getName());
-        return returnService.returnRequest(returnRequestDTO, userId);
+        ResponseEntity<?> responseEntity = returnService.returnRequest(returnRequestDTO, userId);
+        LOGGER.info("request - registeredUser | searchProducts | r: {} | userId: {}",responseEntity.getBody().toString());
+        return responseEntity;
     }
 
     @GetMapping
     public ResponseEntity<?> getReturn(Principal principal) {
+        LOGGER.info("request - registeredUser | getReturnOrders | userID: {}",principal.getName());
         long userId = Long.parseLong(principal.getName());
-        return returnService.getReturn(userId);
+        ResponseEntity<?> returnOrders = returnService.getReturn(userId);
+        LOGGER.info("response - registeredUser | getReturnOrders | returnOrders: {}",returnOrders.getStatusCode());
+        return returnOrders;
     }
 }

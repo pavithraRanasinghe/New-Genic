@@ -43,14 +43,14 @@ public class ReturnServiceImpl implements ReturnService {
 
     @Override
     public ResponseEntity<?> returnRequest(ReturnRequestDTO returnRequestDTO, long userId) {
-        try{
-            if (returnRequestDTO != null){
+        try {
+            if (returnRequestDTO != null) {
                 Optional<UserEntity> user = userRepository.findById(userId);
                 Optional<OrderEntity> order = orderRepository.findById(returnRequestDTO.getOrderId());
                 Optional<ProductEntity> product = productRepository.findById(returnRequestDTO.getProductId());
-                if (order.isPresent() && product.isPresent()){
+                if (order.isPresent() && product.isPresent()) {
                     OrderDetailEntity orderDetailEntity = orderDetailRepository.findByOrderEntityAndProductEntity(order.get(), product.get());
-                    if (orderDetailEntity != null){
+                    if (orderDetailEntity != null) {
                         ReturnEntity returnEntity = new ReturnEntity();
                         returnEntity.setReason(returnRequestDTO.getReason());
                         returnEntity.setRequestDate(DateConverter.localDateToSql(LocalDate.now()));
@@ -58,55 +58,55 @@ public class ReturnServiceImpl implements ReturnService {
                         returnEntity.setAction(ReturnAction.PENDING.toString());
 
                         ReturnEntity returnSaved = returnRepository.save(returnEntity);
-                        if (returnSaved != null){
+                        if (returnSaved != null) {
                             orderDetailEntity.setReturnEntity(returnSaved);
                             orderDetailRepository.save(orderDetailEntity);
-                            return new ResponseEntity<>("Return request sent",HttpStatus.OK);
-                        }else {
-                            return new ResponseEntity<>("Return request not sent",HttpStatus.BAD_REQUEST);
+                            return new ResponseEntity<>("Return request sent", HttpStatus.OK);
+                        } else {
+                            return new ResponseEntity<>("Return request not sent", HttpStatus.BAD_REQUEST);
                         }
-                    }else {
-                        return new ResponseEntity<>("Order Detail not found",HttpStatus.NOT_FOUND);
+                    } else {
+                        return new ResponseEntity<>("Order Detail not found", HttpStatus.NOT_FOUND);
                     }
-                }else{
-                    return new ResponseEntity<>("Order not found",HttpStatus.NOT_FOUND);
+                } else {
+                    return new ResponseEntity<>("Order not found", HttpStatus.NOT_FOUND);
                 }
-            }else {
+            } else {
                 return new ResponseEntity<>("Return request details not found", HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Return request failed");
         }
     }
 
     @Override
     public ResponseEntity<?> getReturn(long userId) {
-        try{
+        try {
             Optional<UserEntity> user = userRepository.findById(userId);
             List<OrderEntity> orderList = orderRepository.findByUserEntity(user.get());
             List<ReturnResponseDTO> responseList = new ArrayList<>();
-            if (!orderList.isEmpty()){
+            if (!orderList.isEmpty()) {
                 for (OrderEntity orderEntity :
                         orderList) {
                     List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
                     for (OrderDetailEntity orderDetailEntity :
                             orderDetailList) {
                         ReturnEntity returnEntity = orderDetailEntity.getReturnEntity();
-                        if (returnEntity != null){
-                            responseList.add(setReturnDetails(returnEntity,orderDetailEntity));
+                        if (returnEntity != null) {
+                            responseList.add(setReturnDetails(returnEntity, orderDetailEntity));
                         }
                     }
                 }
-                return new ResponseEntity<>(responseList,HttpStatus.OK);
-            }else {
-                return new ResponseEntity<>("No orders for you",HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(responseList, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("No orders for you", HttpStatus.NOT_FOUND);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Failed to load returns");
         }
     }
 
-    private ReturnResponseDTO setReturnDetails(ReturnEntity returnEntity,OrderDetailEntity detailEntity){
+    private ReturnResponseDTO setReturnDetails(ReturnEntity returnEntity, OrderDetailEntity detailEntity) {
         return new ReturnResponseDTO(
                 returnEntity.getReturnRequestId(),
                 returnEntity.getReason(),

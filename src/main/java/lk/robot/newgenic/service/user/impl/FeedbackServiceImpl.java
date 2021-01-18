@@ -41,14 +41,14 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public ResponseEntity<?> getFeedback(long productId,int index,int size) {
-        try{
+    public ResponseEntity<?> getFeedback(long productId, int index, int size) {
+        try {
             Optional<ProductEntity> productEntity = productRepository.findById(productId);
-            if(productEntity.isPresent()){
-                List<ProductFeedbackEntity> productFeedbackList = feedbackRepository.findByProductEntityAndApproved(productEntity.get(),true, PageRequest.of(index, size));
-                if (!productFeedbackList.isEmpty()){
+            if (productEntity.isPresent()) {
+                List<ProductFeedbackEntity> productFeedbackList = feedbackRepository.findByProductEntityAndApproved(productEntity.get(), true, PageRequest.of(index, size));
+                if (!productFeedbackList.isEmpty()) {
                     List<ProductFeedbackResponseDTO> feedbackList = new ArrayList<>();
-                    for (ProductFeedbackEntity feedbackEntity:productFeedbackList) {
+                    for (ProductFeedbackEntity feedbackEntity : productFeedbackList) {
 
                         ProductFeedbackResponseDTO productFeedbackResponseDTO = new ProductFeedbackResponseDTO(
                                 feedbackEntity.getProductFeedbackId(),
@@ -60,25 +60,25 @@ public class FeedbackServiceImpl implements FeedbackService {
 
                         feedbackList.add(productFeedbackResponseDTO);
                     }
-                    return new ResponseEntity<>(feedbackList,HttpStatus.OK);
-                }else{
-                    return new ResponseEntity<>("Feedback not found",HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(feedbackList, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Feedback not found", HttpStatus.NOT_FOUND);
                 }
-            }else{
+            } else {
                 return new ResponseEntity<>("No product found", HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Feedback fetching failed");
         }
     }
 
     @Override
     public ResponseEntity<?> writeFeedback(FeedbackRequestDTO feedbackRequestDTO, long userId) {
-        try{
-            if (feedbackRequestDTO != null){
+        try {
+            if (feedbackRequestDTO != null) {
                 Optional<UserEntity> userEntity = userRepository.findById(userId);
                 Optional<ProductEntity> productEntity = productRepository.findById(feedbackRequestDTO.getProductId());
-                if (productEntity.isPresent()){
+                if (productEntity.isPresent()) {
                     ProductFeedbackEntity feedbackEntity = new ProductFeedbackEntity();
                     feedbackEntity.setRate(feedbackRequestDTO.getRate());
                     feedbackEntity.setMessage(feedbackRequestDTO.getMessage());
@@ -88,18 +88,18 @@ public class FeedbackServiceImpl implements FeedbackService {
                     feedbackEntity.setProductEntity(productEntity.get());
 
                     ProductFeedbackEntity save = feedbackRepository.save(feedbackEntity);
-                    if (save != null){
-                        return new ResponseEntity<>("Feedback successful",HttpStatus.OK);
-                    }else {
-                        return new ResponseEntity<>("Feedback unsuccessful",HttpStatus.EXPECTATION_FAILED);
+                    if (save != null) {
+                        return new ResponseEntity<>("Feedback successful", HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity<>("Feedback unsuccessful", HttpStatus.EXPECTATION_FAILED);
                     }
-                }else{
-                    return new ResponseEntity<>("Product not found",HttpStatus.NOT_FOUND);
+                } else {
+                    return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
                 }
-            }else{
-                return new ResponseEntity<>("Feedback details not found",HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>("Feedback details not found", HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Failed to write feedback");
         }
     }

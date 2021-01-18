@@ -3,6 +3,8 @@ package lk.robot.newgenic.controller.user;
 import lk.robot.newgenic.dto.Request.CartOrderRequestDTO;
 import lk.robot.newgenic.dto.Request.OrderRequestDTO;
 import lk.robot.newgenic.service.user.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.security.Principal;
 public class OrderController {
 
     private OrderService orderService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     public OrderController(OrderService orderService) {
@@ -22,20 +25,31 @@ public class OrderController {
     }
 
     @PostMapping("/placeOrder")
-    public ResponseEntity<?> placeOrder(@RequestBody OrderRequestDTO orderRequestDTO, Principal principal){
+    public ResponseEntity<?> placeOneProductOrder(@RequestBody OrderRequestDTO orderRequestDTO,
+                                        Principal principal){
+        LOGGER.info("request - registeredUser | placeOneProductOrder | orderRequest: {} | userId: {}",orderRequestDTO,principal.getName());
         long userId = Long.parseLong(principal.getName());
-        return orderService.placeOrder(orderRequestDTO,userId);
+        ResponseEntity<?> placeOrderResponse = orderService.placeOrder(orderRequestDTO, userId);
+        LOGGER.info("response - registeredUser | placeOneProductOrder | placeOneProductOrderResponse: {}",placeOrderResponse.getStatusCode());
+        return placeOrderResponse;
     }
 
     @PostMapping("/cartOrder")
-    public ResponseEntity<?> cartOrder(@RequestBody CartOrderRequestDTO cartOrderRequestDTO,Principal principal){
+    public ResponseEntity<?> cartOrder(@RequestBody CartOrderRequestDTO cartOrderRequestDTO,
+                                       Principal principal){
+        LOGGER.info("request - registeredUser | placeCartOrder | cartOrderRequest: {} | userId: {}",cartOrderRequestDTO,principal.getName());
         long userId = Long.parseLong(principal.getName());
-        return orderService.cartOrderPlace(cartOrderRequestDTO,userId);
+        ResponseEntity<?> placeOrderResponse = orderService.cartOrderPlace(cartOrderRequestDTO, userId);
+        LOGGER.info("response - registeredUser | placeCartOrder | placeCartOrderResponse: {} ",placeOrderResponse.getStatusCode());
+        return placeOrderResponse;
     }
 
     @GetMapping()
     public ResponseEntity<?> getOrders(Principal principal){
+        LOGGER.info("request - registeredUser | getOrders | userId: {}",principal.getName());
         long userId = Long.parseLong(principal.getName());
-        return orderService.getOrders(userId);
+        ResponseEntity<?> orders = orderService.getOrders(userId);
+        LOGGER.info("response - registeredUser | getOrders | getOrderResponse: {}",orders.getStatusCode());
+        return orders;
     }
 }

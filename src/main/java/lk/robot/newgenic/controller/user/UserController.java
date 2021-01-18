@@ -4,6 +4,8 @@ import lk.robot.newgenic.dto.Request.UserDetailDTO;
 import lk.robot.newgenic.dto.Request.UserSignUpDTO;
 import lk.robot.newgenic.jwt.AuthenticationRequest;
 import lk.robot.newgenic.service.user.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.security.Principal;
 public class UserController {
 
     private UserService userService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(UserService userService) {
@@ -23,19 +26,27 @@ public class UserController {
 
     @PostMapping("/signUp")
     public ResponseEntity<?> userSignUp(@RequestBody UserSignUpDTO userSignUpDTO) {
+        LOGGER.info("request - publicUser | userSignUp | userSignUpDetails:{}", userSignUpDTO);
         ResponseEntity<?> responseEntity = userService.signUp(userSignUpDTO);
+        LOGGER.info("response - publicUser | userSignUp | userSignUpResponse:{}", responseEntity.getBody().toString());
         return responseEntity;
     }
 
     @PostMapping("/logIn")
-    public ResponseEntity<?> userLogin(@RequestBody AuthenticationRequest authenticationRequest){
+    public ResponseEntity<?> userLogin(@RequestBody AuthenticationRequest authenticationRequest) {
+        LOGGER.info("request - registeredUser | userSignIn | authenticationRequest:{}", authenticationRequest);
         ResponseEntity<?> responseEntity = userService.logIn(authenticationRequest);
+        LOGGER.info("response - registeredUser | userSignIn | userSignIn:{}", responseEntity.getBody().toString());
         return responseEntity;
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO, Principal principal){
+    public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO,
+                                          Principal principal) {
+        LOGGER.info("request - registeredUser | userUpdate | userDetail: {},userid: {}", userDetailDTO, principal.getName());
         long userId = Long.parseLong(principal.getName());
-        return userService.updateUser(userDetailDTO,userId);
+        ResponseEntity<?> updateUser = userService.updateUser(userDetailDTO, userId);
+        LOGGER.info("response - registeredUser | userUpdate | updatedUser:{}",updateUser.getBody().toString());
+        return updateUser;
     }
 }

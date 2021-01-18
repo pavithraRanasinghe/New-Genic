@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface DiscountMethodRepository extends JpaRepository<DiscountMethodEntity, Long> {
 
-    @Query("select d from DiscountMethodEntity d order by d.discountMethodId desc")
-    DiscountMethodEntity getDiscountMethod(Pageable pageable);
+    @Query(value = "select * from discount_method where active = true order by discount_method_id desc limit 1",
+    nativeQuery = true)
+    DiscountMethodEntity getDiscountMethod();
 }

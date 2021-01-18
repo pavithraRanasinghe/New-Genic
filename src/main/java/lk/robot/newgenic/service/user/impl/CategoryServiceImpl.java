@@ -49,10 +49,10 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> getAll() {
 
         List<CategoryResponseDTO> categoryResponseDTOList = new ArrayList<>();
-        try{
+        try {
             List<MainCategoryEntity> all = categoryRepository.findAll();
-            if (all.size() != 0){
-                for (MainCategoryEntity mainCategoryEntity:all) {
+            if (all.size() != 0) {
+                for (MainCategoryEntity mainCategoryEntity : all) {
 
                     CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
                     categoryResponseDTO.setMain_category_id(mainCategoryEntity.getMainCategoryId());
@@ -61,8 +61,8 @@ public class CategoryServiceImpl implements CategoryService {
 
                     List<MainSubCategoryEntity> mainSubCategoryList = mainSubCategoryRepository.findByMainCategoryEntity(mainCategoryEntity);
                     List<MainSubCategoryResponseDTO> mainSubCategoryResponseDTOList = new ArrayList<>();
-                    if (mainSubCategoryList.size() != 0){
-                        for (MainSubCategoryEntity mainSubCategoryEntity:mainSubCategoryList) {
+                    if (mainSubCategoryList.size() != 0) {
+                        for (MainSubCategoryEntity mainSubCategoryEntity : mainSubCategoryList) {
 
                             MainSubCategoryResponseDTO mainSubCategoryResponseDTO = new MainSubCategoryResponseDTO();
                             mainSubCategoryResponseDTO.setMain_sub_category_id(mainSubCategoryEntity.getMainSubCategoryId());
@@ -71,9 +71,9 @@ public class CategoryServiceImpl implements CategoryService {
 
                             List<SubCategoryEntity> subCategoryList = subCategoryRepository.findByMainSubCategoryEntity
                                     (mainSubCategoryEntity);
-                            if (subCategoryList.size() != 0){
+                            if (subCategoryList.size() != 0) {
                                 List<SubCategoryDTO> subCategoryDTOList = new ArrayList<>();
-                                for (SubCategoryEntity subCategoryEntity:subCategoryList) {
+                                for (SubCategoryEntity subCategoryEntity : subCategoryList) {
                                     SubCategoryDTO subCategoryDTO = new SubCategoryDTO(
                                             subCategoryEntity.getSubCategoryId(),
                                             subCategoryEntity.getSubCategoryName(),
@@ -82,83 +82,83 @@ public class CategoryServiceImpl implements CategoryService {
                                     subCategoryDTOList.add(subCategoryDTO);
                                     mainSubCategoryResponseDTO.setSubCategoryDTO(subCategoryDTOList);
                                 }
-                            }else{
+                            } else {
                                 return new ResponseEntity<>("Not found Sub category list", HttpStatus.NOT_FOUND);
                             }
 
                             mainSubCategoryResponseDTOList.add(mainSubCategoryResponseDTO);
                         }
-                    }else{
+                    } else {
                         return new ResponseEntity<>("Not found Main sub category list", HttpStatus.NOT_FOUND);
                     }
                     categoryResponseDTO.setMainSubCategoryResponseDTO(mainSubCategoryResponseDTOList);
                     categoryResponseDTOList.add(categoryResponseDTO);
                 }
-                return new ResponseEntity<>(categoryResponseDTOList,HttpStatus.OK);
-            }else{
+                return new ResponseEntity<>(categoryResponseDTOList, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<>("Not found Main category list", HttpStatus.NOT_FOUND);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Category search failed");
         }
     }
 
     @Override
-    public ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId,int index,int size) {
-        try{
-            if(mainSubCategoryId != 0){
+    public ResponseEntity<?> getMainSubCategoryProducts(long mainSubCategoryId, int index, int size) {
+        try {
+            if (mainSubCategoryId != 0) {
                 Optional<MainSubCategoryEntity> mainSubCategory = mainSubCategoryRepository.findById(mainSubCategoryId);
-                if (mainSubCategory.isPresent()){
+                if (mainSubCategory.isPresent()) {
                     List<SubCategoryEntity> subCategoryList = subCategoryRepository.findByMainSubCategoryEntity(mainSubCategory.get());
-                    if (!subCategoryList.isEmpty()){
+                    if (!subCategoryList.isEmpty()) {
                         List<ProductDTO> productList = new ArrayList<>();
-                        for (SubCategoryEntity subCategoryEntity:subCategoryList) {
-                            List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity,true, PageRequest.of(index, size));
-                            if (!productEntityList.isEmpty()){
-                                for (ProductEntity productEntity:productEntityList) {
+                        for (SubCategoryEntity subCategoryEntity : subCategoryList) {
+                            List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity, true, PageRequest.of(index, size));
+                            if (!productEntityList.isEmpty()) {
+                                for (ProductEntity productEntity : productEntityList) {
                                     ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
                                     productList.add(productDTO);
                                 }
-                            }else{
-                                return new ResponseEntity<>("Product list not found",HttpStatus.NOT_FOUND);
+                            } else {
+                                return new ResponseEntity<>("Product list not found", HttpStatus.NOT_FOUND);
                             }
                         }
                         return new ResponseEntity<>(productList, HttpStatus.OK);
-                    }else{
-                        return new ResponseEntity<>("Sub category list not found",HttpStatus.NOT_FOUND);
+                    } else {
+                        return new ResponseEntity<>("Sub category list not found", HttpStatus.NOT_FOUND);
                     }
-                }else {
-                    return new ResponseEntity<>("Main sub category not found",HttpStatus.NOT_FOUND);
+                } else {
+                    return new ResponseEntity<>("Main sub category not found", HttpStatus.NOT_FOUND);
                 }
-            }else {
-                return new ResponseEntity<>("Main sub category id required",HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>("Main sub category id required", HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Something went wrong in main sub category product search");
         }
     }
 
     @Override
-    public ResponseEntity<?> getSubCategoryProducts(long subCategoryId,int index,int size) {
-        if (subCategoryId != 0){
+    public ResponseEntity<?> getSubCategoryProducts(long subCategoryId, int index, int size) {
+        if (subCategoryId != 0) {
             Optional<SubCategoryEntity> subCategoryEntity = subCategoryRepository.findById(subCategoryId);
-            if (subCategoryEntity.isPresent()){
-                List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity.get(),true,PageRequest.of(index, size));
-                if (!productEntityList.isEmpty()){
+            if (subCategoryEntity.isPresent()) {
+                List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity.get(), true, PageRequest.of(index, size));
+                if (!productEntityList.isEmpty()) {
                     List<ProductDTO> productList = new ArrayList<>();
-                    for (ProductEntity productEntity:productEntityList) {
+                    for (ProductEntity productEntity : productEntityList) {
                         ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
                         productList.add(productDTO);
                     }
-                    return new ResponseEntity<>(productList,HttpStatus.OK);
-                }else {
-                    return new ResponseEntity<>("Products not found",HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(productList, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Products not found", HttpStatus.NOT_FOUND);
                 }
-            }else {
-                return new ResponseEntity<>("Sub category not found",HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>("Sub category not found", HttpStatus.NOT_FOUND);
             }
-        }else {
-            return new ResponseEntity<>("Sub category id required",HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("Sub category id required", HttpStatus.BAD_REQUEST);
         }
     }
 }

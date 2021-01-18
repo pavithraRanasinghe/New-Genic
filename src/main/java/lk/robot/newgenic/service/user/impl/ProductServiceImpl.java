@@ -29,21 +29,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> newArrivals(int index,int size) {
+    public ResponseEntity<?> newArrivals(int index, int size) {
 
         try {
             List<ProductEntity> list = productRepository.newArrivals(PageRequest.of(index, size));
-            if (!list.isEmpty()){
+            if (!list.isEmpty()) {
                 List<ProductDTO> newArrivalList = new ArrayList<>();
-                for (ProductEntity productEntity:list) {
+                for (ProductEntity productEntity : list) {
                     ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
                     newArrivalList.add(productDTO);
                 }
-                return new ResponseEntity<>(newArrivalList,HttpStatus.OK);
-            }else{
+                return new ResponseEntity<>(newArrivalList, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<>("New arrivals not found", HttpStatus.NOT_FOUND);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Something went wrong in new arrivals");
         }
 
@@ -51,37 +51,36 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<?> fantechProduct() {
-        try{
-            List<ProductEntity> fantech = productRepository.findAllByBrandAndActive("Fantech",true);
-            if (!fantech.isEmpty()){
+        try {
+            List<ProductEntity> fantech = productRepository.findAllByBrandAndActive("Fantech", true);
+            if (!fantech.isEmpty()) {
                 List<ProductDTO> fantechList = new ArrayList<>();
-                for (ProductEntity productEntity:fantech) {
+                for (ProductEntity productEntity : fantech) {
                     ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
                     fantechList.add(productDTO);
                 }
-                return new ResponseEntity<>(fantechList,HttpStatus.OK);
-            }else{
+                return new ResponseEntity<>(fantechList, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<>("Fantech products not found", HttpStatus.NOT_FOUND);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Something went wrong in fantech products");
         }
     }
 
     @Override
     public ResponseEntity<?> filterProducts(FilterDTO filterDTO) {
-        try{
-            if(filterDTO != null){
+        try {
+            if (filterDTO != null) {
                 productRepository.filterProducts(
                         filterDTO.getBrand(),
                         filterDTO.getMinPrice(),
                         filterDTO.getMaxPrice(),
                         filterDTO.getColor());
-            }else{
-                return new ResponseEntity<>("Filter options required",HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>("Filter options required", HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Product Filter failed");
         }
         return null;
@@ -89,56 +88,56 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<?> getDetail(long productId) {
-        if (productId != 0){
+        if (productId != 0) {
             Optional<ProductEntity> productEntity = productRepository.findById(productId);
-            if(productEntity.isPresent()){
+            if (productEntity.isPresent()) {
                 ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity.get());
-                return new ResponseEntity<>(productDTO,HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>("Product not found",HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(productDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
             }
-        }else {
-            return new ResponseEntity<>("Product ID not found",HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("Product ID not found", HttpStatus.BAD_REQUEST);
         }
     }
 
     @Override
-    public ResponseEntity<?> relatedProduct(long productId,int index,int size) {
-        try{
-            if (productId != 0){
+    public ResponseEntity<?> relatedProduct(long productId, int index, int size) {
+        try {
+            if (productId != 0) {
                 Optional<ProductEntity> productEntity = productRepository.findById(productId);
-                if (productEntity.isPresent()){
+                if (productEntity.isPresent()) {
                     List<ProductEntity> productEntityList = productRepository.
-                            findBySubCategoryEntityAndActive(productEntity.get().getSubCategoryEntity(), true,PageRequest.of(index, size));
-                    if (!productEntityList.isEmpty()){
+                            findBySubCategoryEntityAndActive(productEntity.get().getSubCategoryEntity(), true, PageRequest.of(index, size));
+                    if (!productEntityList.isEmpty()) {
                         List<ProductDTO> productList = new ArrayList<>();
-                        for (ProductEntity product :productEntityList) {
+                        for (ProductEntity product : productEntityList) {
                             productList.add(EntityToDto.productEntityToDto(product));
                         }
-                        return new ResponseEntity<>(productList,HttpStatus.OK);
-                    }else {
-                        return new ResponseEntity<>("Related products not found",HttpStatus.NOT_FOUND);
+                        return new ResponseEntity<>(productList, HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity<>("Related products not found", HttpStatus.NOT_FOUND);
                     }
-                }else {
-                    return new ResponseEntity<>("Product not found",HttpStatus.NOT_FOUND);
+                } else {
+                    return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
                 }
-            }else {
-                return new ResponseEntity<>("Product id not found",HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>("Product id not found", HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Failed to fetch related products");
         }
     }
 
     @Override
     public ResponseEntity<?> searchProduct(String keyword, int index, int size) {
-        try{
-            if (keyword !=null){
+        try {
+            if (keyword != null) {
                 return null;
-            }else{
-                return new ResponseEntity<>("Keyword not found",HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>("Keyword not found", HttpStatus.NOT_FOUND);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Search failed");
         }
     }

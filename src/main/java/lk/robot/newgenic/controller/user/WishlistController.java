@@ -1,6 +1,8 @@
 package lk.robot.newgenic.controller.user;
 
 import lk.robot.newgenic.service.user.WishlistService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.security.Principal;
 public class WishlistController {
 
     private WishlistService wishlistService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(WishlistController.class);
 
     @Autowired
     public WishlistController(WishlistService wishlistService) {
@@ -21,21 +24,22 @@ public class WishlistController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addToWishList(@PathVariable long productId, Principal principal){
-        if (principal == null){
-            return new ResponseEntity<>("Unauthorized to access", HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<?> addToWishList(@PathVariable long productId,
+                                           Principal principal){
+        LOGGER.info("request - registeredUser | addToWishList | productId: {} | userId: {}",productId,principal.getName());
         long userId = Long.parseLong(principal.getName());
-        return wishlistService.addToWishlist(productId,userId);
+        ResponseEntity<?> toWishlist = wishlistService.addToWishlist(productId, userId);
+        LOGGER.info("response - registeredUser | addToWishList | wishlist: {}",toWishlist.getBody().toString());
+        return toWishlist;
     }
 
     @GetMapping()
     public ResponseEntity<?> getWishList(Principal principal){
-        if (principal == null){
-            return new ResponseEntity<>("Unauthorized to access", HttpStatus.UNAUTHORIZED);
-        }
+        LOGGER.info("request - registeredUser | getWishList | userId: {}",principal.getName());
         long userId = Long.parseLong(principal.getName());
-        return wishlistService.getWishList(userId);
+        ResponseEntity<?> wishList = wishlistService.getWishList(userId);
+        LOGGER.info("response - registeredUser | getWishList | wishlist: {}",wishList.getBody().toString());
+        return wishList;
     }
 
 }
