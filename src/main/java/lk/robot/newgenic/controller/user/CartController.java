@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/user/cart")
 @CrossOrigin
 public class CartController {
 

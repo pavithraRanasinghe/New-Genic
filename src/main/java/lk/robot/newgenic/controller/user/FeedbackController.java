@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/feedback")
+@RequestMapping("/user/feedback")
 @CrossOrigin
 public class FeedbackController {
 
