@@ -174,6 +174,14 @@ public class ProductDTO {
         this.active = active;
     }
 
+    public boolean isFreeShipping() {
+        return isFreeShipping;
+    }
+
+    public void setFreeShipping(boolean freeShipping) {
+        isFreeShipping = freeShipping;
+    }
+
     public double getDiscount() {
         return discount;
     }
@@ -203,13 +211,4 @@ public class ProductDTO {
                 ", discount=" + discount +
                 '}';
     }
-
-    public boolean isFreeShipping() {
-        return isFreeShipping;
-    }
-
-    public void setFreeShipping(boolean freeShipping) {
-        isFreeShipping = freeShipping;
-    }
-
 }
