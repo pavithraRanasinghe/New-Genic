@@ -1,4 +1,4 @@
-package lk.robot.newgenic.service.impl;
+package lk.robot.newgenic.service.user.impl;
 
 import lk.robot.newgenic.dto.Request.UserDetailDTO;
 import lk.robot.newgenic.dto.Request.UserSignUpDTO;
@@ -13,7 +13,7 @@ import lk.robot.newgenic.jwt.JwtGenerator;
 import lk.robot.newgenic.repository.UserAddressDetailRepository;
 import lk.robot.newgenic.repository.UserAddressRepository;
 import lk.robot.newgenic.repository.UserRepository;
-import lk.robot.newgenic.service.UserService;
+import lk.robot.newgenic.service.user.UserService;
 import lk.robot.newgenic.util.DateConverter;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;

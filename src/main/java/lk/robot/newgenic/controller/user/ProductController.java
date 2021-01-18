@@ -1,15 +1,11 @@
-package lk.robot.newgenic.controller;
+package lk.robot.newgenic.controller.user;
 
 import lk.robot.newgenic.dto.Request.FilterDTO;
-import lk.robot.newgenic.entity.ProductEntity;
-import lk.robot.newgenic.service.ProductService;
+import lk.robot.newgenic.service.user.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/product")

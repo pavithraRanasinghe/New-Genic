@@ -1,4 +1,4 @@
-package lk.robot.newgenic.service.impl;
+package lk.robot.newgenic.service.user.impl;
 
 import lk.robot.newgenic.dto.Request.ReturnRequestDTO;
 import lk.robot.newgenic.dto.response.ReturnResponseDTO;
@@ -6,7 +6,7 @@ import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.enums.ReturnAction;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.*;
-import lk.robot.newgenic.service.ReturnService;
+import lk.robot.newgenic.service.user.ReturnService;
 import lk.robot.newgenic.util.DateConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

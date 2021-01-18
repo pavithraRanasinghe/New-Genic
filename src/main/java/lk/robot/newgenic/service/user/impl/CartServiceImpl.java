@@ -1,4 +1,4 @@
-package lk.robot.newgenic.service.impl;
+package lk.robot.newgenic.service.user.impl;
 
 import lk.robot.newgenic.dto.DeliveryDTO;
 import lk.robot.newgenic.dto.ProductDTO;
@@ -9,7 +9,7 @@ import lk.robot.newgenic.enums.DiscountType;
 import lk.robot.newgenic.enums.OrderStatus;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.*;
-import lk.robot.newgenic.service.CartService;
+import lk.robot.newgenic.service.user.CartService;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

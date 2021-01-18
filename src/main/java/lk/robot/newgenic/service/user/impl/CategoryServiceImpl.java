@@ -1,4 +1,4 @@
-package lk.robot.newgenic.service.impl;
+package lk.robot.newgenic.service.user.impl;
 
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.SubCategoryDTO;
@@ -13,7 +13,7 @@ import lk.robot.newgenic.repository.CategoryRepository;
 import lk.robot.newgenic.repository.MainSubCategoryRepository;
 import lk.robot.newgenic.repository.ProductRepository;
 import lk.robot.newgenic.repository.SubCategoryRepository;
-import lk.robot.newgenic.service.CategoryService;
+import lk.robot.newgenic.service.user.CategoryService;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

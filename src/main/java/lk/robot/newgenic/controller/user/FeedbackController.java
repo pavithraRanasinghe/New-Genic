@@ -1,7 +1,7 @@
-package lk.robot.newgenic.controller;
+package lk.robot.newgenic.controller.user;
 
 import lk.robot.newgenic.dto.Request.FeedbackRequestDTO;
-import lk.robot.newgenic.service.FeedbackService;
+import lk.robot.newgenic.service.user.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

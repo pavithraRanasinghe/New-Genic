@@ -1,4 +1,4 @@
-package lk.robot.newgenic.service;
+package lk.robot.newgenic.service.user;
 
 import org.springframework.http.ResponseEntity;
 

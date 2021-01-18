@@ -1,6 +1,6 @@
-package lk.robot.newgenic.controller;
+package lk.robot.newgenic.controller.user;
 
-import lk.robot.newgenic.service.WishlistService;
+import lk.robot.newgenic.service.user.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

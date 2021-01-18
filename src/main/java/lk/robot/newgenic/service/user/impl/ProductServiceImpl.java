@@ -1,11 +1,11 @@
-package lk.robot.newgenic.service.impl;
+package lk.robot.newgenic.service.user.impl;
 
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.Request.FilterDTO;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.ProductRepository;
-import lk.robot.newgenic.service.ProductService;
+import lk.robot.newgenic.service.user.ProductService;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

@@ -1,7 +1,7 @@
-package lk.robot.newgenic.controller;
+package lk.robot.newgenic.controller.user;
 
 import lk.robot.newgenic.dto.Request.CartRequestDTO;
-import lk.robot.newgenic.service.CartService;
+import lk.robot.newgenic.service.user.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

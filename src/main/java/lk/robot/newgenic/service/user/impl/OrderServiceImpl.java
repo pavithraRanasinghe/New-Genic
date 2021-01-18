@@ -1,4 +1,4 @@
-package lk.robot.newgenic.service.impl;
+package lk.robot.newgenic.service.user.impl;
 
 import lk.robot.newgenic.dto.Request.BillingDetail;
 import lk.robot.newgenic.dto.Request.CartOrderRequestDTO;
@@ -11,7 +11,7 @@ import lk.robot.newgenic.enums.AddressType;
 import lk.robot.newgenic.enums.OrderStatus;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.*;
-import lk.robot.newgenic.service.OrderService;
+import lk.robot.newgenic.service.user.OrderService;
 import lk.robot.newgenic.util.DateConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

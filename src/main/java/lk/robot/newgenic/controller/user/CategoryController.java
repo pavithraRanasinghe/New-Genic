@@ -1,6 +1,6 @@
-package lk.robot.newgenic.controller;
+package lk.robot.newgenic.controller.user;
 
-import lk.robot.newgenic.service.CategoryService;
+import lk.robot.newgenic.service.user.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

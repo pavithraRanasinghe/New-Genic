@@ -1,4 +1,4 @@
-package lk.robot.newgenic.service.impl;
+package lk.robot.newgenic.service.user.impl;
 
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.entity.ProductEntity;
@@ -8,7 +8,7 @@ import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.ProductRepository;
 import lk.robot.newgenic.repository.UserRepository;
 import lk.robot.newgenic.repository.WishlistRepository;
-import lk.robot.newgenic.service.WishlistService;
+import lk.robot.newgenic.service.user.WishlistService;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
