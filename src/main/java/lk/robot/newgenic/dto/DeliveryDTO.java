@@ -1,7 +1,6 @@
 package lk.robot.newgenic.dto;
 
-import lk.robot.newgenic.dto.response.DeliveryCostDTO;
-import lk.robot.newgenic.entity.DeliveryCostEntity;
+import lk.robot.newgenic.dto.user.response.DeliveryCostDTO;
 
 public class DeliveryDTO {
     private long deliveryId;

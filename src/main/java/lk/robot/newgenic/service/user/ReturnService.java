@@ -1,6 +1,6 @@
 package lk.robot.newgenic.service.user;
 
-import lk.robot.newgenic.dto.Request.ReturnRequestDTO;
+import lk.robot.newgenic.dto.user.Request.ReturnRequestDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface ReturnService {

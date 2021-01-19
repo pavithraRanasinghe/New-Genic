@@ -1,8 +1,8 @@
 package lk.robot.newgenic.service.user.impl;
 
-import lk.robot.newgenic.dto.Request.UserDetailDTO;
-import lk.robot.newgenic.dto.Request.UserSignUpDTO;
-import lk.robot.newgenic.dto.response.SignInResponseDTO;
+import lk.robot.newgenic.dto.user.Request.UserDetailDTO;
+import lk.robot.newgenic.dto.user.Request.UserSignUpDTO;
+import lk.robot.newgenic.dto.user.response.SignInResponseDTO;
 import lk.robot.newgenic.entity.UserAddressDetailEntity;
 import lk.robot.newgenic.entity.UserAddressEntity;
 import lk.robot.newgenic.entity.UserEntity;
@@ -10,9 +10,9 @@ import lk.robot.newgenic.enums.AddressType;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.jwt.AuthenticationRequest;
 import lk.robot.newgenic.jwt.JwtGenerator;
-import lk.robot.newgenic.repository.UserAddressDetailRepository;
-import lk.robot.newgenic.repository.UserAddressRepository;
-import lk.robot.newgenic.repository.UserRepository;
+import lk.robot.newgenic.repository.user.UserAddressDetailRepository;
+import lk.robot.newgenic.repository.user.UserAddressRepository;
+import lk.robot.newgenic.repository.user.UserRepository;
 import lk.robot.newgenic.service.user.UserService;
 import lk.robot.newgenic.util.DateConverter;
 import lk.robot.newgenic.util.EntityToDto;

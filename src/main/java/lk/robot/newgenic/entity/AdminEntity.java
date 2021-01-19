@@ -19,13 +19,15 @@ public class AdminEntity {
     @Column(unique = true)
     private String username;
     @Column
-    private Date dob;
+    private String nic;
     @Column
     private String gender;
     @Column
     private String gmail;
     @Column
     private String mobile;
+    @Column(name = "profile_picture")
+    private String profilePicture;
     @Column
     private String password;
     @Column(name = "registered_date")
@@ -40,21 +42,24 @@ public class AdminEntity {
                        String firstName,
                        String lastName,
                        String username,
-                       Date dob,
+                       String nic,
                        String gender,
                        String gmail,
                        String mobile,
+                       String profilePicture,
                        String password,
                        Date registeredDate,
-                       Time registeredTime) {
+                       Time registeredTime,
+                       String role) {
         this.adminId = adminId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
-        this.dob = dob;
+        this.nic = nic;
         this.gender = gender;
         this.gmail = gmail;
         this.mobile = mobile;
+        this.profilePicture = profilePicture;
         this.password = password;
         this.registeredDate = registeredDate;
         this.registeredTime = registeredTime;
@@ -92,12 +97,12 @@ public class AdminEntity {
         this.username = username;
     }
 
-    public Date getDob() {
-        return dob;
+    public String getNic() {
+        return nic;
     }
 
-    public void setDob(Date dob) {
-        this.dob = dob;
+    public void setNic(String nic) {
+        this.nic = nic;
     }
 
     public String getGender() {
@@ -122,6 +127,14 @@ public class AdminEntity {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public String getPassword() {
@@ -155,10 +168,11 @@ public class AdminEntity {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
-                ", dob=" + dob +
+                ", nic='" + nic + '\'' +
                 ", gender='" + gender + '\'' +
                 ", gmail='" + gmail + '\'' +
                 ", mobile='" + mobile + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
                 ", password='" + password + '\'' +
                 ", registeredDate=" + registeredDate +
                 ", registeredTime=" + registeredTime +

@@ -1,14 +1,14 @@
 package lk.robot.newgenic.service.user.impl;
 
-import lk.robot.newgenic.dto.Request.FeedbackRequestDTO;
-import lk.robot.newgenic.dto.response.ProductFeedbackResponseDTO;
+import lk.robot.newgenic.dto.user.Request.FeedbackRequestDTO;
+import lk.robot.newgenic.dto.user.response.ProductFeedbackResponseDTO;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.entity.ProductFeedbackEntity;
 import lk.robot.newgenic.entity.UserEntity;
 import lk.robot.newgenic.exception.CustomException;
-import lk.robot.newgenic.repository.FeedbackRepository;
-import lk.robot.newgenic.repository.ProductRepository;
-import lk.robot.newgenic.repository.UserRepository;
+import lk.robot.newgenic.repository.user.FeedbackRepository;
+import lk.robot.newgenic.repository.user.ProductRepository;
+import lk.robot.newgenic.repository.user.UserRepository;
 import lk.robot.newgenic.service.user.FeedbackService;
 import lk.robot.newgenic.util.DateConverter;
 import lk.robot.newgenic.util.EntityToDto;

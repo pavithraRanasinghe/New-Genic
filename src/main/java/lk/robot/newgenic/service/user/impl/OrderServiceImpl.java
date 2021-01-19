@@ -1,16 +1,16 @@
 package lk.robot.newgenic.service.user.impl;
 
-import lk.robot.newgenic.dto.Request.BillingDetail;
-import lk.robot.newgenic.dto.Request.CartOrderRequestDTO;
-import lk.robot.newgenic.dto.Request.OrderRequestDTO;
-import lk.robot.newgenic.dto.Request.ShippingDetail;
-import lk.robot.newgenic.dto.response.OrderProductDetail;
-import lk.robot.newgenic.dto.response.OrderResponseDTO;
+import lk.robot.newgenic.dto.user.Request.BillingDetail;
+import lk.robot.newgenic.dto.user.Request.CartOrderRequestDTO;
+import lk.robot.newgenic.dto.user.Request.OrderRequestDTO;
+import lk.robot.newgenic.dto.user.Request.ShippingDetail;
+import lk.robot.newgenic.dto.user.response.OrderProductDetail;
+import lk.robot.newgenic.dto.user.response.OrderResponseDTO;
 import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.enums.AddressType;
 import lk.robot.newgenic.enums.OrderStatus;
 import lk.robot.newgenic.exception.CustomException;
-import lk.robot.newgenic.repository.*;
+import lk.robot.newgenic.repository.user.*;
 import lk.robot.newgenic.service.user.OrderService;
 import lk.robot.newgenic.util.DateConverter;
 import org.springframework.beans.factory.annotation.Autowired;

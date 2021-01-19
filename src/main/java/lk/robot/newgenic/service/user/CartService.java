@@ -1,6 +1,6 @@
 package lk.robot.newgenic.service.user;
 
-import lk.robot.newgenic.dto.Request.CartRequestDTO;
+import lk.robot.newgenic.dto.user.Request.CartRequestDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface CartService {

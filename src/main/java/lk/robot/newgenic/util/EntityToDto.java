@@ -1,9 +1,11 @@
 package lk.robot.newgenic.util;
 
 import lk.robot.newgenic.dto.ProductDTO;
-import lk.robot.newgenic.dto.Request.UserSignUpDTO;
-import lk.robot.newgenic.dto.response.DeliveryCostDTO;
-import lk.robot.newgenic.dto.response.UserFeedbackDTO;
+import lk.robot.newgenic.dto.admin.request.UserRequestDTO;
+import lk.robot.newgenic.dto.user.Request.UserSignUpDTO;
+import lk.robot.newgenic.dto.user.response.DeliveryCostDTO;
+import lk.robot.newgenic.dto.user.response.UserFeedbackDTO;
+import lk.robot.newgenic.entity.AdminEntity;
 import lk.robot.newgenic.entity.DeliveryCostEntity;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.entity.UserEntity;
@@ -54,6 +56,20 @@ public class EntityToDto {
 
         return userEntity;
 
+    }
+
+    public static AdminEntity adminDtoToEntity(UserRequestDTO userRequestDTO){
+        AdminEntity adminEntity = new AdminEntity();
+        adminEntity.setFirstName(userRequestDTO.getFirstName());
+        adminEntity.setLastName(userRequestDTO.getLastName());
+        adminEntity.setUsername(userRequestDTO.getUserName());
+        adminEntity.setNic(userRequestDTO.getNic());
+        adminEntity.setGender(userRequestDTO.getGender());
+        adminEntity.setGmail(userRequestDTO.getGmail());
+        adminEntity.setMobile(userRequestDTO.getMobile());
+        adminEntity.setProfilePicture(userRequestDTO.getProfilePicture());
+
+        return adminEntity;
     }
 
     public static DeliveryCostDTO deliveryCostEntityToDTO(DeliveryCostEntity deliveryCostEntity){

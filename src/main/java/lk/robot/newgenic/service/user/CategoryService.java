@@ -1,9 +1,6 @@
 package lk.robot.newgenic.service.user;
 
-import lk.robot.newgenic.dto.response.CategoryResponseDTO;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 public interface CategoryService {
 

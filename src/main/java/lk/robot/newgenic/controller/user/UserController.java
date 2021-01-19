@@ -1,7 +1,7 @@
 package lk.robot.newgenic.controller.user;
 
-import lk.robot.newgenic.dto.Request.UserDetailDTO;
-import lk.robot.newgenic.dto.Request.UserSignUpDTO;
+import lk.robot.newgenic.dto.user.Request.UserDetailDTO;
+import lk.robot.newgenic.dto.user.Request.UserSignUpDTO;
 import lk.robot.newgenic.jwt.AuthenticationRequest;
 import lk.robot.newgenic.service.user.UserService;
 import org.slf4j.Logger;
