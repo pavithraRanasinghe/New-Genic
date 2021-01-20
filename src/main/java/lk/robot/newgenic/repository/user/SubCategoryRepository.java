@@ -11,4 +11,6 @@ public interface SubCategoryRepository extends JpaRepository<SubCategoryEntity,L
     List<SubCategoryEntity> findByMainSubCategoryEntity(MainSubCategoryEntity main);
 
     List<SubCategoryEntity> findAllByMainSubCategoryEntity(MainSubCategoryEntity mainSubCategoryEntity);
+
+    SubCategoryEntity findBySubCategoryNameAndMainSubCategoryEntity(String name,MainSubCategoryEntity mainSubCategory);
 }
