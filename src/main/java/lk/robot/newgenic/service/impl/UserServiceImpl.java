@@ -1,5 +1,6 @@
 package lk.robot.newgenic.service.impl;
 
+import lk.robot.newgenic.dto.UserDTO;
 import lk.robot.newgenic.dto.user.request.UserDetailDTO;
 import lk.robot.newgenic.dto.user.request.UserSignUpDTO;
 import lk.robot.newgenic.dto.user.response.SignInResponseDTO;
@@ -16,6 +17,7 @@ import lk.robot.newgenic.repository.UserRepository;
 import lk.robot.newgenic.service.UserService;
 import lk.robot.newgenic.util.DateConverter;
 import lk.robot.newgenic.util.EntityToDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +35,19 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
     private UserRepository userRepository;
     private UserAddressRepository userAddressRepository;
     private UserAddressDetailRepository userAddressDetailRepository;
 
     @Autowired
     public UserServiceImpl(PasswordEncoder passwordEncoder,
+                           ModelMapper modelMapper,
                            UserRepository userRepository,
                            UserAddressRepository userAddressRepository,
                            UserAddressDetailRepository userAddressDetailRepository) {
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.userAddressRepository = userAddressRepository;
         this.userAddressDetailRepository = userAddressDetailRepository;
@@ -166,6 +171,21 @@ public class UserServiceImpl implements UserService {
             }
         } catch (Exception e) {
             throw new CustomException("User update failed");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getProfile(long userId) {
+        try{
+            Optional<UserEntity> userEntity = userRepository.findById(userId);
+            if (userEntity.isPresent()){
+                UserDTO user = modelMapper.map(userEntity.get(), UserDTO.class);
+                return new ResponseEntity<>(user,HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            throw new CustomException(e.getMessage());
         }
     }
 

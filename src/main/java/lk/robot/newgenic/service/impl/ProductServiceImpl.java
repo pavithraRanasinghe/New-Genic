@@ -138,7 +138,17 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<?> searchProduct(String keyword, int index, int size) {
         try {
             if (keyword != null) {
-                return null;
+                List<ProductEntity> productEntityList = productRepository.searchProducts(keyword);
+                if (!productEntityList.isEmpty()){
+                    List<ProductDTO> productList = new ArrayList<>();
+                    for (ProductEntity productEntity :
+                            productEntityList) {
+                        productList.add(EntityToDto.productEntityToDto(productEntity));
+                    }
+                    return new ResponseEntity<>(productList,HttpStatus.OK);
+                }else {
+                    return new ResponseEntity<>("No products found",HttpStatus.NOT_FOUND);
+                }
             } else {
                 return new ResponseEntity<>("Keyword not found", HttpStatus.NOT_FOUND);
             }

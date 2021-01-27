@@ -43,10 +43,19 @@ public class UserController {
     @PatchMapping("/update")
     public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO,
                                           Principal principal) {
-        LOGGER.info("request - registeredUser | userUpdate | userDetail: {},userid: {}", userDetailDTO, principal.getName());
+        LOGGER.info("request - registeredUser | userUpdate | userDetail: {},userId: {}", userDetailDTO, principal.getName());
         long userId = Long.parseLong(principal.getName());
         ResponseEntity<?> updateUser = userService.updateUser(userDetailDTO, userId);
         LOGGER.info("response - registeredUser | userUpdate | updatedUser:{}",updateUser.getBody().toString());
         return updateUser;
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(Principal principal){
+        LOGGER.info("request | getProfile | userId:{}",principal.getName());
+        long userId = Long.parseLong(principal.getName());
+        ResponseEntity<?> profile = userService.getProfile(userId);
+        LOGGER.info("response | getProfile | profile: {}",profile.getBody().toString());
+        return profile;
     }
 }

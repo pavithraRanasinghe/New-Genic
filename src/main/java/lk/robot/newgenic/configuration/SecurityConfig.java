@@ -4,6 +4,7 @@ import lk.robot.newgenic.jwt.JwtConfig;
 import lk.robot.newgenic.jwt.JwtTokenAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -48,8 +49,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
 
-                .antMatchers("/user/signUp").permitAll()
-                .antMatchers("/user/logIn").permitAll()
+//                user permissions
+                .antMatchers("/signUp").permitAll()
+                .antMatchers("/logIn").permitAll()
+//                product permissions
+                .antMatchers("/product/**").permitAll()
+//                cart permissions
+                .antMatchers("/cart/**").permitAll()
+//                category permissions
+                .antMatchers("/category/**").permitAll()
+//                feedback permissions
+                .antMatchers(HttpMethod.GET,"/feedback/**").permitAll()
 
                 .anyRequest()
                 .authenticated();

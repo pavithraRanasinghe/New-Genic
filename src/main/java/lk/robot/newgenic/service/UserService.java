@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 
-    public ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO);
+    ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO);
 
-    public ResponseEntity<?> logIn(AuthenticationRequest authenticationRequest);
+    ResponseEntity<?> logIn(AuthenticationRequest authenticationRequest);
 
     ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO,long userId);
+
+    ResponseEntity<?> getProfile(long userId);
 }

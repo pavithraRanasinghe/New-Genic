@@ -64,7 +64,7 @@ public class ProductController {
         return relatedProduct;
     }
 
-    @PostMapping("/search")
+    @PostMapping("/search/{keyword}")
     public ResponseEntity<?> search(@PathVariable String keyword,
                                     @RequestParam int index,
                                     @RequestParam int size) {
