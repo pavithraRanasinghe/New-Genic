@@ -3,6 +3,7 @@ package lk.robot.newgenic.entity;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.List;
 
 @Entity
 @Table(name = "delivery")
@@ -30,12 +31,11 @@ public class DeliveryEntity {
     private String registrationNumber;
     @Column
     private boolean active;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "delivery_cost_id",referencedColumnName = "delivery_cost_id")
-    private DeliveryCostEntity deliveryCostEntity;
     @ManyToOne
     @JoinColumn(name = "fk_admin_id")
     private AdminEntity adminEntity;
+    @OneToMany(mappedBy = "deliveryEntity",fetch = FetchType.LAZY)
+    private List<DeliveryCostEntity> costEntityList;
 
     public DeliveryEntity() {
     }
@@ -50,7 +50,6 @@ public class DeliveryEntity {
                           Time registrationTime,
                           String registrationNumber,
                           boolean active,
-                          DeliveryCostEntity deliveryCostEntity,
                           AdminEntity adminEntity) {
         this.deliveryId = deliveryId;
         this.name = name;
@@ -62,7 +61,6 @@ public class DeliveryEntity {
         this.registrationTime = registrationTime;
         this.registrationNumber = registrationNumber;
         this.active = active;
-        this.deliveryCostEntity = deliveryCostEntity;
         this.adminEntity = adminEntity;
     }
 
@@ -146,20 +144,20 @@ public class DeliveryEntity {
         this.active = active;
     }
 
-    public DeliveryCostEntity getDeliveryCostEntity() {
-        return deliveryCostEntity;
-    }
-
-    public void setDeliveryCostEntity(DeliveryCostEntity deliveryCostEntity) {
-        this.deliveryCostEntity = deliveryCostEntity;
-    }
-
     public AdminEntity getAdminEntity() {
         return adminEntity;
     }
 
     public void setAdminEntity(AdminEntity adminEntity) {
         this.adminEntity = adminEntity;
+    }
+
+    public List<DeliveryCostEntity> getCostEntityList() {
+        return costEntityList;
+    }
+
+    public void setCostEntityList(List<DeliveryCostEntity> costEntityList) {
+        this.costEntityList = costEntityList;
     }
 
     @Override
@@ -175,8 +173,8 @@ public class DeliveryEntity {
                 ", registrationTime=" + registrationTime +
                 ", registrationNumber='" + registrationNumber + '\'' +
                 ", active=" + active +
-                ", deliveryCostEntity=" + deliveryCostEntity +
                 ", adminEntity=" + adminEntity +
+                ", costEntityList=" + costEntityList +
                 '}';
     }
 }

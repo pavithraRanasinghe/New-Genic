@@ -6,6 +6,7 @@ import lk.robot.newgenic.dto.user.CartProductDTO;
 import lk.robot.newgenic.dto.user.request.CartRequestDTO;
 import lk.robot.newgenic.dto.user.response.CartOrderResponse;
 import lk.robot.newgenic.dto.user.response.CartResponseDTO;
+import lk.robot.newgenic.dto.user.response.DeliveryCostDTO;
 import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.enums.DiscountType;
 import lk.robot.newgenic.enums.OrderStatus;
@@ -145,7 +146,7 @@ public class CartServiceImpl implements CartService {
         try {
             ResponseEntity<?> cartResponse = getCart(userId);
             List<ProductDTO> cart = (List<ProductDTO>) cartResponse.getBody();
-            List<DeliveryEntity> all = deliveryRepository.findAll();
+            List<DeliveryEntity> allDeliveries = deliveryRepository.findAll();
             CartOrderResponse cartOrderResponse = new CartOrderResponse();
             double cartPrice = 0;
             double totalWeight = 0;
@@ -167,7 +168,7 @@ public class CartServiceImpl implements CartService {
                 }
             }
 
-            List<DeliveryDTO> deliveryDTOList = setDeliveryEntityToDto(all);
+            List<DeliveryDTO> deliveryDTOList = setDeliveryEntityToDto(allDeliveries);
             cartOrderResponse.setDeliveryDTOList(deliveryDTOList);
             cartOrderResponse.setProductDTOList(cart);
             cartOrderResponse.setCartPrice(cartPrice);
@@ -197,10 +198,24 @@ public class CartServiceImpl implements CartService {
             list.add(new DeliveryDTO(
                     deliveryEntity.getDeliveryId(),
                     deliveryEntity.getName(),
-                    EntityToDto.deliveryCostEntityToDTO(deliveryEntity.getDeliveryCostEntity())
+                    costEntityToDto(deliveryEntity.getCostEntityList())
             ));
         }
         return list;
+    }
+
+    private List<DeliveryCostDTO> costEntityToDto(List<DeliveryCostEntity> costEntityList){
+        List<DeliveryCostDTO> costList = new ArrayList<>();
+        for (DeliveryCostEntity deliveryCostEntity:
+                costEntityList) {
+            costList.add(new DeliveryCostDTO(
+                    deliveryCostEntity.getDeliveryCostId(),
+                    deliveryCostEntity.getDistrict(),
+                    deliveryCostEntity.getCost(),
+                    deliveryCostEntity.getCostPerExtra()
+            ));
+        }
+        return costList;
     }
 
     private CartProductDTO entityToDTO(OrderDetailEntity detailEntity){

@@ -26,6 +26,7 @@ public class CartOrderResponse {
         this.deliveryDTOList = deliveryDTOList;
         this.isCartFreeShipping = isCartFreeShipping;
         this.discount = discount;
+        this.cartPrice = cartPrice;
         this.totalWeight = totalWeight;
     }
 

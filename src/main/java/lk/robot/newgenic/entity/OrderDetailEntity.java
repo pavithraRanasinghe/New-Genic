@@ -1,8 +1,6 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Time;
 
 
 @Entity
@@ -23,9 +21,10 @@ public class OrderDetailEntity {
     @ManyToOne
     @JoinColumn(name = "fk_order_id")
     private OrderEntity orderEntity;
-    @OneToOne
-    @JoinColumn(name = "return_request_id",referencedColumnName = "return_request_id")
-    private ReturnEntity returnEntity;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_return_detail_id", referencedColumnName = "return_detail_id")
+    private ReturnDetailEntity returnDetailEntity;
+
 
     public OrderDetailEntity() {
     }
@@ -35,13 +34,13 @@ public class OrderDetailEntity {
                              double orderPrice,
                              ProductEntity productEntity,
                              OrderEntity orderEntity,
-                             ReturnEntity returnEntity) {
+                             ReturnDetailEntity returnDetailEntity) {
         this.orderDetailId = orderDetailId;
         this.quantity = quantity;
         this.orderPrice = orderPrice;
         this.productEntity = productEntity;
         this.orderEntity = orderEntity;
-        this.returnEntity = returnEntity;
+        this.returnDetailEntity = returnDetailEntity;
     }
 
     public long getOrderDetailId() {
@@ -84,12 +83,12 @@ public class OrderDetailEntity {
         this.orderEntity = orderEntity;
     }
 
-    public ReturnEntity getReturnEntity() {
-        return returnEntity;
+    public ReturnDetailEntity getReturnDetailEntity() {
+        return returnDetailEntity;
     }
 
-    public void setReturnEntity(ReturnEntity returnEntity) {
-        this.returnEntity = returnEntity;
+    public void setReturnDetailEntity(ReturnDetailEntity returnDetailEntity) {
+        this.returnDetailEntity = returnDetailEntity;
     }
 
     @Override
@@ -100,7 +99,7 @@ public class OrderDetailEntity {
                 ", orderPrice=" + orderPrice +
                 ", productEntity=" + productEntity +
                 ", orderEntity=" + orderEntity +
-                ", returnEntity=" + returnEntity +
+                ", returnDetailEntity=" + returnDetailEntity +
                 '}';
     }
 }

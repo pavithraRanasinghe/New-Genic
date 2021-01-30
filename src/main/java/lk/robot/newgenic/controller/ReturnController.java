@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/return")
@@ -23,11 +24,11 @@ public class ReturnController {
     }
 
     @PostMapping
-    public ResponseEntity<?> returnRequest(@RequestBody ReturnRequestDTO returnRequestDTO,
+    public ResponseEntity<?> returnRequest(@RequestBody List<ReturnRequestDTO> returnRequestDTOList,
                                            Principal principal) {
-        LOGGER.info("request - registeredUser | returnRequest | returnRequest: {} | userId: {} |",returnRequestDTO,principal.getName());
+        LOGGER.info("request - registeredUser | returnRequest | returnRequestList: {} | userId: {} |",returnRequestDTOList,principal.getName());
         long userId = Long.parseLong(principal.getName());
-        ResponseEntity<?> responseEntity = returnService.returnRequest(returnRequestDTO, userId);
+        ResponseEntity<?> responseEntity = returnService.returnRequest(returnRequestDTOList, userId);
         LOGGER.info("request - registeredUser | searchProducts | r: {} | userId: {}",responseEntity.getBody().toString());
         return responseEntity;
     }

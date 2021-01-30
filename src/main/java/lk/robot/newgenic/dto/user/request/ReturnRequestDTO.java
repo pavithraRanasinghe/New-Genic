@@ -5,6 +5,7 @@ public class ReturnRequestDTO {
     private long orderId;
     private long productId;
     private String reason;
+    private int returnQty;
 
     public ReturnRequestDTO() {
 
@@ -12,10 +13,12 @@ public class ReturnRequestDTO {
 
     public ReturnRequestDTO(long orderId,
                             long productId,
-                            String reason) {
+                            String reason,
+                            int returnQty) {
         this.orderId = orderId;
         this.productId = productId;
         this.reason = reason;
+        this.returnQty = returnQty;
     }
 
     public long getOrderId() {
@@ -42,12 +45,21 @@ public class ReturnRequestDTO {
         this.reason = reason;
     }
 
+    public int getReturnQty() {
+        return returnQty;
+    }
+
+    public void setReturnQty(int returnQty) {
+        this.returnQty = returnQty;
+    }
+
     @Override
     public String toString() {
         return "ReturnRequestDTO{" +
                 "orderId=" + orderId +
                 ", productId=" + productId +
                 ", reason='" + reason + '\'' +
+                ", returnQty=" + returnQty +
                 '}';
     }
 }

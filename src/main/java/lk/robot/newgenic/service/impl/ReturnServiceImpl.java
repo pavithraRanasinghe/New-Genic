@@ -42,82 +42,88 @@ public class ReturnServiceImpl implements ReturnService {
     }
 
     @Override
-    public ResponseEntity<?> returnRequest(ReturnRequestDTO returnRequestDTO, long userId) {
-        try {
-            if (returnRequestDTO != null) {
-                Optional<UserEntity> user = userRepository.findById(userId);
-                Optional<OrderEntity> order = orderRepository.findById(returnRequestDTO.getOrderId());
-                Optional<ProductEntity> product = productRepository.findById(returnRequestDTO.getProductId());
-                if (order.isPresent() && product.isPresent()) {
-                    OrderDetailEntity orderDetailEntity = orderDetailRepository.findByOrderEntityAndProductEntity(order.get(), product.get());
-                    if (orderDetailEntity != null) {
-                        ReturnEntity returnEntity = new ReturnEntity();
-                        returnEntity.setReason(returnRequestDTO.getReason());
-                        returnEntity.setRequestDate(DateConverter.localDateToSql(LocalDate.now()));
-                        returnEntity.setRequestTime(DateConverter.localTimeToSql(LocalTime.now()));
-                        returnEntity.setAction(ReturnAction.PENDING.toString());
+    public ResponseEntity<?> returnRequest(List<ReturnRequestDTO> returnRequestDTOList, long userId) {
+//        try {
+//            if (!returnRequestDTOList.isEmpty()) {
+//                for (ReturnRequestDTO returnRequestDTO :
+//                        returnRequestDTOList) {
+//                    Optional<OrderEntity> order = orderRepository.findById(returnRequestDTO.getOrderId());
+//                    Optional<ProductEntity> product = productRepository.findById(returnRequestDTO.getProductId());
+//                    if (order.isPresent() && product.isPresent()) {
+//                        OrderDetailEntity orderDetailEntity = orderDetailRepository.findByOrderEntityAndProductEntity(order.get(), product.get());
+//                        if (orderDetailEntity != null) {
+//                            ReturnEntity returnEntity = new ReturnEntity();
+//                            returnEntity.setReason(returnRequestDTO.getReason());
+//                            returnEntity.setRequestDate(DateConverter.localDateToSql(LocalDate.now()));
+//                            returnEntity.setRequestTime(DateConverter.localTimeToSql(LocalTime.now()));
+//                            returnEntity.setReturnQty(returnRequestDTO.getReturnQty());
+//                            returnEntity.setAction(ReturnAction.PENDING.toString());
+//
+//                            ReturnEntity returnSaved = returnRepository.save(returnEntity);
+//                            if (returnSaved != null) {
+//                                orderDetailEntity.setReturnEntity(returnSaved);
+//                                orderDetailRepository.save(orderDetailEntity);
+//                            } else {
+//                                return new ResponseEntity<>("Return request not sent", HttpStatus.BAD_REQUEST);
+//                            }
+//                        } else {
+//                            return new ResponseEntity<>("Order Detail not found", HttpStatus.NOT_FOUND);
+//                        }
+//                    } else {
+//                        return new ResponseEntity<>("Order not found", HttpStatus.NOT_FOUND);
+//                    }
+//                }
+//                return new ResponseEntity<>("Return request sent", HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>("Return request details not found", HttpStatus.BAD_REQUEST);
+//            }
+//        } catch (Exception e) {
+//            throw new CustomException("Return request failed");
+//        }
 
-                        ReturnEntity returnSaved = returnRepository.save(returnEntity);
-                        if (returnSaved != null) {
-                            orderDetailEntity.setReturnEntity(returnSaved);
-                            orderDetailRepository.save(orderDetailEntity);
-                            return new ResponseEntity<>("Return request sent", HttpStatus.OK);
-                        } else {
-                            return new ResponseEntity<>("Return request not sent", HttpStatus.BAD_REQUEST);
-                        }
-                    } else {
-                        return new ResponseEntity<>("Order Detail not found", HttpStatus.NOT_FOUND);
-                    }
-                } else {
-                    return new ResponseEntity<>("Order not found", HttpStatus.NOT_FOUND);
-                }
-            } else {
-                return new ResponseEntity<>("Return request details not found", HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            throw new CustomException("Return request failed");
-        }
+        return null;
     }
 
     @Override
     public ResponseEntity<?> getReturn(long userId) {
-        try {
-            Optional<UserEntity> user = userRepository.findById(userId);
-            List<OrderEntity> orderList = orderRepository.findByUserEntity(user.get());
-            List<ReturnResponseDTO> responseList = new ArrayList<>();
-            if (!orderList.isEmpty()) {
-                for (OrderEntity orderEntity :
-                        orderList) {
-                    List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
-                    for (OrderDetailEntity orderDetailEntity :
-                            orderDetailList) {
-                        ReturnEntity returnEntity = orderDetailEntity.getReturnEntity();
-                        if (returnEntity != null) {
-                            responseList.add(setReturnDetails(returnEntity, orderDetailEntity));
-                        }
-                    }
-                }
-                return new ResponseEntity<>(responseList, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("No orders for you", HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            throw new CustomException("Failed to load returns");
-        }
+//        try {
+//            Optional<UserEntity> user = userRepository.findById(userId);
+//            List<OrderEntity> orderList = orderRepository.findByUserEntity(user.get());
+//            List<ReturnResponseDTO> responseList = new ArrayList<>();
+//            if (!orderList.isEmpty()) {
+//                for (OrderEntity orderEntity :
+//                        orderList) {
+//                    List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
+//                    for (OrderDetailEntity orderDetailEntity :
+//                            orderDetailList) {
+//                        ReturnEntity returnEntity = orderDetailEntity.getReturnEntity();
+//                        if (returnEntity != null) {
+//                            responseList.add(setReturnDetails(returnEntity, orderDetailEntity));
+//                        }
+//                    }
+//                }
+//                return new ResponseEntity<>(responseList, HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>("No orders for you", HttpStatus.NOT_FOUND);
+//            }
+//        } catch (Exception e) {
+//            throw new CustomException("Failed to load returns");
+//        }
+        return null;
     }
 
-    private ReturnResponseDTO setReturnDetails(ReturnEntity returnEntity, OrderDetailEntity detailEntity) {
-        return new ReturnResponseDTO(
-                returnEntity.getReturnRequestId(),
-                returnEntity.getReason(),
-                returnEntity.getRequestDate(),
-                returnEntity.getRequestTime(),
-                returnEntity.getAction(),
-                detailEntity.getProductEntity().getProductId(),
-                detailEntity.getOrderEntity().getOrderId(),
-                detailEntity.getProductEntity().getName(),
-                detailEntity.getQuantity(),
-                detailEntity.getOrderPrice()
-        );
-    }
+//    private ReturnResponseDTO setReturnDetails(ReturnEntity returnEntity, OrderDetailEntity detailEntity) {
+//        return new ReturnResponseDTO(
+//                returnEntity.getReturnRequestId(),
+//                returnEntity.getReason(),
+//                returnEntity.getRequestDate(),
+//                returnEntity.getRequestTime(),
+//                returnEntity.getAction(),
+//                detailEntity.getProductEntity().getProductId(),
+//                detailEntity.getOrderEntity().getOrderId(),
+//                detailEntity.getProductEntity().getName(),
+//                detailEntity.getQuantity(),
+//                detailEntity.getOrderPrice()
+//        );
+//    }
 }

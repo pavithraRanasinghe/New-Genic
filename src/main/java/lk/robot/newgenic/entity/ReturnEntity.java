@@ -12,32 +12,36 @@ public class ReturnEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "return_request_id")
     private long returnRequestId;
-    @Column
-    private String reason;
     @Column(name = "request_date")
     private Date requestDate;
     @Column(name = "request_time")
     private Time requestTime;
+    @Column(name = "response_date")
+    private Date responseDate;
+    @Column(name = "response_time")
+    private Time responseTime;
     @Column
     private String action;
-    @OneToOne(mappedBy = "returnEntity")
-    private OrderDetailEntity orderDetailEntity;
+    @OneToOne(mappedBy = "returnEntity",cascade = CascadeType.ALL,orphanRemoval = true)
+    private OrderEntity orderEntity;
 
     public ReturnEntity() {
     }
 
     public ReturnEntity(long returnRequestId,
-                        String reason,
                         Date requestDate,
                         Time requestTime,
-                        OrderDetailEntity orderDetailEntity,
-                        String action) {
+                        Date responseDate,
+                        Time responseTime,
+                        String action,
+                        OrderEntity orderEntity) {
         this.returnRequestId = returnRequestId;
-        this.reason = reason;
         this.requestDate = requestDate;
         this.requestTime = requestTime;
-        this.orderDetailEntity = orderDetailEntity;
+        this.responseDate = responseDate;
+        this.responseTime = responseTime;
         this.action = action;
+        this.orderEntity = orderEntity;
     }
 
     public long getReturnRequestId() {
@@ -46,14 +50,6 @@ public class ReturnEntity {
 
     public void setReturnRequestId(long returnRequestId) {
         this.returnRequestId = returnRequestId;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
     }
 
     public Date getRequestDate() {
@@ -72,6 +68,22 @@ public class ReturnEntity {
         this.requestTime = requestTime;
     }
 
+    public Date getResponseDate() {
+        return responseDate;
+    }
+
+    public void setResponseDate(Date responseDate) {
+        this.responseDate = responseDate;
+    }
+
+    public Time getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Time responseTime) {
+        this.responseTime = responseTime;
+    }
+
     public String getAction() {
         return action;
     }
@@ -80,23 +92,25 @@ public class ReturnEntity {
         this.action = action;
     }
 
-    public OrderDetailEntity getOrderDetailEntity() {
-        return orderDetailEntity;
+    public OrderEntity getOrderEntity() {
+        return orderEntity;
     }
 
-    public void setOrderDetailEntity(OrderDetailEntity orderDetailEntity) {
-        this.orderDetailEntity = orderDetailEntity;
+    public void setOrderEntity(OrderEntity orderEntity) {
+        this.orderEntity = orderEntity;
     }
+
 
     @Override
     public String toString() {
         return "ReturnEntity{" +
                 "returnRequestId=" + returnRequestId +
-                ", reason='" + reason + '\'' +
                 ", requestDate=" + requestDate +
                 ", requestTime=" + requestTime +
+                ", responseDate=" + responseDate +
+                ", responseTime=" + responseTime +
                 ", action='" + action + '\'' +
-                ", orderDetailEntity=" + orderDetailEntity +
+                ", orderEntity=" + orderEntity +
                 '}';
     }
 }
