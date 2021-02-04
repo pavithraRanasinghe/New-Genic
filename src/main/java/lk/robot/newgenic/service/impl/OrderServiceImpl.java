@@ -250,7 +250,7 @@ public class OrderServiceImpl implements OrderService {
     private PaymentEntity setPaymentDetails(OrderRequestDTO orderRequestDTO, ProductEntity productEntity) {
         PaymentEntity paymentEntity = new PaymentEntity();
         paymentEntity.setOrderPrice(orderRequestDTO.getRetailPrice() * orderRequestDTO.getQty());
-        paymentEntity.setProductsBuyingPrice(productEntity.getBuyingPrice() * orderRequestDTO.getQty());
+        paymentEntity.setBuyingPrice(productEntity.getBuyingPrice() * orderRequestDTO.getQty());
         paymentEntity.setPaid(false);
         if (productEntity.isFreeShipping()) {
             paymentEntity.setFreeDeliveryPrice(orderRequestDTO.getDeliveryCost());
@@ -272,7 +272,7 @@ public class OrderServiceImpl implements OrderService {
                 buyingPrice += orderDetailEntity.getProductEntity().getBuyingPrice() + orderDetailEntity.getQuantity();
             }
             paymentEntity.setOrderPrice(totalPrice);
-            paymentEntity.setProductsBuyingPrice(buyingPrice);
+            paymentEntity.setBuyingPrice(buyingPrice);
             paymentEntity.setPaid(false);
             if (cartOrderRequestDTO.isFreeShipping()) {
                 paymentEntity.setFreeDeliveryPrice(cartOrderRequestDTO.getDeliveryCost());
