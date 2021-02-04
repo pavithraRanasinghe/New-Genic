@@ -2,6 +2,7 @@ package lk.robot.newgenic.service.impl;
 
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.user.request.FilterDTO;
+import lk.robot.newgenic.dto.user.response.SaleResponseDTO;
 import lk.robot.newgenic.entity.DealEntity;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.enums.DealStatus;
@@ -169,7 +170,18 @@ public class ProductServiceImpl implements ProductService {
                             products) {
                         productList.add(EntityToDto.productEntityToDto(productEntity));
                     }
-                    return new ResponseEntity<>(productList,HttpStatus.OK);
+                    SaleResponseDTO saleResponseDTO = new SaleResponseDTO(
+                            dealEntity.getDealId(),
+                            dealEntity.getName(),
+                            dealEntity.getDescription(),
+                            dealEntity.getStartDate(),
+                            dealEntity.getStartTime(),
+                            dealEntity.getEndDate(),
+                            dealEntity.getEndTime(),
+                            dealEntity.getDiscount(),
+                            productList
+                    );
+                    return new ResponseEntity<>(saleResponseDTO,HttpStatus.OK);
                 }else{
                     return new ResponseEntity<>("No products found",HttpStatus.NOT_FOUND);
                 }
