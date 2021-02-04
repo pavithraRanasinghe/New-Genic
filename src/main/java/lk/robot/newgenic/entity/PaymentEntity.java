@@ -22,6 +22,8 @@ public class PaymentEntity {
     private double discountPrice;
     @Column
     private double refund;
+    @Column(name = "products_buying_price")
+    private double productsBuyingPrice;
     @Column(name = "payment_date")
     private Date paymentDate;
     @Column(name = "payment_time")
@@ -40,6 +42,7 @@ public class PaymentEntity {
                          double freeDeliveryPrice,
                          double discountPrice,
                          double refund,
+                         double productsBuyingPrice,
                          Date paymentDate,
                          Time paymentTime,
                          boolean isPaid,
@@ -50,6 +53,7 @@ public class PaymentEntity {
         this.freeDeliveryPrice = freeDeliveryPrice;
         this.discountPrice = discountPrice;
         this.refund = refund;
+        this.productsBuyingPrice = productsBuyingPrice;
         this.paymentDate = paymentDate;
         this.paymentTime = paymentTime;
         this.isPaid = isPaid;
@@ -124,6 +128,14 @@ public class PaymentEntity {
         return refund;
     }
 
+    public double getProductsBuyingPrice() {
+        return productsBuyingPrice;
+    }
+
+    public void setProductsBuyingPrice(double productsBuyingPrice) {
+        this.productsBuyingPrice = productsBuyingPrice;
+    }
+
     public void setRefund(double refund) {
         this.refund = refund;
     }
@@ -145,6 +157,7 @@ public class PaymentEntity {
                 ", freeDeliveryPrice=" + freeDeliveryPrice +
                 ", discountPrice=" + discountPrice +
                 ", refund=" + refund +
+                ", productsBuyingPrice=" + productsBuyingPrice +
                 ", paymentDate=" + paymentDate +
                 ", paymentTime=" + paymentTime +
                 ", isPaid=" + isPaid +

@@ -151,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
                 userAddressDetailRepository.save(billingAddressDetail);
                 userAddressDetailRepository.save(shippingAddressDetail);
                 if (billingDetail != null && shippingDetail != null) {
-                    PaymentEntity paymentEntity = setCartPaymentDetails(cartOrderRequestDTO);
+                    PaymentEntity paymentEntity = setCartPaymentDetails(cartOrderRequestDTO, cart.get());
                     PaymentEntity payment = paymentRepository.save(paymentEntity);
 
                     if (payment != null) {
@@ -165,8 +165,17 @@ public class OrderServiceImpl implements OrderService {
                         cart.get().setBillingDetail(billingDetail);
                         cart.get().setShippingDetails(shippingDetail);
 
-                        OrderEntity save = orderRepository.save(cart.get());
-                        if (save != null) {
+                        OrderEntity order = orderRepository.save(cart.get());
+                        if (order != null) {
+                            List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(cart.get());
+                            if (!orderDetailList.isEmpty()) {
+                                for (OrderDetailEntity orderDetailEntity :
+                                        orderDetailList) {
+                                    ProductEntity productEntity = orderDetailEntity.getProductEntity();
+                                    productEntity.setStock(productEntity.getStock() - orderDetailEntity.getQuantity());
+                                    productRepository.save(productEntity);
+                                }
+                            }
                             return new ResponseEntity<>("Order successful", HttpStatus.OK);
                         } else {
                             return new ResponseEntity<>("Order not saved", HttpStatus.BAD_REQUEST);
@@ -241,6 +250,7 @@ public class OrderServiceImpl implements OrderService {
     private PaymentEntity setPaymentDetails(OrderRequestDTO orderRequestDTO, ProductEntity productEntity) {
         PaymentEntity paymentEntity = new PaymentEntity();
         paymentEntity.setOrderPrice(orderRequestDTO.getRetailPrice() * orderRequestDTO.getQty());
+        paymentEntity.setProductsBuyingPrice(productEntity.getBuyingPrice() * orderRequestDTO.getQty());
         paymentEntity.setPaid(false);
         if (productEntity.isFreeShipping()) {
             paymentEntity.setFreeDeliveryPrice(orderRequestDTO.getDeliveryCost());
@@ -250,14 +260,25 @@ public class OrderServiceImpl implements OrderService {
         return paymentEntity;
     }
 
-    private PaymentEntity setCartPaymentDetails(CartOrderRequestDTO cartOrderRequestDTO) {
+    private PaymentEntity setCartPaymentDetails(CartOrderRequestDTO cartOrderRequestDTO, OrderEntity orderEntity) {
+        List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
         PaymentEntity paymentEntity = new PaymentEntity();
-        paymentEntity.setOrderPrice(cartOrderRequestDTO.getCartPrice());
-        paymentEntity.setPaid(false);
-        if (cartOrderRequestDTO.isFreeShipping()) {
-            paymentEntity.setFreeDeliveryPrice(cartOrderRequestDTO.getDeliveryCost());
-        } else {
-            paymentEntity.setDeliveryPrice(cartOrderRequestDTO.getDeliveryCost());
+        if (!orderDetailList.isEmpty()){
+            double totalPrice = 0;
+            double buyingPrice = 0;
+            for (OrderDetailEntity orderDetailEntity :
+                    orderDetailList) {
+                totalPrice += orderDetailEntity.getProductEntity().getRetailPrice() + orderDetailEntity.getQuantity();
+                buyingPrice += orderDetailEntity.getProductEntity().getBuyingPrice() + orderDetailEntity.getQuantity();
+            }
+            paymentEntity.setOrderPrice(totalPrice);
+            paymentEntity.setProductsBuyingPrice(buyingPrice);
+            paymentEntity.setPaid(false);
+            if (cartOrderRequestDTO.isFreeShipping()) {
+                paymentEntity.setFreeDeliveryPrice(cartOrderRequestDTO.getDeliveryCost());
+            } else {
+                paymentEntity.setDeliveryPrice(cartOrderRequestDTO.getDeliveryCost());
+            }
         }
         return paymentEntity;
     }
