@@ -8,6 +8,8 @@ import lk.robot.newgenic.entity.UserAddressDetailEntity;
 import lk.robot.newgenic.entity.UserAddressEntity;
 import lk.robot.newgenic.entity.UserEntity;
 import lk.robot.newgenic.enums.AddressType;
+import lk.robot.newgenic.enums.AuthenticationProvider;
+import lk.robot.newgenic.enums.Role;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.jwt.AuthenticationRequest;
 import lk.robot.newgenic.jwt.JwtGenerator;
@@ -183,6 +185,63 @@ public class UserServiceImpl implements UserService {
                 return new ResponseEntity<>(user,HttpStatus.OK);
             }else {
                 return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            throw new CustomException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> newUserFromSuccessHandler(String email, String name, AuthenticationProvider authenticationProvider) {
+        try{
+            UserEntity userEntity = new UserEntity();
+            userEntity.setFirstName(name);
+            userEntity.setUsername(name);
+            userEntity.setGmail(email);
+            userEntity.setAuthenticationProvider(authenticationProvider);
+            userEntity.setRole(Role.REGISTERED_USER.toString());
+
+            UserEntity user = userRepository.save(userEntity);
+            if (!user.equals(null)){
+                String accessToken = createAccessToken(user);
+                SignInResponseDTO signInResponseDTO = new SignInResponseDTO(
+                        accessToken,
+                        user.getUserId(),
+                        user.getUsername(),
+                        LocalDate.now(),
+                        LocalTime.now()
+                );
+                return new ResponseEntity<>(signInResponseDTO,HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("User not logIn Failed",HttpStatus.BAD_GATEWAY);
+            }
+        }catch (Exception e){
+            throw new CustomException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> updateUserFromSuccessHandler(UserEntity userEntity, String email, String name, AuthenticationProvider authenticationProvider) {
+        try{
+            userEntity.setFirstName(name);
+            userEntity.setUsername(name);
+            userEntity.setGmail(email);
+            userEntity.setAuthenticationProvider(authenticationProvider);
+            userEntity.setRole(Role.REGISTERED_USER.toString());
+
+            UserEntity user = userRepository.save(userEntity);
+            if (!user.equals(null)){
+                String accessToken = createAccessToken(user);
+                SignInResponseDTO signInResponseDTO = new SignInResponseDTO(
+                        accessToken,
+                        user.getUserId(),
+                        user.getUsername(),
+                        LocalDate.now(),
+                        LocalTime.now()
+                );
+                return new ResponseEntity<>(signInResponseDTO,HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("User not logIn Failed",HttpStatus.BAD_GATEWAY);
             }
         }catch (Exception e){
             throw new CustomException(e.getMessage());

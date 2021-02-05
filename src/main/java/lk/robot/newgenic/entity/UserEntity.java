@@ -1,5 +1,7 @@
 package lk.robot.newgenic.entity;
 
+import lk.robot.newgenic.enums.AuthenticationProvider;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
@@ -22,7 +24,7 @@ public class UserEntity {
     private String profilePicture;
     @Column(nullable = false)
     private String gmail;
-    @Column(nullable = false)
+    @Column
     private String mobile;
     @Column
     private Date dob;
@@ -36,6 +38,8 @@ public class UserEntity {
     private Date registeredDate;
     @Column(name = "registered_time")
     private Time registeredTime;
+    @Enumerated(EnumType.STRING)
+    private AuthenticationProvider authenticationProvider;
 
     public UserEntity() {
     }
@@ -51,7 +55,8 @@ public class UserEntity {
                       String username,
                       String password,
                       Date registeredDate,
-                      Time registeredTime) {
+                      Time registeredTime,
+                      AuthenticationProvider authenticationProvider) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -64,6 +69,7 @@ public class UserEntity {
         this.password = password;
         this.registeredDate = registeredDate;
         this.registeredTime = registeredTime;
+        this.authenticationProvider = authenticationProvider;
     }
 
     public long getUserId() {
@@ -162,6 +168,14 @@ public class UserEntity {
         this.registeredTime = registeredTime;
     }
 
+    public AuthenticationProvider getAuthenticationProvider() {
+        return authenticationProvider;
+    }
+
+    public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
+    }
+
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -177,6 +191,7 @@ public class UserEntity {
                 ", password='" + password + '\'' +
                 ", registeredDate=" + registeredDate +
                 ", registeredTime=" + registeredTime +
+                ", authenticationProvider=" + authenticationProvider +
                 '}';
     }
 }

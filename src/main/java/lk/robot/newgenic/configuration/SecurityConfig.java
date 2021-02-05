@@ -2,6 +2,8 @@ package lk.robot.newgenic.configuration;
 
 import lk.robot.newgenic.jwt.JwtConfig;
 import lk.robot.newgenic.jwt.JwtTokenAuthorizationFilter;
+import lk.robot.newgenic.oauth.CustomOAuth2UserService;
+import lk.robot.newgenic.oauth.OAuth2LoginSuccessfulHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,6 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private CustomOAuth2UserService oAuth2UserService;
+    @Autowired
+    private OAuth2LoginSuccessfulHandler successfulHandler;
 
     private final PasswordEncoder passwordEncoder;
     private final JwtConfig jwtConfig;
@@ -60,8 +66,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/category/**").permitAll()
 //                feedback permissions
                 .antMatchers(HttpMethod.GET,"/feedback/**").permitAll()
-
+//                oauth2
+                .antMatchers("/oauth2/**").permitAll()
                 .anyRequest()
-                .authenticated();
+                .authenticated()
+                .and()
+                .oauth2Login()
+                    .loginPage(jwtConfig.getUrl())
+                    .userInfoEndpoint().userService(oAuth2UserService)
+                    .and()
+                    .successHandler(successfulHandler);
     }
 }
