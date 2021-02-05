@@ -248,6 +248,44 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void updateResetPasswordToken(String token, String gmail) {
+        try{
+            UserEntity user = userRepository.findByGmail(gmail);
+
+            if (user != null){
+               user.setResetPasswordToken(token);
+               userRepository.save(user);
+            }else{
+                throw new CustomException("User not found");
+            }
+
+        }catch (Exception e){
+            throw new CustomException(e.getMessage());
+        }
+    }
+
+    @Override
+    public UserEntity get(String token) {
+        try{
+            return userRepository.findByResetPasswordToken(token);
+        }catch (Exception e){
+            throw new CustomException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void resetPassword(UserEntity userEntity, String password) {
+        try{
+            String newPassword = passwordEncoder.encode(password);
+            userEntity.setPassword(newPassword);
+
+            userRepository.save(userEntity);
+        }catch (Exception e){
+            throw new CustomException(e.getMessage());
+        }
+    }
+
     public String createAccessToken(UserEntity userEntity) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole()));

@@ -24,6 +24,7 @@ public class PaymentEntity {
     private double discountPrice;
     @Column
     private double refund;
+    private double reorder;
     @Column(name = "payment_date")
     private Date paymentDate;
     @Column(name = "payment_time")
@@ -43,6 +44,7 @@ public class PaymentEntity {
                          double freeDeliveryPrice,
                          double discountPrice,
                          double refund,
+                         double reorder,
                          Date paymentDate,
                          Time paymentTime,
                          boolean isPaid,
@@ -54,6 +56,7 @@ public class PaymentEntity {
         this.freeDeliveryPrice = freeDeliveryPrice;
         this.discountPrice = discountPrice;
         this.refund = refund;
+        this.reorder = reorder;
         this.paymentDate = paymentDate;
         this.paymentTime = paymentTime;
         this.isPaid = isPaid;
@@ -140,6 +143,14 @@ public class PaymentEntity {
         this.refund = refund;
     }
 
+    public double getReorder() {
+        return reorder;
+    }
+
+    public void setReorder(double reorder) {
+        this.reorder = reorder;
+    }
+
     public boolean isPaid() {
         return isPaid;
     }
@@ -158,6 +169,7 @@ public class PaymentEntity {
                 ", freeDeliveryPrice=" + freeDeliveryPrice +
                 ", discountPrice=" + discountPrice +
                 ", refund=" + refund +
+                ", reorder=" + reorder +
                 ", paymentDate=" + paymentDate +
                 ", paymentTime=" + paymentTime +
                 ", isPaid=" + isPaid +

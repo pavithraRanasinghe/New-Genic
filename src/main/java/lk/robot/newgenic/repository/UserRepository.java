@@ -12,5 +12,7 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
     @Query("SELECT u FROM UserEntity u WHERE u.username=?1")
     Optional<UserEntity> validateUser(String username);
 
-    UserEntity findByGmail(String email);
+    UserEntity findByGmail(String gmail);
+
+    UserEntity findByResetPasswordToken(String token);
 }

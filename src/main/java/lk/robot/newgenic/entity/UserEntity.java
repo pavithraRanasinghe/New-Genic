@@ -40,6 +40,8 @@ public class UserEntity {
     private Time registeredTime;
     @Enumerated(EnumType.STRING)
     private AuthenticationProvider authenticationProvider;
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
 
     public UserEntity() {
     }
@@ -56,7 +58,8 @@ public class UserEntity {
                       String password,
                       Date registeredDate,
                       Time registeredTime,
-                      AuthenticationProvider authenticationProvider) {
+                      AuthenticationProvider authenticationProvider,
+                      String resetPasswordToken) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -70,6 +73,7 @@ public class UserEntity {
         this.registeredDate = registeredDate;
         this.registeredTime = registeredTime;
         this.authenticationProvider = authenticationProvider;
+        this.resetPasswordToken = resetPasswordToken;
     }
 
     public long getUserId() {
@@ -176,6 +180,14 @@ public class UserEntity {
         this.authenticationProvider = authenticationProvider;
     }
 
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
+    }
+
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -192,6 +204,7 @@ public class UserEntity {
                 ", registeredDate=" + registeredDate +
                 ", registeredTime=" + registeredTime +
                 ", authenticationProvider=" + authenticationProvider +
+                ", resetPasswordToken='" + resetPasswordToken + '\'' +
                 '}';
     }
 }
