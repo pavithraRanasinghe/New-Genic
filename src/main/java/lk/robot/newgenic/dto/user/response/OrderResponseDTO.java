@@ -6,7 +6,7 @@ import java.util.List;
 
 public class OrderResponseDTO {
 
-    private long orderId;
+    private String orderId;
     private Date orderDate;
     private Time orderTime;
     private String tracking;
@@ -19,7 +19,7 @@ public class OrderResponseDTO {
     public OrderResponseDTO() {
     }
 
-    public OrderResponseDTO(long orderId,
+    public OrderResponseDTO(String orderId,
                             Date orderDate,
                             Time orderTime,
                             String tracking,
@@ -39,11 +39,11 @@ public class OrderResponseDTO {
         this.productDetailList = productDetailList;
     }
 
-    public long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

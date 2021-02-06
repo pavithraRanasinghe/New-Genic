@@ -1,7 +1,7 @@
 package lk.robot.newgenic.dto.user.request;
 
 public class CartOrderRequestDTO {
-    private long cartId;
+    private String cartId;
     private long deliveryId;
     private double deliveryCost;
     private double discount;
@@ -14,7 +14,7 @@ public class CartOrderRequestDTO {
     public CartOrderRequestDTO() {
     }
 
-    public CartOrderRequestDTO(long cartId,
+    public CartOrderRequestDTO(String cartId,
                                long deliveryId,
                                double deliveryCost,
                                double discount,
@@ -34,11 +34,11 @@ public class CartOrderRequestDTO {
         this.totalWeight = totalWeight;
     }
 
-    public long getCartId() {
+    public String getCartId() {
         return cartId;
     }
 
-    public void setCartId(long cartId) {
+    public void setCartId(String cartId) {
         this.cartId = cartId;
     }
 

@@ -3,6 +3,7 @@ package lk.robot.newgenic.entity;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
@@ -12,6 +13,8 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private long orderId;
+    @Column(name = "order_uuid")
+    private String orderUuid;
     private String status;
     @Column(name = "pick_up_date")
     private Date pickUpDate;
@@ -51,6 +54,7 @@ public class OrderEntity {
     }
 
     public OrderEntity(long orderId,
+                       String orderUuid,
                        String status,
                        Date pickUpDate,
                        Time pickUpTime,
@@ -66,6 +70,7 @@ public class OrderEntity {
                        DiscountMethodEntity discountMethodEntity,
                        ReturnEntity returnEntity) {
         this.orderId = orderId;
+        this.orderUuid = orderUuid;
         this.status = status;
         this.pickUpDate = pickUpDate;
         this.pickUpTime = pickUpTime;
@@ -88,6 +93,14 @@ public class OrderEntity {
 
     public void setOrderId(long orderId) {
         this.orderId = orderId;
+    }
+
+    public String getOrderUuid() {
+        return orderUuid;
+    }
+
+    public void setOrderUuid(String orderUuid) {
+        this.orderUuid = orderUuid;
     }
 
     public String getStatus() {
@@ -206,6 +219,7 @@ public class OrderEntity {
     public String toString() {
         return "OrderEntity{" +
                 "orderId=" + orderId +
+                ", orderUuid='" + orderUuid + '\'' +
                 ", status='" + status + '\'' +
                 ", pickUpDate=" + pickUpDate +
                 ", pickUpTime=" + pickUpTime +

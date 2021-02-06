@@ -16,6 +16,8 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private long userId;
+    @Column(name = "user_uuid")
+    private String userUuid;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -47,6 +49,7 @@ public class UserEntity {
     }
 
     public UserEntity(long userId,
+                      String userUuid,
                       String firstName,
                       String lastName,
                       String profilePicture,
@@ -61,6 +64,7 @@ public class UserEntity {
                       AuthenticationProvider authenticationProvider,
                       String resetPasswordToken) {
         this.userId = userId;
+        this.userUuid = userUuid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.profilePicture = profilePicture;
@@ -82,6 +86,14 @@ public class UserEntity {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public String getUserUuid() {
+        return userUuid;
+    }
+
+    public void setUserUuid(String userUuid) {
+        this.userUuid = userUuid;
     }
 
     public String getFirstName() {
@@ -192,6 +204,7 @@ public class UserEntity {
     public String toString() {
         return "UserEntity{" +
                 "userId=" + userId +
+                ", userUuid='" + userUuid + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", profilePicture='" + profilePicture + '\'' +

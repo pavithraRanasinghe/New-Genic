@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -67,7 +68,8 @@ public class CartServiceImpl implements CartService {
                             return new ResponseEntity<>("Product already added to cart", HttpStatus.CONFLICT);
                         }
                         existCart.setTotalWeight(existCart.getTotalWeight() + cartRequestDTO.getWeight());
-
+                        String uuid = UUID.randomUUID().toString();
+                        existCart.setOrderUuid(uuid);
                         OrderEntity order = orderRepository.save(existCart);
                         if (!order.equals(null)) {
                             OrderDetailEntity orderDetailEntity = setValuesToOrderDetail(order, cartRequestDTO, productEntity.get());
@@ -82,7 +84,7 @@ public class CartServiceImpl implements CartService {
                         orderEntity.setStatus(OrderStatus.CART.toString());
                         orderEntity.setTotalWeight(cartRequestDTO.getWeight());
                         orderEntity.setUserEntity(userEntity.get());
-
+                        orderEntity.setOrderUuid(UUID.randomUUID().toString());
                         OrderEntity order = orderRepository.save(orderEntity);
                         if (!order.equals(null)) {
                             OrderDetailEntity orderDetailEntity = setValuesToOrderDetail(order, cartRequestDTO, productEntity.get());

@@ -14,9 +14,9 @@ public interface UserService {
 
     ResponseEntity<?> logIn(AuthenticationRequest authenticationRequest);
 
-    ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO,long userId);
+    ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO,String userId);
 
-    ResponseEntity<?> getProfile(long userId);
+    ResponseEntity<?> getProfile(String userId);
 
     ResponseEntity<?> newUserFromSuccessHandler(String email,String name,AuthenticationProvider authenticationProvider);
 

@@ -19,6 +19,7 @@ import lk.robot.newgenic.repository.UserRepository;
 import lk.robot.newgenic.service.UserService;
 import lk.robot.newgenic.util.DateConverter;
 import lk.robot.newgenic.util.EntityToDto;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -59,18 +61,22 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO) {
         try {
             if (!userSignUpDTO.equals(null)) {
-                UserEntity userEntity = EntityToDto.userDtoToEntity(userSignUpDTO);
-                userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-                userEntity.setRegisteredDate(DateConverter.localDateToSql(LocalDate.now()));
-                userEntity.setRegisteredTime(DateConverter.localTimeToSql(LocalTime.now()));
 
-                UserEntity save = userRepository.save(userEntity);
+                UserEntity existUser = userRepository.findByGmail(userSignUpDTO.getGmail());
+                if (existUser != null){
+                    UserEntity userEntity = EntityToDto.userDtoToEntity(userSignUpDTO);
+                    userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+                    userEntity.setRegisteredDate(DateConverter.localDateToSql(LocalDate.now()));
+                    userEntity.setRegisteredTime(DateConverter.localTimeToSql(LocalTime.now()));
+                    userEntity.setUserUuid(UUID.randomUUID().toString());
+                    UserEntity save = userRepository.save(userEntity);
 
-                if (save.equals(null)) {
-                    return new ResponseEntity<>("User Sign up failed", HttpStatus.BAD_REQUEST);
+                    if (save.equals(null)) {
+                        return new ResponseEntity<>("User Sign up failed", HttpStatus.BAD_REQUEST);
+                    }
+                    return new ResponseEntity<>("User sign up successful", HttpStatus.OK);
                 }
-                return new ResponseEntity<>("User sign up successful", HttpStatus.OK);
-
+                return new ResponseEntity<>("User already signup with "+userSignUpDTO.getGmail(),HttpStatus.BAD_GATEWAY);
             } else {
                 return new ResponseEntity<>("User details not found", HttpStatus.NOT_FOUND);
             }
@@ -96,7 +102,7 @@ public class UserServiceImpl implements UserService {
                 }
                 SignInResponseDTO signInResponseDTO = new SignInResponseDTO(
                         accessToken,
-                        userEntity.get().getUserId(),
+                        userEntity.get().getUserUuid(),
                         userEntity.get().getUsername(),
                         LocalDate.now(),
                         LocalTime.now()
@@ -111,19 +117,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO, long userId) {
+    public ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO, String userId) {
         try {
             if (userDetailDTO != null) {
-                Optional<UserEntity> userEntity = userRepository.findById(userId);
+                UserEntity userEntity = userRepository.findByUserUuid(userId);
 
-                userEntity.get().setFirstName(userDetailDTO.getFirstName());
-                userEntity.get().setLastName(userDetailDTO.getLastName());
-                userEntity.get().setGmail(userDetailDTO.getGmail());
-                userEntity.get().setMobile(userDetailDTO.getMobile());
-                userEntity.get().setDob(DateConverter.stringToDate(userDetailDTO.getDob()));
-                userEntity.get().setProfilePicture(userDetailDTO.getProfilePicture());
+                userEntity.setFirstName(userDetailDTO.getFirstName());
+                userEntity.setLastName(userDetailDTO.getLastName());
+                userEntity.setGmail(userDetailDTO.getGmail());
+                userEntity.setMobile(userDetailDTO.getMobile());
+                userEntity.setDob(DateConverter.stringToDate(userDetailDTO.getDob()));
+                userEntity.setProfilePicture(userDetailDTO.getProfilePicture());
 
-                UserEntity user = userRepository.save(userEntity.get());
+                UserEntity user = userRepository.save(userEntity);
                 if (user != null) {
 
                     List<UserAddressDetailEntity> byUserEntity = userAddressDetailRepository.findByUserEntity(user);
@@ -177,11 +183,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> getProfile(long userId) {
+    public ResponseEntity<?> getProfile(String userId) {
         try{
-            Optional<UserEntity> userEntity = userRepository.findById(userId);
-            if (userEntity.isPresent()){
-                UserDTO user = modelMapper.map(userEntity.get(), UserDTO.class);
+            UserEntity userEntity = userRepository.findByUserUuid(userId);
+            if (userEntity!= null){
+                UserDTO user = modelMapper.map(userEntity, UserDTO.class);
                 return new ResponseEntity<>(user,HttpStatus.OK);
             }else {
                 return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);
@@ -195,6 +201,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> newUserFromSuccessHandler(String email, String name, AuthenticationProvider authenticationProvider) {
         try{
             UserEntity userEntity = new UserEntity();
+            userEntity.setUserUuid(UUID.randomUUID().toString());
             userEntity.setFirstName(name);
             userEntity.setUsername(name);
             userEntity.setGmail(email);
@@ -206,7 +213,7 @@ public class UserServiceImpl implements UserService {
                 String accessToken = createAccessToken(user);
                 SignInResponseDTO signInResponseDTO = new SignInResponseDTO(
                         accessToken,
-                        user.getUserId(),
+                        user.getUserUuid(),
                         user.getUsername(),
                         LocalDate.now(),
                         LocalTime.now()
@@ -234,7 +241,7 @@ public class UserServiceImpl implements UserService {
                 String accessToken = createAccessToken(user);
                 SignInResponseDTO signInResponseDTO = new SignInResponseDTO(
                         accessToken,
-                        user.getUserId(),
+                        user.getUserUuid(),
                         user.getUsername(),
                         LocalDate.now(),
                         LocalTime.now()
@@ -289,6 +296,6 @@ public class UserServiceImpl implements UserService {
     public String createAccessToken(UserEntity userEntity) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole()));
-        return JwtGenerator.generateToken(userEntity.getUsername(), Long.toString(userEntity.getUserId()), authorities);
+        return JwtGenerator.generateToken(userEntity.getUsername(), userEntity.getUserUuid(), authorities);
     }
 }

@@ -57,7 +57,7 @@ public class UserController {
     public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO,
                                           Principal principal) {
         LOGGER.info("request - registeredUser | userUpdate | userDetail: {},userId: {}", userDetailDTO, principal.getName());
-        long userId = Long.parseLong(principal.getName());
+        String userId = principal.getName();
         ResponseEntity<?> updateUser = userService.updateUser(userDetailDTO, userId);
         LOGGER.info("response - registeredUser | userUpdate | updatedUser:{}",updateUser.getBody().toString());
         return updateUser;
@@ -66,7 +66,7 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(Principal principal){
         LOGGER.info("request | getProfile | userId:{}",principal.getName());
-        long userId = Long.parseLong(principal.getName());
+        String userId = principal.getName();
         ResponseEntity<?> profile = userService.getProfile(userId);
         LOGGER.info("response | getProfile | profile: {}",profile.getBody().toString());
         return profile;
@@ -106,7 +106,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("reset_password")
+    @GetMapping("/reset_password")
     public ResponseEntity<?> checkResetToken(@Param(value = "token")String token){
         UserEntity userEntity = userService.get(token);
         if (userEntity!= null){
@@ -117,9 +117,7 @@ public class UserController {
     }
 
     @PostMapping("/reset_password")
-    public ResponseEntity<?> resetPassword(HttpServletRequest request){
-        String token = request.getParameter("token");
-        String password = request.getParameter("password");
+    public ResponseEntity<?> resetPassword(@Param("token") String token,@Param("password") String password){
         UserEntity userEntity = userService.get(token);
         if (userEntity!= null){
             userService.resetPassword(userEntity,password);

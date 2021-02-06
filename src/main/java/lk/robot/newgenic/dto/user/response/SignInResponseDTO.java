@@ -6,7 +6,7 @@ import java.time.LocalTime;
 public class SignInResponseDTO {
 
     private String token;
-    private long userId;
+    private String userId;
     private String username;
     private LocalDate loginDate;
     private LocalTime loginTime;
@@ -15,7 +15,7 @@ public class SignInResponseDTO {
     }
 
     public SignInResponseDTO(String token,
-                             long userId,
+                             String userId,
                              String username,
                              LocalDate loginDate,
                              LocalTime loginTime) {
@@ -34,11 +34,11 @@ public class SignInResponseDTO {
         this.token = token;
     }
 
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

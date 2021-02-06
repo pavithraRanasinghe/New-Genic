@@ -24,6 +24,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -85,6 +86,7 @@ public class OrderServiceImpl implements OrderService {
 
                             if (payment != null) {
                                 OrderEntity orderEntity = new OrderEntity();
+                                orderEntity.setOrderUuid(UUID.randomUUID().toString());
                                 orderEntity.setStatus(OrderStatus.PENDING.toString());
                                 orderEntity.setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
                                 orderEntity.setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
@@ -137,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<?> cartOrderPlace(CartOrderRequestDTO cartOrderRequestDTO, long userId) {
         try {
             Optional<UserEntity> user = userRepository.findById(userId);
-            Optional<OrderEntity> cart = orderRepository.findById(cartOrderRequestDTO.getCartId());
+            OrderEntity cart = orderRepository.findByOrderUuid(cartOrderRequestDTO.getCartId());
             Optional<DeliveryEntity> deliveryEntity = deliveryRepository.findById(cartOrderRequestDTO.getDeliveryId());
             if (cart != null) {
                 UserAddressEntity billingDetail = userAddressRepository.save(setBillingDetails(cartOrderRequestDTO.getBillingDetail()));
@@ -151,23 +153,23 @@ public class OrderServiceImpl implements OrderService {
                 userAddressDetailRepository.save(billingAddressDetail);
                 userAddressDetailRepository.save(shippingAddressDetail);
                 if (billingDetail != null && shippingDetail != null) {
-                    PaymentEntity paymentEntity = setCartPaymentDetails(cartOrderRequestDTO, cart.get());
+                    PaymentEntity paymentEntity = setCartPaymentDetails(cartOrderRequestDTO, cart);
                     PaymentEntity payment = paymentRepository.save(paymentEntity);
 
                     if (payment != null) {
-                        cart.get().setStatus(OrderStatus.PENDING.toString());
-                        cart.get().setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
-                        cart.get().setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
-                        cart.get().setTotalWeight(cartOrderRequestDTO.getTotalWeight());
-                        cart.get().setUserEntity(user.get());
-                        cart.get().setDeliveryEntity(deliveryEntity.get());
-                        cart.get().setPaymentEntity(payment);
-                        cart.get().setBillingDetail(billingDetail);
-                        cart.get().setShippingDetails(shippingDetail);
+                        cart.setStatus(OrderStatus.PENDING.toString());
+                        cart.setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
+                        cart.setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
+                        cart.setTotalWeight(cartOrderRequestDTO.getTotalWeight());
+                        cart.setUserEntity(user.get());
+                        cart.setDeliveryEntity(deliveryEntity.get());
+                        cart.setPaymentEntity(payment);
+                        cart.setBillingDetail(billingDetail);
+                        cart.setShippingDetails(shippingDetail);
 
-                        OrderEntity order = orderRepository.save(cart.get());
+                        OrderEntity order = orderRepository.save(cart);
                         if (order != null) {
-                            List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(cart.get());
+                            List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(cart);
                             if (!orderDetailList.isEmpty()) {
                                 for (OrderDetailEntity orderDetailEntity :
                                         orderDetailList) {
@@ -285,7 +287,7 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderResponseDTO setOrderDetails(OrderEntity orderEntity, List<OrderProductDetail> productDetailList) {
         return new OrderResponseDTO(
-                orderEntity.getOrderId(),
+                orderEntity.getOrderUuid(),
                 orderEntity.getOrderDate(),
                 orderEntity.getOrderTime(),
                 orderEntity.getTrackingNumber(),
