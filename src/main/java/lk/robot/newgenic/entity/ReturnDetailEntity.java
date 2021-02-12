@@ -13,7 +13,7 @@ public class ReturnDetailEntity {
     private String reason;
     @Column(name = "return_qty")
     private int returnQty;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_return_id")
     private ReturnEntity returnEntity;
     @OneToOne(mappedBy = "returnDetailEntity",cascade = CascadeType.ALL, orphanRemoval = true)

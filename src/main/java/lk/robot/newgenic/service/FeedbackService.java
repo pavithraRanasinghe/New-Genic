@@ -1,6 +1,6 @@
 package lk.robot.newgenic.service;
 
-import lk.robot.newgenic.dto.user.request.FeedbackRequestDTO;
+import lk.robot.newgenic.dto.request.FeedbackRequestDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface FeedbackService {

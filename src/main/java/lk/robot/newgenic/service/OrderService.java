@@ -1,7 +1,7 @@
 package lk.robot.newgenic.service;
 
-import lk.robot.newgenic.dto.user.request.CartOrderRequestDTO;
-import lk.robot.newgenic.dto.user.request.OrderRequestDTO;
+import lk.robot.newgenic.dto.request.CartOrderRequestDTO;
+import lk.robot.newgenic.dto.request.OrderRequestDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface OrderService {

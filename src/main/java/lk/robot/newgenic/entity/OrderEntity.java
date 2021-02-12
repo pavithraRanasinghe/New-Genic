@@ -3,7 +3,6 @@ package lk.robot.newgenic.entity;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
@@ -70,7 +69,6 @@ public class OrderEntity {
                        DiscountMethodEntity discountMethodEntity,
                        ReturnEntity returnEntity) {
         this.orderId = orderId;
-        this.orderUuid = orderUuid;
         this.status = status;
         this.pickUpDate = pickUpDate;
         this.pickUpTime = pickUpTime;

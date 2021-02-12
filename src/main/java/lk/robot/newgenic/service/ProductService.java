@@ -1,6 +1,6 @@
 package lk.robot.newgenic.service;
 
-import lk.robot.newgenic.dto.user.request.FilterDTO;
+import lk.robot.newgenic.dto.request.FilterDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface ProductService {
@@ -11,9 +11,9 @@ public interface ProductService {
 
     ResponseEntity<?> filterProducts(FilterDTO filterDTO);
 
-    ResponseEntity<?> getDetail(long productId);
+    ResponseEntity<?> getDetail(String productId);
 
-    ResponseEntity<?> relatedProduct(long productId,int index,int size);
+    ResponseEntity<?> relatedProduct(String productId,int index,int size);
 
     ResponseEntity<?> searchProduct(String keyword,int index,int size);
 

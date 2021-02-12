@@ -1,6 +1,6 @@
 package lk.robot.newgenic.controller;
 
-import lk.robot.newgenic.dto.user.request.ReturnRequestDTO;
+import lk.robot.newgenic.dto.request.ReturnRequestDTO;
 import lk.robot.newgenic.service.ReturnService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

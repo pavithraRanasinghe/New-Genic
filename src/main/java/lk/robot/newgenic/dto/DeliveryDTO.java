@@ -1,6 +1,6 @@
 package lk.robot.newgenic.dto;
 
-import lk.robot.newgenic.dto.user.response.DeliveryCostDTO;
+import lk.robot.newgenic.dto.response.DeliveryCostDTO;
 
 import java.util.List;
 

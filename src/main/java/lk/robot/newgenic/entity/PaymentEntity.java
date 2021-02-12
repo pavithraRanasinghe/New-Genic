@@ -22,7 +22,6 @@ public class PaymentEntity {
     private double freeDeliveryPrice;
     @Column(name = "discount_price")
     private double discountPrice;
-    @Column
     private double refund;
     private double reorder;
     @Column(name = "payment_date")

@@ -33,16 +33,6 @@ public class MainCategoryEntity {
         this.adminEntity = adminEntity;
     }
 
-    @Override
-    public String toString() {
-        return "MainCategoryEntity{" +
-                "mainCategoryId=" + mainCategoryId +
-                ", mainCategoryName='" + mainCategoryName + '\'' +
-                ", mainCategoryDescription='" + mainCategoryDescription + '\'' +
-                ", adminEntity=" + adminEntity +
-                '}';
-    }
-
     public long getMainCategoryId() {
         return mainCategoryId;
     }
@@ -73,5 +63,15 @@ public class MainCategoryEntity {
 
     public void setAdminEntity(AdminEntity adminEntity) {
         this.adminEntity = adminEntity;
+    }
+
+    @Override
+    public String toString() {
+        return "MainCategoryEntity{" +
+                "mainCategoryId=" + mainCategoryId +
+                ", mainCategoryName='" + mainCategoryName + '\'' +
+                ", mainCategoryDescription='" + mainCategoryDescription + '\'' +
+                ", adminEntity=" + adminEntity +
+                '}';
     }
 }

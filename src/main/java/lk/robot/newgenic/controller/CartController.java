@@ -1,6 +1,6 @@
 package lk.robot.newgenic.controller;
 
-import lk.robot.newgenic.dto.user.request.CartRequestDTO;
+import lk.robot.newgenic.dto.request.CartRequestDTO;
 import lk.robot.newgenic.service.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

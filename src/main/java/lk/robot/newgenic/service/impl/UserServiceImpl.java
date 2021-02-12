@@ -1,9 +1,12 @@
 package lk.robot.newgenic.service.impl;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import lk.robot.newgenic.dto.UserDTO;
-import lk.robot.newgenic.dto.user.request.UserDetailDTO;
-import lk.robot.newgenic.dto.user.request.UserSignUpDTO;
-import lk.robot.newgenic.dto.user.response.SignInResponseDTO;
+import lk.robot.newgenic.dto.request.UserDetailDTO;
+import lk.robot.newgenic.dto.request.UserSignUpDTO;
+import lk.robot.newgenic.dto.response.SignInResponseDTO;
 import lk.robot.newgenic.entity.UserAddressDetailEntity;
 import lk.robot.newgenic.entity.UserAddressEntity;
 import lk.robot.newgenic.entity.UserEntity;
@@ -19,15 +22,18 @@ import lk.robot.newgenic.repository.UserRepository;
 import lk.robot.newgenic.service.UserService;
 import lk.robot.newgenic.util.DateConverter;
 import lk.robot.newgenic.util.EntityToDto;
-import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -45,6 +51,13 @@ public class UserServiceImpl implements UserService {
     private UserAddressDetailRepository userAddressDetailRepository;
 
     @Autowired
+    private AmazonS3 s3Client;
+    @Value(value = "application.bucket.name")
+    private String bucketName;
+    @Value(value = "aws.folder.user")
+    private String folder;
+
+    @Autowired
     public UserServiceImpl(PasswordEncoder passwordEncoder,
                            ModelMapper modelMapper,
                            UserRepository userRepository,
@@ -58,7 +71,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO) {
+    public ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO, MultipartFile profilePicture) {
         try {
             if (!userSignUpDTO.equals(null)) {
 
@@ -69,12 +82,27 @@ public class UserServiceImpl implements UserService {
                     userEntity.setRegisteredDate(DateConverter.localDateToSql(LocalDate.now()));
                     userEntity.setRegisteredTime(DateConverter.localTimeToSql(LocalTime.now()));
                     userEntity.setUserUuid(UUID.randomUUID().toString());
+                    if (!profilePicture.isEmpty()){
+                        uploadFile(profilePicture);
+                        userEntity.setProfilePicture(getFileUrl(profilePicture));
+                    }
                     UserEntity save = userRepository.save(userEntity);
 
                     if (save.equals(null)) {
                         return new ResponseEntity<>("User Sign up failed", HttpStatus.BAD_REQUEST);
                     }
-                    return new ResponseEntity<>("User sign up successful", HttpStatus.OK);
+                    String accessToken = createAccessToken(userEntity);
+                    if (accessToken.isEmpty()) {
+                        return new ResponseEntity<>("Token not created", HttpStatus.FORBIDDEN);
+                    }
+                    SignInResponseDTO signInResponseDTO = new SignInResponseDTO(
+                            accessToken,
+                            userEntity.getUserUuid(),
+                            userEntity.getUsername(),
+                            LocalDate.now(),
+                            LocalTime.now()
+                    );
+                    return new ResponseEntity<>(signInResponseDTO, HttpStatus.OK);
                 }
                 return new ResponseEntity<>("User already signup with "+userSignUpDTO.getGmail(),HttpStatus.BAD_GATEWAY);
             } else {
@@ -117,7 +145,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO, String userId) {
+    public ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO, String userId, MultipartFile profilePicture) {
         try {
             if (userDetailDTO != null) {
                 UserEntity userEntity = userRepository.findByUserUuid(userId);
@@ -127,8 +155,10 @@ public class UserServiceImpl implements UserService {
                 userEntity.setGmail(userDetailDTO.getGmail());
                 userEntity.setMobile(userDetailDTO.getMobile());
                 userEntity.setDob(DateConverter.stringToDate(userDetailDTO.getDob()));
-                userEntity.setProfilePicture(userDetailDTO.getProfilePicture());
-
+                if (!profilePicture.isEmpty()){
+                    uploadFile(profilePicture);
+                    userEntity.setProfilePicture(getFileUrl(profilePicture));
+                }
                 UserEntity user = userRepository.save(userEntity);
                 if (user != null) {
 
@@ -297,5 +327,25 @@ public class UserServiceImpl implements UserService {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole()));
         return JwtGenerator.generateToken(userEntity.getUsername(), userEntity.getUserUuid(), authorities);
+    }
+
+    private void uploadFile(MultipartFile multipartFile){
+        try {
+            File file = new File(multipartFile.getOriginalFilename());
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(multipartFile.getBytes());
+            fos.close();
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName ,folder+multipartFile.getOriginalFilename(), file);
+            putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead);
+            s3Client.putObject(putObjectRequest);
+            file.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getFileUrl(MultipartFile profilePicture){
+        return s3Client.getUrl(bucketName, folder + profilePicture.getOriginalFilename()).toString();
     }
 }

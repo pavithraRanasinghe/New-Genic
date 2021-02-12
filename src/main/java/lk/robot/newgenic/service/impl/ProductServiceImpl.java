@@ -1,14 +1,15 @@
 package lk.robot.newgenic.service.impl;
 
+import lk.robot.newgenic.dto.CombinationDTO;
 import lk.robot.newgenic.dto.ProductDTO;
-import lk.robot.newgenic.dto.user.request.FilterDTO;
-import lk.robot.newgenic.dto.user.response.SaleResponseDTO;
-import lk.robot.newgenic.entity.DealEntity;
-import lk.robot.newgenic.entity.ProductEntity;
+import lk.robot.newgenic.dto.VariationDTO;
+import lk.robot.newgenic.dto.request.FilterDTO;
+import lk.robot.newgenic.dto.response.ProductResponseDTO;
+import lk.robot.newgenic.dto.response.SaleResponseDTO;
+import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.enums.DealStatus;
 import lk.robot.newgenic.exception.CustomException;
-import lk.robot.newgenic.repository.DealRepository;
-import lk.robot.newgenic.repository.ProductRepository;
+import lk.robot.newgenic.repository.*;
 import lk.robot.newgenic.service.ProductService;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +18,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;
     private DealRepository dealRepository;
+    private VariationProductDetailRepository variationProductDetailRepository;
+    private VariationDetailRepository variationDetailRepository;
+    private CombinationRepository combinationRepository;
+    private VariationCombinationDetailRepository variationCombinationDetailRepository;
 
-    @Autowired
+
     public ProductServiceImpl(ProductRepository productRepository,
-                              DealRepository dealRepository) {
+                              DealRepository dealRepository,
+                              VariationProductDetailRepository variationProductDetailRepository,
+                              VariationDetailRepository variationDetailRepository,
+                              CombinationRepository combinationRepository,
+                              VariationCombinationDetailRepository variationCombinationDetailRepository) {
         this.productRepository = productRepository;
         this.dealRepository = dealRepository;
+        this.variationProductDetailRepository = variationProductDetailRepository;
+        this.variationDetailRepository = variationDetailRepository;
+        this.combinationRepository = combinationRepository;
+        this.variationCombinationDetailRepository = variationCombinationDetailRepository;
     }
 
     @Override
@@ -40,10 +51,9 @@ public class ProductServiceImpl implements ProductService {
         try {
             List<ProductEntity> list = productRepository.newArrivals(PageRequest.of(index, size));
             if (!list.isEmpty()) {
-                List<ProductDTO> newArrivalList = new ArrayList<>();
+                List<ProductResponseDTO> newArrivalList = new ArrayList<>();
                 for (ProductEntity productEntity : list) {
-                    ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
-                    newArrivalList.add(productDTO);
+                    newArrivalList.add(setProductDetails(productEntity));
                 }
                 return new ResponseEntity<>(newArrivalList, HttpStatus.OK);
             } else {
@@ -60,10 +70,9 @@ public class ProductServiceImpl implements ProductService {
         try {
             List<ProductEntity> fantech = productRepository.findAllByBrandAndActive("Fantech", true);
             if (!fantech.isEmpty()) {
-                List<ProductDTO> fantechList = new ArrayList<>();
+                List<ProductResponseDTO> fantechList = new ArrayList<>();
                 for (ProductEntity productEntity : fantech) {
-                    ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
-                    fantechList.add(productDTO);
+                    fantechList.add(setProductDetails(productEntity));
                 }
                 return new ResponseEntity<>(fantechList, HttpStatus.OK);
             } else {
@@ -93,12 +102,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> getDetail(long productId) {
-        if (productId != 0) {
-            Optional<ProductEntity> productEntity = productRepository.findById(productId);
+    public ResponseEntity<?> getDetail(String productId) {
+        if (productId != null) {
+            Optional<ProductEntity> productEntity = productRepository.findByUuid(productId);
             if (productEntity.isPresent()) {
-                ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity.get());
-                return new ResponseEntity<>(productDTO, HttpStatus.OK);
+                ProductResponseDTO productResponseDTO = setProductDetails(productEntity.get());
+                return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
             }
@@ -108,17 +117,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<?> relatedProduct(long productId, int index, int size) {
+    public ResponseEntity<?> relatedProduct(String productId, int index, int size) {
         try {
-            if (productId != 0) {
-                Optional<ProductEntity> productEntity = productRepository.findById(productId);
+            if (productId != null) {
+                Optional<ProductEntity> productEntity = productRepository.findByUuid(productId);
                 if (productEntity.isPresent()) {
                     List<ProductEntity> productEntityList = productRepository.
                             findBySubCategoryEntityAndActive(productEntity.get().getSubCategoryEntity(), true, PageRequest.of(index, size));
                     if (!productEntityList.isEmpty()) {
-                        List<ProductDTO> productList = new ArrayList<>();
+                        List<ProductResponseDTO> productList = new ArrayList<>();
                         for (ProductEntity product : productEntityList) {
-                            productList.add(EntityToDto.productEntityToDto(product));
+                            productList.add(setProductDetails(product));
                         }
                         return new ResponseEntity<>(productList, HttpStatus.OK);
                     } else {
@@ -140,15 +149,15 @@ public class ProductServiceImpl implements ProductService {
         try {
             if (keyword != null) {
                 List<ProductEntity> productEntityList = productRepository.searchProducts(keyword);
-                if (!productEntityList.isEmpty()){
-                    List<ProductDTO> productList = new ArrayList<>();
+                if (!productEntityList.isEmpty()) {
+                    List<ProductResponseDTO> productList = new ArrayList<>();
                     for (ProductEntity productEntity :
                             productEntityList) {
-                        productList.add(EntityToDto.productEntityToDto(productEntity));
+                        productList.add(setProductDetails(productEntity));
                     }
-                    return new ResponseEntity<>(productList,HttpStatus.OK);
-                }else {
-                    return new ResponseEntity<>("No products found",HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(productList, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("No products found", HttpStatus.NOT_FOUND);
                 }
             } else {
                 return new ResponseEntity<>("Keyword not found", HttpStatus.NOT_FOUND);
@@ -160,15 +169,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<?> getSaleProducts(int index, int size) {
-        try{
+        try {
             DealEntity dealEntity = dealRepository.findByDealStatus(DealStatus.ACTIVE.toString());
-            if (dealEntity != null){
-                List<ProductEntity> products = productRepository.findByDealEntity(dealEntity,PageRequest.of(index,size));
-                if (!products.isEmpty()){
-                    List<ProductDTO> productList = new ArrayList<>();
+            if (dealEntity != null) {
+                List<ProductEntity> products = productRepository.findByDealEntity(dealEntity, PageRequest.of(index, size));
+                if (!products.isEmpty()) {
+                    List<ProductResponseDTO> productList = new ArrayList<>();
                     for (ProductEntity productEntity :
                             products) {
-                        productList.add(EntityToDto.productEntityToDto(productEntity));
+                        productList.add(setProductDetails(productEntity));
                     }
                     SaleResponseDTO saleResponseDTO = new SaleResponseDTO(
                             dealEntity.getDealId(),
@@ -181,15 +190,74 @@ public class ProductServiceImpl implements ProductService {
                             dealEntity.getDiscount(),
                             productList
                     );
-                    return new ResponseEntity<>(saleResponseDTO,HttpStatus.OK);
-                }else{
-                    return new ResponseEntity<>("No products found",HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(saleResponseDTO, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("No products found", HttpStatus.NOT_FOUND);
                 }
-            }else {
-                return new ResponseEntity<>("Deals not found",HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>("Deals not found", HttpStatus.NOT_FOUND);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Failed to get sale products");
         }
+    }
+
+    private ProductResponseDTO setProductDetails(ProductEntity productEntity) {
+        List<CombinationDTO> combinationList = new ArrayList<>();
+        List<VariationProductDetailEntity> variationProductDetailList = variationProductDetailRepository.findByProductEntity(productEntity);
+        for (VariationProductDetailEntity variationProductDetailEntity :
+                variationProductDetailList) {
+            VariationEntity variationEntity = variationProductDetailEntity.getVariationEntity();
+            List<VariationDetailEntity> byVariationEntity = variationDetailRepository.findByVariationEntity(variationEntity);
+            for (VariationDetailEntity variationDetailEntity :
+                    byVariationEntity) {
+
+                List<VariationCombinationDetailEntity> variationCombinationDetailList = variationCombinationDetailRepository.findByVariationDetailEntity(variationDetailEntity);
+
+                for (VariationCombinationDetailEntity variationCombinationDetailEntity :
+                        variationCombinationDetailList) {
+                    CombinationEntity combinationEntity = variationCombinationDetailEntity.getCombinationEntity();
+
+                    CombinationDTO combinationDTO = new CombinationDTO();
+                    combinationDTO.setCombinationId(combinationEntity.getCombinationId());
+                    combinationDTO.setStock(combinationEntity.getStock());
+                    combinationDTO.setWeight(combinationEntity.getWeight());
+                    combinationDTO.setSalePrice(combinationEntity.getSalePrice());
+                    combinationDTO.setRetailPrice(combinationEntity.getRetailPrice());
+
+                    VariationDTO variationDTO = new VariationDTO();
+                    VariationDetailEntity variationDetail = variationCombinationDetailEntity.getVariationDetailEntity();
+                    variationDTO.setVariationDetailId(variationDetail.getVariationValueId());
+                    variationDTO.setValue(variationDetail.getValue());
+                    variationDTO.setVariationId(variationDetail.getVariationEntity().getVariationId());
+                    variationDTO.setVariationName(variationDetail.getVariationEntity().getVariationName());
+
+                    if (combinationList.isEmpty()){
+                        combinationList.add(combinationDTO);
+                    }
+
+                    for (CombinationDTO combination :
+                            combinationList) {
+                           if (combination.getCombinationId() == combinationEntity.getCombinationId()){
+                               combination.getVariationList().add(variationDTO);
+                           }else{
+                               List<VariationDTO> variationList = new ArrayList<>();
+                               variationList.add(variationDTO);
+                               combinationDTO.setVariationList(variationList);
+                               combinationList.add(combinationDTO);
+                           }
+                    }
+                }
+            }
+        }
+        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+        productResponseDTO.setUuid(productEntity.getUuid());
+        productResponseDTO.setName(productEntity.getName());
+        productResponseDTO.setDescription(productEntity.getDescription());
+        productResponseDTO.setBrand(productEntity.getBrand());
+        productResponseDTO.setFreeShipping(productEntity.isFreeShipping());
+        productResponseDTO.setVariationList(combinationList);
+
+        return productResponseDTO;
     }
 }

@@ -1,7 +1,8 @@
 package lk.robot.newgenic.controller;
 
-import lk.robot.newgenic.dto.user.request.UserDetailDTO;
-import lk.robot.newgenic.dto.user.request.UserSignUpDTO;
+import com.amazonaws.services.s3.AmazonS3;
+import lk.robot.newgenic.dto.request.UserDetailDTO;
+import lk.robot.newgenic.dto.request.UserSignUpDTO;
 import lk.robot.newgenic.entity.UserEntity;
 import lk.robot.newgenic.jwt.AuthenticationRequest;
 import lk.robot.newgenic.service.UserService;
@@ -16,11 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 
 @RestController
@@ -31,6 +31,8 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private AmazonS3 s3Client;
 
     @Autowired
     public UserController(UserService userService) {
@@ -38,9 +40,9 @@ public class UserController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> userSignUp(@RequestBody UserSignUpDTO userSignUpDTO) {
+    public ResponseEntity<?> userSignUp(@RequestBody UserSignUpDTO userSignUpDTO, @RequestParam("image") MultipartFile profilePicture) {
         LOGGER.info("request - publicUser | userSignUp | userSignUpDetails:{}", userSignUpDTO);
-        ResponseEntity<?> responseEntity = userService.signUp(userSignUpDTO);
+        ResponseEntity<?> responseEntity = userService.signUp(userSignUpDTO,profilePicture);
         LOGGER.info("response - publicUser | userSignUp | userSignUpResponse:{}", responseEntity.getBody().toString());
         return responseEntity;
     }
@@ -55,10 +57,11 @@ public class UserController {
 
     @PatchMapping("/update")
     public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO,
+                                          @RequestParam("image") MultipartFile profilePicture,
                                           Principal principal) {
         LOGGER.info("request - registeredUser | userUpdate | userDetail: {},userId: {}", userDetailDTO, principal.getName());
         String userId = principal.getName();
-        ResponseEntity<?> updateUser = userService.updateUser(userDetailDTO, userId);
+        ResponseEntity<?> updateUser = userService.updateUser(userDetailDTO, userId,profilePicture);
         LOGGER.info("response - registeredUser | userUpdate | updatedUser:{}",updateUser.getBody().toString());
         return updateUser;
     }

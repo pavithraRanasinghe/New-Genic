@@ -2,8 +2,8 @@ package lk.robot.newgenic.service.impl;
 
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.SubCategoryDTO;
-import lk.robot.newgenic.dto.user.response.CategoryResponseDTO;
-import lk.robot.newgenic.dto.user.response.MainSubCategoryResponseDTO;
+import lk.robot.newgenic.dto.response.CategoryResponseDTO;
+import lk.robot.newgenic.dto.response.MainSubCategoryResponseDTO;
 import lk.robot.newgenic.entity.MainCategoryEntity;
 import lk.robot.newgenic.entity.MainSubCategoryEntity;
 import lk.robot.newgenic.entity.ProductEntity;

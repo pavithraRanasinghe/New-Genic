@@ -5,8 +5,6 @@ import lk.robot.newgenic.enums.AuthenticationProvider;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -26,7 +24,7 @@ public class UserEntity {
     private String profilePicture;
     @Column(nullable = false)
     private String gmail;
-    @Column
+    @Column(nullable = false)
     private String mobile;
     @Column
     private Date dob;
@@ -40,10 +38,15 @@ public class UserEntity {
     private Date registeredDate;
     @Column(name = "registered_time")
     private Time registeredTime;
+    @Column(name = "update_date",nullable = false)
+    private Date updateDate;
+    @Column(name = "update_time",nullable = false)
+    private Time updateTime;
     @Enumerated(EnumType.STRING)
     private AuthenticationProvider authenticationProvider;
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
+
 
     public UserEntity() {
     }
@@ -61,6 +64,8 @@ public class UserEntity {
                       String password,
                       Date registeredDate,
                       Time registeredTime,
+                      Date updateDate,
+                      Time updateTime,
                       AuthenticationProvider authenticationProvider,
                       String resetPasswordToken) {
         this.userId = userId;
@@ -76,6 +81,8 @@ public class UserEntity {
         this.password = password;
         this.registeredDate = registeredDate;
         this.registeredTime = registeredTime;
+        this.updateDate = updateDate;
+        this.updateTime = updateTime;
         this.authenticationProvider = authenticationProvider;
         this.resetPasswordToken = resetPasswordToken;
     }
@@ -184,6 +191,22 @@ public class UserEntity {
         this.registeredTime = registeredTime;
     }
 
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Time getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Time updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public AuthenticationProvider getAuthenticationProvider() {
         return authenticationProvider;
     }
@@ -216,6 +239,8 @@ public class UserEntity {
                 ", password='" + password + '\'' +
                 ", registeredDate=" + registeredDate +
                 ", registeredTime=" + registeredTime +
+                ", updateDate=" + updateDate +
+                ", updateTime=" + updateTime +
                 ", authenticationProvider=" + authenticationProvider +
                 ", resetPasswordToken='" + resetPasswordToken + '\'' +
                 '}';

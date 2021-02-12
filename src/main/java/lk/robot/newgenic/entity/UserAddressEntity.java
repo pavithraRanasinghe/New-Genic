@@ -1,8 +1,6 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "user_address")

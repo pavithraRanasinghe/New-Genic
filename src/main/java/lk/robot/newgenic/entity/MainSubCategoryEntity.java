@@ -32,16 +32,6 @@ public class MainSubCategoryEntity {
         this.mainCategoryEntity = mainCategoryEntity;
     }
 
-    @Override
-    public String toString() {
-        return "MainSubCategory{" +
-                "mainSubCategoryId=" + mainSubCategoryId +
-                ", mainSubCategoryName='" + mainSubCategoryName + '\'' +
-                ", mainSubCategoryDescription='" + mainSubCategoryDescription + '\'' +
-                ", mainCategoryEntity=" + mainCategoryEntity +
-                '}';
-    }
-
     public long getMainSubCategoryId() {
         return mainSubCategoryId;
     }
@@ -72,5 +62,16 @@ public class MainSubCategoryEntity {
 
     public void setMainCategoryEntity(MainCategoryEntity mainCategoryEntity) {
         this.mainCategoryEntity = mainCategoryEntity;
+    }
+
+
+    @Override
+    public String toString() {
+        return "MainSubCategory{" +
+                "mainSubCategoryId=" + mainSubCategoryId +
+                ", mainSubCategoryName='" + mainSubCategoryName + '\'' +
+                ", mainSubCategoryDescription='" + mainSubCategoryDescription + '\'' +
+                ", mainCategoryEntity=" + mainCategoryEntity +
+                '}';
     }
 }

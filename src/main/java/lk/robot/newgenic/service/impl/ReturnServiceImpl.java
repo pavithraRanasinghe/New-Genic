@@ -1,23 +1,13 @@
 package lk.robot.newgenic.service.impl;
 
-import lk.robot.newgenic.dto.user.request.ReturnRequestDTO;
-import lk.robot.newgenic.dto.user.response.ReturnResponseDTO;
-import lk.robot.newgenic.entity.*;
-import lk.robot.newgenic.enums.ReturnAction;
-import lk.robot.newgenic.exception.CustomException;
+import lk.robot.newgenic.dto.request.ReturnRequestDTO;
 import lk.robot.newgenic.repository.*;
 import lk.robot.newgenic.service.ReturnService;
-import lk.robot.newgenic.util.DateConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReturnServiceImpl implements ReturnService {

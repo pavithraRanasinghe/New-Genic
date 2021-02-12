@@ -27,6 +27,10 @@ public class DeliveryEntity {
     private Date registrationDate;
     @Column(name = "registration_time")
     private Time registrationTime;
+    @Column(name = "update_date",nullable = false)
+    private Date updateDate;
+    @Column(name = "update_time",nullable = false)
+    private Time updateTime;
     @Column(name = "registration_number")
     private String registrationNumber;
     @Column
@@ -48,6 +52,8 @@ public class DeliveryEntity {
                           String website,
                           Date registrationDate,
                           Time registrationTime,
+                          Date updateDate,
+                          Time updateTime,
                           String registrationNumber,
                           boolean active,
                           AdminEntity adminEntity) {
@@ -59,6 +65,8 @@ public class DeliveryEntity {
         this.website = website;
         this.registrationDate = registrationDate;
         this.registrationTime = registrationTime;
+        this.updateDate = updateDate;
+        this.updateTime = updateTime;
         this.registrationNumber = registrationNumber;
         this.active = active;
         this.adminEntity = adminEntity;
@@ -128,6 +136,22 @@ public class DeliveryEntity {
         this.registrationTime = registrationTime;
     }
 
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Time getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Time updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public String getRegistrationNumber() {
         return registrationNumber;
     }
@@ -171,6 +195,8 @@ public class DeliveryEntity {
                 ", website='" + website + '\'' +
                 ", registrationDate=" + registrationDate +
                 ", registrationTime=" + registrationTime +
+                ", updateDate=" + updateDate +
+                ", updateTime=" + updateTime +
                 ", registrationNumber='" + registrationNumber + '\'' +
                 ", active=" + active +
                 ", adminEntity=" + adminEntity +

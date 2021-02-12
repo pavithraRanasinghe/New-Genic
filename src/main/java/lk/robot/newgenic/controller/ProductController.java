@@ -1,6 +1,6 @@
 package lk.robot.newgenic.controller;
 
-import lk.robot.newgenic.dto.user.request.FilterDTO;
+import lk.robot.newgenic.dto.request.FilterDTO;
 import lk.robot.newgenic.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<?> getDetail(@PathVariable long productId) {
+    public ResponseEntity<?> getDetail(@PathVariable String productId) {
         LOGGER.info("request - allUser | getProductDetail | productId: {}", productId);
         ResponseEntity<?> detail = productService.getDetail(productId);
         LOGGER.info("response - allUser | getProductDetail | productDetail: {}", detail.getBody().toString());
@@ -55,7 +55,7 @@ public class ProductController {
     }
 
     @GetMapping("/relatedProducts/{productId}")
-    public ResponseEntity<?> getRelatedProducts(@PathVariable long productId,
+    public ResponseEntity<?> getRelatedProducts(@PathVariable String productId,
                                                 @RequestParam int index,
                                                 @RequestParam int size) {
         LOGGER.info("request - allUser | getRelatedProduct | productId: {} | index: {} | size: {}", productId, index, size);

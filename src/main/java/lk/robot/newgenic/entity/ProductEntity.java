@@ -14,37 +14,26 @@ public class ProductEntity {
     private long productId;
     @Column(name = "product_code",nullable = false)
     private String productCode;
+    @Column(name = "product_uuid")
+    private String uuid;
     @Column(nullable = false)
     private String name;
     @Column
     private String description;
     @Column
     private String brand;
-    @Column
-    private int stock;
-    @Column
-    private String color;
-    @Column
-    private String size;
-    @Column
-    private String gender;
-    @Column
-    private Double weight;
-    @Column(name = "buying_price")
-    private double buyingPrice;
-    @Column(name = "sale_price")
-    private double salePrice;
-    @Column(name = "retail_price")
-    private double retailPrice;
     @Column(name = "added_date",nullable = false)
     private Date addedDate;
     @Column(name = "added_time",nullable = false)
     private Time addedTime;
+    @Column(name = "update_date",nullable = false)
+    private Date updateDate;
+    @Column(name = "update_time",nullable = false)
+    private Time updateTime;
     @Column(nullable = false)
     private boolean active;
-    @Column(name = "free_shipping")
-    private boolean freeShipping;
-
+    @Column(name = "is_free_shipping")
+    private boolean isFreeShipping;
     @ManyToOne
     @JoinColumn(name = "fk_sub_category_id")
     private SubCategoryEntity subCategoryEntity;
@@ -59,40 +48,30 @@ public class ProductEntity {
     public ProductEntity(
             long productId,
             String productCode,
+            String uuid,
             String name,
             String description,
             String brand,
-            int stock,
-            String color,
-            String size,
-            String gender,
-            double weight,
-            double buyingPrice,
-            double salePrice,
-            double retailPrice,
             Date addedDate,
             Time addedTime,
+            Date updateDate,
+            Time updateTime,
             boolean active,
-            boolean freeShipping,
+            boolean isFreeShipping,
             SubCategoryEntity subCategoryEntity,
             DealEntity dealEntity) {
         this.productId = productId;
         this.productCode = productCode;
+        this.uuid = uuid;
         this.name = name;
         this.description = description;
         this.brand = brand;
-        this.stock = stock;
-        this.color = color;
-        this.size = size;
-        this.gender = gender;
-        this.weight = weight;
-        this.buyingPrice = buyingPrice;
-        this.salePrice = salePrice;
-        this.retailPrice = retailPrice;
         this.addedDate = addedDate;
         this.addedTime = addedTime;
+        this.updateDate = updateDate;
+        this.updateTime = updateTime;
         this.active = active;
-        this.freeShipping = freeShipping;
+        this.isFreeShipping = isFreeShipping;
         this.subCategoryEntity = subCategoryEntity;
         this.dealEntity = dealEntity;
     }
@@ -111,6 +90,14 @@ public class ProductEntity {
 
     public void setProductCode(String productCode) {
         this.productCode = productCode;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {
@@ -137,70 +124,6 @@ public class ProductEntity {
         this.brand = brand;
     }
 
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-
-    public double getBuyingPrice() {
-        return buyingPrice;
-    }
-
-    public void setBuyingPrice(double buyingPrice) {
-        this.buyingPrice = buyingPrice;
-    }
-
-    public double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
-    }
-
-    public double getRetailPrice() {
-        return retailPrice;
-    }
-
-    public void setRetailPrice(double retailPrice) {
-        this.retailPrice = retailPrice;
-    }
 
     public Date getAddedDate() {
         return addedDate;
@@ -218,6 +141,22 @@ public class ProductEntity {
         this.addedTime = addedTime;
     }
 
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Time getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Time updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -227,11 +166,11 @@ public class ProductEntity {
     }
 
     public boolean isFreeShipping() {
-        return freeShipping;
+        return isFreeShipping;
     }
 
     public void setFreeShipping(boolean freeShipping) {
-        this.freeShipping = freeShipping;
+        isFreeShipping = freeShipping;
     }
 
     public SubCategoryEntity getSubCategoryEntity() {
@@ -255,21 +194,16 @@ public class ProductEntity {
         return "ProductEntity{" +
                 "productId=" + productId +
                 ", productCode='" + productCode + '\'' +
+                ", uuid='" + uuid + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", brand='" + brand + '\'' +
-                ", stock=" + stock +
-                ", color='" + color + '\'' +
-                ", size='" + size + '\'' +
-                ", gender='" + gender + '\'' +
-                ", weight=" + weight +
-                ", buyingPrice=" + buyingPrice +
-                ", salePrice=" + salePrice +
-                ", retailPrice=" + retailPrice +
                 ", addedDate=" + addedDate +
                 ", addedTime=" + addedTime +
+                ", updateDate=" + updateDate +
+                ", updateTime=" + updateTime +
                 ", active=" + active +
-                ", freeShipping=" + freeShipping +
+                ", isFreeShipping=" + isFreeShipping +
                 ", subCategoryEntity=" + subCategoryEntity +
                 ", dealEntity=" + dealEntity +
                 '}';

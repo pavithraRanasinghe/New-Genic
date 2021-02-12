@@ -1,7 +1,7 @@
 package lk.robot.newgenic.service.impl;
 
-import lk.robot.newgenic.dto.user.request.FeedbackRequestDTO;
-import lk.robot.newgenic.dto.user.response.ProductFeedbackResponseDTO;
+import lk.robot.newgenic.dto.request.FeedbackRequestDTO;
+import lk.robot.newgenic.dto.response.ProductFeedbackResponseDTO;
 import lk.robot.newgenic.entity.ProductEntity;
 import lk.robot.newgenic.entity.ProductFeedbackEntity;
 import lk.robot.newgenic.entity.UserEntity;

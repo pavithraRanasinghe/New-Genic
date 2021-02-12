@@ -1,11 +1,11 @@
 package lk.robot.newgenic.service.impl;
 
-import lk.robot.newgenic.dto.user.request.BillingDetail;
-import lk.robot.newgenic.dto.user.request.CartOrderRequestDTO;
-import lk.robot.newgenic.dto.user.request.OrderRequestDTO;
-import lk.robot.newgenic.dto.user.request.ShippingDetail;
-import lk.robot.newgenic.dto.user.response.OrderProductDetail;
-import lk.robot.newgenic.dto.user.response.OrderResponseDTO;
+import lk.robot.newgenic.dto.request.BillingDetail;
+import lk.robot.newgenic.dto.request.CartOrderRequestDTO;
+import lk.robot.newgenic.dto.request.OrderRequestDTO;
+import lk.robot.newgenic.dto.request.ShippingDetail;
+import lk.robot.newgenic.dto.response.OrderProductDetail;
+import lk.robot.newgenic.dto.response.OrderResponseDTO;
 import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.enums.AddressType;
 import lk.robot.newgenic.enums.OrderStatus;

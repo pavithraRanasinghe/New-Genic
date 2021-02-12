@@ -13,18 +13,18 @@ public class ProductImageEntity {
     @Column
     private String url;
     @ManyToOne
-    @JoinColumn(name = "fk_product_id")
-    private ProductEntity productEntity;
+    @JoinColumn(name = "fk_variation_detail_id")
+    private VariationDetailEntity variationDetailEntity;
 
     public ProductImageEntity() {
     }
 
     public ProductImageEntity(long productImageId,
                               String url,
-                              ProductEntity productEntity) {
+                              VariationDetailEntity variationDetailEntity) {
         this.productImageId = productImageId;
         this.url = url;
-        this.productEntity = productEntity;
+        this.variationDetailEntity = variationDetailEntity;
     }
 
     public long getProductImageId() {
@@ -43,12 +43,12 @@ public class ProductImageEntity {
         this.url = url;
     }
 
-    public ProductEntity getProductEntity() {
-        return productEntity;
+    public VariationDetailEntity getVariationDetailEntity() {
+        return variationDetailEntity;
     }
 
-    public void setProductEntity(ProductEntity productEntity) {
-        this.productEntity = productEntity;
+    public void setVariationDetailEntity(VariationDetailEntity variationDetailEntity) {
+        this.variationDetailEntity = variationDetailEntity;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ProductImageEntity {
         return "ProductImageEntity{" +
                 "productImageId=" + productImageId +
                 ", url='" + url + '\'' +
-                ", productEntity=" + productEntity +
+                ", variationDetailEntity=" + variationDetailEntity +
                 '}';
     }
 }
