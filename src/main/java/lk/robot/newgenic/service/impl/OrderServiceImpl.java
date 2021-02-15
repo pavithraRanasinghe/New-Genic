@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transaction;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -38,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     private UserAddressDetailRepository userAddressDetailRepository;
     private UserAddressRepository userAddressRepository;
     private DeliveryRepository deliveryRepository;
+    private CombinationRepository combinationRepository;
+    private VariationCombinationDetailRepository variationCombinationDetailRepository;
 
     @Autowired
     public OrderServiceImpl(UserRepository userRepository,
@@ -47,7 +50,9 @@ public class OrderServiceImpl implements OrderService {
                             PaymentRepository paymentRepository,
                             UserAddressRepository userAddressRepository,
                             UserAddressDetailRepository userAddressDetailRepository,
-                            DeliveryRepository deliveryRepository) {
+                            DeliveryRepository deliveryRepository,
+                            CombinationRepository combinationRepository,
+                            VariationCombinationDetailRepository variationCombinationDetailRepository) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
@@ -56,32 +61,27 @@ public class OrderServiceImpl implements OrderService {
         this.userAddressRepository = userAddressRepository;
         this.userAddressDetailRepository = userAddressDetailRepository;
         this.deliveryRepository = deliveryRepository;
+        this.combinationRepository = combinationRepository;
+        this.variationCombinationDetailRepository = variationCombinationDetailRepository;
     }
 
     @Override
-    public ResponseEntity<?> placeOrder(OrderRequestDTO orderRequestDTO, long userId) {
+    @Transactional
+    public ResponseEntity<?> placeOrder(OrderRequestDTO orderRequestDTO, String userId) {
         try {
             if (orderRequestDTO != null) {
-                Optional<UserEntity> user = userRepository.findById(userId);
-                Optional<ProductEntity> productEntity = productRepository.findById(orderRequestDTO.getProductId());
-                if (productEntity.isPresent()) {
+                Optional<UserEntity> user = userRepository.findByUserUuid(userId);
+                Optional<CombinationEntity> combinationEntity = combinationRepository.findById(orderRequestDTO.getCombinationId());
+                if (combinationEntity.isPresent()) {
 
                     Optional<DeliveryEntity> deliveryEntity = deliveryRepository.findById(orderRequestDTO.getDeliveryId());
                     if (deliveryEntity.isPresent()) {
 
-                        UserAddressEntity billingDetail = userAddressRepository.save(setBillingDetails(orderRequestDTO.getBillingDetail()));
-                        UserAddressEntity shippingDetail = userAddressRepository.save(setShippingDetails(orderRequestDTO.getShippingDetail()));
-                        UserAddressDetailEntity billingAddressDetail = new UserAddressDetailEntity();
-                        UserAddressDetailEntity shippingAddressDetail = new UserAddressDetailEntity();
-                        billingAddressDetail.setUserEntity(user.get());
-                        billingAddressDetail.setUserAddressEntity(billingDetail);
-                        shippingAddressDetail.setUserEntity(user.get());
-                        shippingAddressDetail.setUserAddressEntity(shippingDetail);
-                        userAddressDetailRepository.save(billingAddressDetail);
-                        userAddressDetailRepository.save(shippingAddressDetail);
+                        UserAddressEntity billingDetail = setBillingDetails(orderRequestDTO.getBillingDetail());
+                        UserAddressEntity shippingDetail = setShippingDetails(orderRequestDTO.getShippingDetail());
 
                         if (billingDetail != null && shippingDetail != null) {
-                            PaymentEntity paymentEntity = setPaymentDetails(orderRequestDTO, productEntity.get());
+                            PaymentEntity paymentEntity = setPaymentDetails(orderRequestDTO, combinationEntity.get());
                             PaymentEntity payment = paymentRepository.save(paymentEntity);
 
                             if (payment != null) {
@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
                                 orderEntity.setStatus(OrderStatus.PENDING.toString());
                                 orderEntity.setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
                                 orderEntity.setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
-                                orderEntity.setTotalWeight(productEntity.get().getWeight());
+                                orderEntity.setTotalWeight(combinationEntity.get().getWeight());
                                 orderEntity.setUserEntity(user.get());
                                 orderEntity.setDeliveryEntity(deliveryEntity.get());
                                 orderEntity.setPaymentEntity(paymentEntity);
@@ -100,13 +100,13 @@ public class OrderServiceImpl implements OrderService {
                                 OrderEntity order = orderRepository.save(orderEntity);
                                 if (order != null) {
                                     OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
-                                    orderDetailEntity.setOrderPrice(orderRequestDTO.getRetailPrice() * orderRequestDTO.getQty());
+                                    orderDetailEntity.setOrderPrice(combinationEntity.get().getRetailPrice() * orderRequestDTO.getQty());
                                     orderDetailEntity.setQuantity(orderRequestDTO.getQty());
-                                    orderDetailEntity.setProductEntity(productEntity.get());
+                                    orderDetailEntity.setCombinationEntity(combinationEntity.get());
                                     orderDetailEntity.setOrderEntity(order);
                                     OrderDetailEntity save = orderDetailRepository.save(orderDetailEntity);
-                                    productEntity.get().setStock(productEntity.get().getStock() - orderRequestDTO.getQty());
-                                    productRepository.save(productEntity.get());
+                                    combinationEntity.get().setStock(combinationEntity.get().getStock() - orderRequestDTO.getQty());
+                                    combinationRepository.save(combinationEntity.get());
                                     if (save != null) {
                                         return new ResponseEntity<>("Order place successful", HttpStatus.OK);
                                     } else {
@@ -136,46 +136,39 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> cartOrderPlace(CartOrderRequestDTO cartOrderRequestDTO, long userId) {
+    public ResponseEntity<?> cartOrderPlace(CartOrderRequestDTO cartOrderRequestDTO, String userId) {
         try {
-            Optional<UserEntity> user = userRepository.findById(userId);
-            OrderEntity cart = orderRepository.findByOrderUuid(cartOrderRequestDTO.getCartId());
+            Optional<UserEntity> user = userRepository.findByUserUuid(userId);
+            Optional<OrderEntity> cart = orderRepository.findByOrderUuid(cartOrderRequestDTO.getCartId());
             Optional<DeliveryEntity> deliveryEntity = deliveryRepository.findById(cartOrderRequestDTO.getDeliveryId());
-            if (cart != null) {
-                UserAddressEntity billingDetail = userAddressRepository.save(setBillingDetails(cartOrderRequestDTO.getBillingDetail()));
-                UserAddressEntity shippingDetail = userAddressRepository.save(setShippingDetails(cartOrderRequestDTO.getShippingDetail()));
-                UserAddressDetailEntity billingAddressDetail = new UserAddressDetailEntity();
-                UserAddressDetailEntity shippingAddressDetail = new UserAddressDetailEntity();
-                billingAddressDetail.setUserEntity(user.get());
-                billingAddressDetail.setUserAddressEntity(billingDetail);
-                shippingAddressDetail.setUserEntity(user.get());
-                shippingAddressDetail.setUserAddressEntity(shippingDetail);
-                userAddressDetailRepository.save(billingAddressDetail);
-                userAddressDetailRepository.save(shippingAddressDetail);
+            if (cart.isPresent()) {
+                UserAddressEntity billingDetail = setBillingDetails(cartOrderRequestDTO.getBillingDetail());
+                UserAddressEntity shippingDetail = setShippingDetails(cartOrderRequestDTO.getShippingDetail());
+
                 if (billingDetail != null && shippingDetail != null) {
-                    PaymentEntity paymentEntity = setCartPaymentDetails(cartOrderRequestDTO, cart);
+                    PaymentEntity paymentEntity = setCartPaymentDetails(cartOrderRequestDTO, cart.get());
                     PaymentEntity payment = paymentRepository.save(paymentEntity);
 
                     if (payment != null) {
-                        cart.setStatus(OrderStatus.PENDING.toString());
-                        cart.setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
-                        cart.setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
-                        cart.setTotalWeight(cartOrderRequestDTO.getTotalWeight());
-                        cart.setUserEntity(user.get());
-                        cart.setDeliveryEntity(deliveryEntity.get());
-                        cart.setPaymentEntity(payment);
-                        cart.setBillingDetail(billingDetail);
-                        cart.setShippingDetails(shippingDetail);
+                        cart.get().setStatus(OrderStatus.PENDING.toString());
+                        cart.get().setOrderDate(DateConverter.localDateToSql(LocalDate.now()));
+                        cart.get().setOrderTime(DateConverter.localTimeToSql(LocalTime.now()));
+                        cart.get().setTotalWeight(cartOrderRequestDTO.getTotalWeight());
+                        cart.get().setUserEntity(user.get());
+                        cart.get().setDeliveryEntity(deliveryEntity.get());
+                        cart.get().setPaymentEntity(payment);
+                        cart.get().setBillingDetail(billingDetail);
+                        cart.get().setShippingDetails(shippingDetail);
 
-                        OrderEntity order = orderRepository.save(cart);
+                        OrderEntity order = orderRepository.save(cart.get());
                         if (order != null) {
-                            List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(cart);
+                            List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(cart.get());
                             if (!orderDetailList.isEmpty()) {
                                 for (OrderDetailEntity orderDetailEntity :
                                         orderDetailList) {
-                                    ProductEntity productEntity = orderDetailEntity.getProductEntity();
-                                    productEntity.setStock(productEntity.getStock() - orderDetailEntity.getQuantity());
-                                    productRepository.save(productEntity);
+                                    CombinationEntity combinationEntity = orderDetailEntity.getCombinationEntity();
+                                    combinationEntity.setStock(combinationEntity.getStock() - orderDetailEntity.getQuantity());
+                                    combinationRepository.save(combinationEntity);
                                 }
                             }
                             return new ResponseEntity<>("Order successful", HttpStatus.OK);
@@ -197,26 +190,31 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<?> getOrders(long userId) {
+    public ResponseEntity<?> getOrders(String userId) {
         try {
-            Optional<UserEntity> user = userRepository.findById(userId);
-            List<OrderEntity> orders = orderRepository.findByUserEntity(user.get());
-            List<OrderResponseDTO> orderResponseList = new ArrayList<>();
-            if (!orders.isEmpty()) {
-                for (OrderEntity orderEntity :
-                        orders) {
-                    List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
-                    List<OrderProductDetail> productDetailList = new ArrayList<>();
-                    for (OrderDetailEntity detailEntity :
-                            orderDetailList) {
-                        productDetailList.add(setProductDetail(detailEntity));
+            Optional<UserEntity> user = userRepository.findByUserUuid(userId);
+            if (user.isPresent()){
+                List<OrderEntity> orders = orderRepository.findByUserEntity(user.get());
+                List<OrderResponseDTO> orderResponseList = new ArrayList<>();
+                if (!orders.isEmpty()) {
+                    for (OrderEntity orderEntity :
+                            orders) {
+                        List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
+                        List<OrderProductDetail> productDetailList = new ArrayList<>();
+                        for (OrderDetailEntity detailEntity :
+                                orderDetailList) {
+                            productDetailList.add(setProductDetail(detailEntity));
+                        }
+                        orderResponseList.add(setOrderDetails(orderEntity, productDetailList));
                     }
-                    orderResponseList.add(setOrderDetails(orderEntity, productDetailList));
+                    return new ResponseEntity<>(orderResponseList, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Orders not found", HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(orderResponseList, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Orders not found", HttpStatus.NOT_FOUND);
+            }else {
+                return new ResponseEntity<>("User not found",HttpStatus.BAD_REQUEST);
             }
+
         } catch (Exception e) {
             throw new CustomException("Failed to load orders");
         }
@@ -249,12 +247,14 @@ public class OrderServiceImpl implements OrderService {
         return userAddressEntity;
     }
 
-    private PaymentEntity setPaymentDetails(OrderRequestDTO orderRequestDTO, ProductEntity productEntity) {
+    private PaymentEntity setPaymentDetails(OrderRequestDTO orderRequestDTO, CombinationEntity combinationEntity) {
         PaymentEntity paymentEntity = new PaymentEntity();
-        paymentEntity.setOrderPrice(orderRequestDTO.getRetailPrice() * orderRequestDTO.getQty());
-        paymentEntity.setBuyingPrice(productEntity.getBuyingPrice() * orderRequestDTO.getQty());
+        paymentEntity.setOrderPrice(combinationEntity.getRetailPrice() * orderRequestDTO.getQty());
+        paymentEntity.setBuyingPrice(combinationEntity.getBuyingPrice() * orderRequestDTO.getQty());
         paymentEntity.setPaid(false);
-        if (productEntity.isFreeShipping()) {
+
+        ProductEntity product = getProductFromCombination(combinationEntity);
+        if (product.isFreeShipping()) {
             paymentEntity.setFreeDeliveryPrice(orderRequestDTO.getDeliveryCost());
         } else {
             paymentEntity.setDeliveryPrice(orderRequestDTO.getDeliveryCost());
@@ -270,8 +270,8 @@ public class OrderServiceImpl implements OrderService {
             double buyingPrice = 0;
             for (OrderDetailEntity orderDetailEntity :
                     orderDetailList) {
-                totalPrice += orderDetailEntity.getProductEntity().getRetailPrice() + orderDetailEntity.getQuantity();
-                buyingPrice += orderDetailEntity.getProductEntity().getBuyingPrice() + orderDetailEntity.getQuantity();
+                totalPrice += orderDetailEntity.getCombinationEntity().getRetailPrice() + orderDetailEntity.getQuantity();
+                buyingPrice += orderDetailEntity.getCombinationEntity().getBuyingPrice() + orderDetailEntity.getQuantity();
             }
             paymentEntity.setOrderPrice(totalPrice);
             paymentEntity.setBuyingPrice(buyingPrice);
@@ -300,12 +300,45 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderProductDetail setProductDetail(OrderDetailEntity detailEntity) {
-        return new OrderProductDetail(
-                detailEntity.getProductEntity().getProductId(),
-                detailEntity.getProductEntity().getName(),
-                detailEntity.getProductEntity().getProductCode(),
-                detailEntity.getQuantity(),
-                detailEntity.getOrderPrice()
-        );
+        return new OrderProductDetail();
+//                detailEntity.getProductEntity().getProductId(),
+//                detailEntity.getProductEntity().getName(),
+//                detailEntity.getProductEntity().getProductCode(),
+//                detailEntity.getQuantity(),
+//                detailEntity.getOrderPrice()
+//        );
+    }
+
+    private ProductEntity getProductFromCombination(CombinationEntity combinationEntity) {
+        List<VariationCombinationDetailEntity> variationCombinationList = variationCombinationDetailRepository.findByCombinationEntity(combinationEntity);
+        if (!variationCombinationList.isEmpty()) {
+            ProductEntity productEntity = new ProductEntity();
+            for (VariationCombinationDetailEntity variationCombinationDetailEntity :
+                    variationCombinationList) {
+                productEntity = variationCombinationDetailEntity.getVariationDetailEntity().getVariationEntity().getProductEntity();
+            }
+            return productEntity;
+        } else {
+            return null;
+        }
+    }
+
+    private UserAddressEntity setBilling(BillingDetail billingDetailDTO,UserEntity userEntity){
+        UserAddressEntity billingDetail = userAddressRepository.save(setBillingDetails(billingDetailDTO));
+        UserAddressDetailEntity billingAddressDetail = new UserAddressDetailEntity();
+        billingAddressDetail.setUserEntity(userEntity);
+        billingAddressDetail.setUserAddressEntity(billingDetail);
+        userAddressDetailRepository.save(billingAddressDetail);
+
+        return billingDetail;
+    }
+    private UserAddressEntity setShipping(ShippingDetail shippingDetailDTO,UserEntity userEntity) {
+        UserAddressEntity shippingDetail = userAddressRepository.save(setShippingDetails(shippingDetailDTO));
+        UserAddressDetailEntity shippingAddressDetail = new UserAddressDetailEntity();
+        shippingAddressDetail.setUserEntity(userEntity);
+        shippingAddressDetail.setUserAddressEntity(shippingDetail);
+        userAddressDetailRepository.save(shippingAddressDetail);
+
+        return shippingDetail;
     }
 }

@@ -28,8 +28,7 @@ public class OrderController {
     public ResponseEntity<?> placeOneProductOrder(@RequestBody OrderRequestDTO orderRequestDTO,
                                         Principal principal){
         LOGGER.info("request - registeredUser | placeOneProductOrder | orderRequest: {} | userId: {}",orderRequestDTO,principal.getName());
-        long userId = Long.parseLong(principal.getName());
-        ResponseEntity<?> placeOrderResponse = orderService.placeOrder(orderRequestDTO, userId);
+        ResponseEntity<?> placeOrderResponse = orderService.placeOrder(orderRequestDTO, principal.getName());
         LOGGER.info("response - registeredUser | placeOneProductOrder | placeOneProductOrderResponse: {}",placeOrderResponse.getStatusCode());
         return placeOrderResponse;
     }
@@ -38,8 +37,7 @@ public class OrderController {
     public ResponseEntity<?> cartOrder(@RequestBody CartOrderRequestDTO cartOrderRequestDTO,
                                        Principal principal){
         LOGGER.info("request - registeredUser | placeCartOrder | cartOrderRequest: {} | userId: {}",cartOrderRequestDTO,principal.getName());
-        long userId = Long.parseLong(principal.getName());
-        ResponseEntity<?> placeOrderResponse = orderService.cartOrderPlace(cartOrderRequestDTO, userId);
+        ResponseEntity<?> placeOrderResponse = orderService.cartOrderPlace(cartOrderRequestDTO, principal.getName());
         LOGGER.info("response - registeredUser | placeCartOrder | placeCartOrderResponse: {} ",placeOrderResponse.getStatusCode());
         return placeOrderResponse;
     }
@@ -47,8 +45,7 @@ public class OrderController {
     @GetMapping()
     public ResponseEntity<?> getOrders(Principal principal){
         LOGGER.info("request - registeredUser | getOrders | userId: {}",principal.getName());
-        long userId = Long.parseLong(principal.getName());
-        ResponseEntity<?> orders = orderService.getOrders(userId);
+        ResponseEntity<?> orders = orderService.getOrders(principal.getName());
         LOGGER.info("response - registeredUser | getOrders | getOrderResponse: {}",orders.getStatusCode());
         return orders;
     }

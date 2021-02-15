@@ -2,21 +2,21 @@ package lk.robot.newgenic.dto;
 
 public class VariationDTO {
 
-    private long variationDetailId;
-    private String variationName;
     private long variationId;
+    private String variationName;
+    private long variationDetailId;
     private String value;
 
     public VariationDTO() {
     }
 
-    public VariationDTO(long variationDetailId,
+    public VariationDTO(long variationId,
                         String variationName,
-                        long variationId,
+                        long variationDetailId,
                         String value) {
-        this.variationDetailId = variationDetailId;
-        this.variationName = variationName;
         this.variationId = variationId;
+        this.variationName = variationName;
+        this.variationDetailId = variationDetailId;
         this.value = value;
     }
 
@@ -55,8 +55,9 @@ public class VariationDTO {
     @Override
     public String toString() {
         return "VariationDTO{" +
-                "variationDetailId=" + variationDetailId +
-                ", variationId=" + variationId +
+                "variationId=" + variationId +
+                ", variationName='" + variationName + '\'' +
+                ", variationDetailId=" + variationDetailId +
                 ", value='" + value + '\'' +
                 '}';
     }

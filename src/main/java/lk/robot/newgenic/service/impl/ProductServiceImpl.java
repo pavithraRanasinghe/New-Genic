@@ -1,7 +1,6 @@
 package lk.robot.newgenic.service.impl;
 
 import lk.robot.newgenic.dto.CombinationDTO;
-import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.VariationDTO;
 import lk.robot.newgenic.dto.request.FilterDTO;
 import lk.robot.newgenic.dto.response.ProductResponseDTO;
@@ -11,8 +10,6 @@ import lk.robot.newgenic.enums.DealStatus;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.*;
 import lk.robot.newgenic.service.ProductService;
-import lk.robot.newgenic.util.EntityToDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,23 +22,20 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;
     private DealRepository dealRepository;
-    private VariationProductDetailRepository variationProductDetailRepository;
     private VariationDetailRepository variationDetailRepository;
-    private CombinationRepository combinationRepository;
+    private VariationRepository variationRepository;
     private VariationCombinationDetailRepository variationCombinationDetailRepository;
 
 
     public ProductServiceImpl(ProductRepository productRepository,
                               DealRepository dealRepository,
-                              VariationProductDetailRepository variationProductDetailRepository,
                               VariationDetailRepository variationDetailRepository,
-                              CombinationRepository combinationRepository,
+                              VariationRepository variationRepository,
                               VariationCombinationDetailRepository variationCombinationDetailRepository) {
         this.productRepository = productRepository;
         this.dealRepository = dealRepository;
-        this.variationProductDetailRepository = variationProductDetailRepository;
         this.variationDetailRepository = variationDetailRepository;
-        this.combinationRepository = combinationRepository;
+        this.variationRepository = variationRepository;
         this.variationCombinationDetailRepository = variationCombinationDetailRepository;
     }
 
@@ -204,10 +198,9 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductResponseDTO setProductDetails(ProductEntity productEntity) {
         List<CombinationDTO> combinationList = new ArrayList<>();
-        List<VariationProductDetailEntity> variationProductDetailList = variationProductDetailRepository.findByProductEntity(productEntity);
-        for (VariationProductDetailEntity variationProductDetailEntity :
-                variationProductDetailList) {
-            VariationEntity variationEntity = variationProductDetailEntity.getVariationEntity();
+        List<VariationEntity> variationList = variationRepository.findByProductEntity(productEntity);
+        for (VariationEntity variationEntity :
+                variationList) {
             List<VariationDetailEntity> byVariationEntity = variationDetailRepository.findByVariationEntity(variationEntity);
             for (VariationDetailEntity variationDetailEntity :
                     byVariationEntity) {
@@ -227,7 +220,7 @@ public class ProductServiceImpl implements ProductService {
 
                     VariationDTO variationDTO = new VariationDTO();
                     VariationDetailEntity variationDetail = variationCombinationDetailEntity.getVariationDetailEntity();
-                    variationDTO.setVariationDetailId(variationDetail.getVariationValueId());
+                    variationDTO.setVariationDetailId(variationDetail.getVariationDetailId());
                     variationDTO.setValue(variationDetail.getValue());
                     variationDTO.setVariationId(variationDetail.getVariationEntity().getVariationId());
                     variationDTO.setVariationName(variationDetail.getVariationEntity().getVariationName());
@@ -241,9 +234,9 @@ public class ProductServiceImpl implements ProductService {
                            if (combination.getCombinationId() == combinationEntity.getCombinationId()){
                                combination.getVariationList().add(variationDTO);
                            }else{
-                               List<VariationDTO> variationList = new ArrayList<>();
-                               variationList.add(variationDTO);
-                               combinationDTO.setVariationList(variationList);
+                               List<VariationDTO> allVariationList = new ArrayList<>();
+                               allVariationList.add(variationDTO);
+                               combinationDTO.setVariationList(allVariationList);
                                combinationList.add(combinationDTO);
                            }
                     }

@@ -12,7 +12,7 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private long productId;
-    @Column(name = "product_code",nullable = false)
+    @Column(name = "product_code", nullable = false)
     private String productCode;
     @Column(name = "product_uuid")
     private String uuid;
@@ -22,13 +22,13 @@ public class ProductEntity {
     private String description;
     @Column
     private String brand;
-    @Column(name = "added_date",nullable = false)
+    @Column(name = "added_date", nullable = false)
     private Date addedDate;
-    @Column(name = "added_time",nullable = false)
+    @Column(name = "added_time", nullable = false)
     private Time addedTime;
-    @Column(name = "update_date",nullable = false)
+    @Column(name = "update_date", nullable = false)
     private Date updateDate;
-    @Column(name = "update_time",nullable = false)
+    @Column(name = "update_time", nullable = false)
     private Time updateTime;
     @Column(nullable = false)
     private boolean active;
@@ -41,6 +41,7 @@ public class ProductEntity {
     @ManyToOne
     @JoinColumn(name = "fk_deal_id")
     private DealEntity dealEntity;
+
 
     public ProductEntity() {
     }

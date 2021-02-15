@@ -4,7 +4,7 @@ import lk.robot.newgenic.dto.CombinationDTO;
 
 import java.util.List;
 
-public class ProductResponseDTO {
+public class SingleProductResponseDTO {
 
     private String uuid;
     private String productCode;
@@ -12,25 +12,25 @@ public class ProductResponseDTO {
     private String description;
     private String brand;
     private boolean freeShipping;
-    private List<CombinationDTO> variationList;
+    private CombinationDTO combinationDTO;
 
-    public ProductResponseDTO() {
+    public SingleProductResponseDTO() {
     }
 
-    public ProductResponseDTO(String uuid,
-                              String productCode,
-                              String name,
-                              String description,
-                              String brand,
-                              boolean freeShipping,
-                              List<CombinationDTO> variationList) {
+    public SingleProductResponseDTO(String uuid,
+                                    String productCode,
+                                    String name,
+                                    String description,
+                                    String brand,
+                                    boolean freeShipping,
+                                    CombinationDTO combinationDTO) {
         this.uuid = uuid;
         this.productCode = productCode;
         this.name = name;
         this.description = description;
         this.brand = brand;
         this.freeShipping = freeShipping;
-        this.variationList = variationList;
+        this.combinationDTO = combinationDTO;
     }
 
 
@@ -82,24 +82,24 @@ public class ProductResponseDTO {
         this.freeShipping = freeShipping;
     }
 
-    public List<CombinationDTO> getVariationList() {
-        return variationList;
+    public CombinationDTO getCombinationDTO() {
+        return combinationDTO;
     }
 
-    public void setVariationList(List<CombinationDTO> variationList) {
-        this.variationList = variationList;
+    public void setCombinationDTO(CombinationDTO combinationDTO) {
+        this.combinationDTO = combinationDTO;
     }
 
     @Override
     public String toString() {
-        return "ProductResponseDTO{" +
+        return "SingleProductResponseDTO{" +
                 "uuid='" + uuid + '\'' +
                 ", productCode='" + productCode + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", brand='" + brand + '\'' +
                 ", freeShipping=" + freeShipping +
-                ", variationList=" + variationList +
+                ", combinationDTO=" + combinationDTO +
                 '}';
     }
 }

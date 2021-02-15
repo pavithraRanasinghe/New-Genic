@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ReturnService {
 
-    ResponseEntity<?> returnRequest(List<ReturnRequestDTO> returnRequestDTOList, long userId);
+    ResponseEntity<?> returnRequest(List<ReturnRequestDTO> returnRequestDTOList, String userId);
 
-    ResponseEntity<?> getReturn(long userId);
+    ResponseEntity<?> getReturn(String userId);
 }

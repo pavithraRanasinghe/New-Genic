@@ -23,10 +23,10 @@ public class WishlistController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addToWishList(@PathVariable long productId,
+    public ResponseEntity<?> addToWishList(@PathVariable String productId,
                                            Principal principal){
         LOGGER.info("request - registeredUser | addToWishList | productId: {} | userId: {}",productId,principal.getName());
-        long userId = Long.parseLong(principal.getName());
+        String userId = principal.getName();
         ResponseEntity<?> toWishlist = wishlistService.addToWishlist(productId, userId);
         LOGGER.info("response - registeredUser | addToWishList | wishlist: {}",toWishlist.getBody().toString());
         return toWishlist;
@@ -35,7 +35,7 @@ public class WishlistController {
     @GetMapping()
     public ResponseEntity<?> getWishList(Principal principal){
         LOGGER.info("request - registeredUser | getWishList | userId: {}",principal.getName());
-        long userId = Long.parseLong(principal.getName());
+        String userId = principal.getName();
         ResponseEntity<?> wishList = wishlistService.getWishList(userId);
         LOGGER.info("response - registeredUser | getWishList | wishlist: {}",wishList.getBody().toString());
         return wishList;

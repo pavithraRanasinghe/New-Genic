@@ -71,21 +71,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO, MultipartFile profilePicture) {
+    public ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO) {
         try {
             if (!userSignUpDTO.equals(null)) {
 
                 UserEntity existUser = userRepository.findByGmail(userSignUpDTO.getGmail());
-                if (existUser != null){
+                if (existUser == null){
                     UserEntity userEntity = EntityToDto.userDtoToEntity(userSignUpDTO);
-                    userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+                    userEntity.setPassword(passwordEncoder.encode(userSignUpDTO.getPassword()));
                     userEntity.setRegisteredDate(DateConverter.localDateToSql(LocalDate.now()));
                     userEntity.setRegisteredTime(DateConverter.localTimeToSql(LocalTime.now()));
                     userEntity.setUserUuid(UUID.randomUUID().toString());
-                    if (!profilePicture.isEmpty()){
-                        uploadFile(profilePicture);
-                        userEntity.setProfilePicture(getFileUrl(profilePicture));
-                    }
+                    userEntity.setAuthenticationProvider(AuthenticationProvider.LOCAL);
+
                     UserEntity save = userRepository.save(userEntity);
 
                     if (save.equals(null)) {
@@ -109,7 +107,7 @@ public class UserServiceImpl implements UserService {
                 return new ResponseEntity<>("User details not found", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            throw new CustomException("User sign up failed");
+            throw new CustomException(e.getMessage());
         }
     }
 
@@ -148,18 +146,18 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO, String userId, MultipartFile profilePicture) {
         try {
             if (userDetailDTO != null) {
-                UserEntity userEntity = userRepository.findByUserUuid(userId);
+                Optional<UserEntity> userEntity = userRepository.findByUserUuid(userId);
 
-                userEntity.setFirstName(userDetailDTO.getFirstName());
-                userEntity.setLastName(userDetailDTO.getLastName());
-                userEntity.setGmail(userDetailDTO.getGmail());
-                userEntity.setMobile(userDetailDTO.getMobile());
-                userEntity.setDob(DateConverter.stringToDate(userDetailDTO.getDob()));
+                userEntity.get().setFirstName(userDetailDTO.getFirstName());
+                userEntity.get().setLastName(userDetailDTO.getLastName());
+                userEntity.get().setGmail(userDetailDTO.getGmail());
+                userEntity.get().setMobile(userDetailDTO.getMobile());
+                userEntity.get().setDob(DateConverter.stringToDate(userDetailDTO.getDob()));
                 if (!profilePicture.isEmpty()){
                     uploadFile(profilePicture);
-                    userEntity.setProfilePicture(getFileUrl(profilePicture));
+                    userEntity.get().setProfilePicture(getFileUrl(profilePicture));
                 }
-                UserEntity user = userRepository.save(userEntity);
+                UserEntity user = userRepository.save(userEntity.get());
                 if (user != null) {
 
                     List<UserAddressDetailEntity> byUserEntity = userAddressDetailRepository.findByUserEntity(user);
@@ -215,8 +213,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> getProfile(String userId) {
         try{
-            UserEntity userEntity = userRepository.findByUserUuid(userId);
-            if (userEntity!= null){
+            Optional<UserEntity> userEntity = userRepository.findByUserUuid(userId);
+            if (userEntity.isPresent()){
                 UserDTO user = modelMapper.map(userEntity, UserDTO.class);
                 return new ResponseEntity<>(user,HttpStatus.OK);
             }else {

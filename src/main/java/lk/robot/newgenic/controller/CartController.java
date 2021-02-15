@@ -26,7 +26,7 @@ public class CartController {
     @PostMapping
     public ResponseEntity<?> addToCart(@RequestBody CartRequestDTO cartRequestDTO, Principal principal){
         LOGGER.info("request  - registeredUser | addToCart | userId : {} | cartRequestDTO: {}", principal.getName(),cartRequestDTO);
-        long userId = Long.parseLong(principal.getName());
+        String userId = principal.getName();
         ResponseEntity<?> cart = cartService.addToCart(cartRequestDTO, userId);
         LOGGER.info("response - registeredUser | addToCart | cart: {}",cart.getBody().toString());
         return cart;
@@ -35,7 +35,7 @@ public class CartController {
     @GetMapping
     public ResponseEntity<?> getCart(Principal principal){
         LOGGER.info("request  - registeredUser | getCart | userId : {}", principal.getName());
-        long userId = Long.parseLong(principal.getName());
+        String userId = principal.getName();
         ResponseEntity<?> cart = cartService.getCart(userId);
         LOGGER.info("response - registeredUser | getCart | cart: {}",cart.getStatusCode());
         return cart;
@@ -44,7 +44,7 @@ public class CartController {
     @GetMapping("/cartOrderDetail")
     public ResponseEntity<?> cartOrderDetail(Principal principal){
         LOGGER.info("request  - registeredUser | getCaryOrderDetails | userId : {}", principal.getName());
-        long userId = Long.parseLong(principal.getName());
+        String userId = principal.getName();
         ResponseEntity<?> responseEntity = cartService.cartOrder(userId);
         LOGGER.info("response - registeredUser | getCaryOrderDetails | cartDetails: {}",responseEntity.getStatusCode());
         return responseEntity;

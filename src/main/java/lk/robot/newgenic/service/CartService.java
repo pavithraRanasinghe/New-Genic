@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface CartService {
 
-    ResponseEntity<?> addToCart(CartRequestDTO cartRequestDTO, long userId);
+    ResponseEntity<?> addToCart(CartRequestDTO cartRequestDTO, String userId);
 
-    ResponseEntity<?> getCart(long userId);
+    ResponseEntity<?> getCart(String userId);
 
-    ResponseEntity<?> cartOrder(long userId);
+    ResponseEntity<?> cartOrder(String userId);
 }

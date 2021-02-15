@@ -10,7 +10,7 @@ public class ReturnResponseDTO {
     private Date requestDate;
     private Time requestTime;
     private String action;
-    private long productId;
+    private long combinationId;
     private long orderId;
     private String productName;
     private int qty;
@@ -24,7 +24,7 @@ public class ReturnResponseDTO {
                              Date requestDate,
                              Time requestTime,
                              String action,
-                             long productId,
+                             long combinationId,
                              long orderId,
                              String productName,
                              int qty,
@@ -34,7 +34,7 @@ public class ReturnResponseDTO {
         this.requestDate = requestDate;
         this.requestTime = requestTime;
         this.action = action;
-        this.productId = productId;
+        this.combinationId = combinationId;
         this.orderId = orderId;
         this.productName = productName;
         this.qty = qty;
@@ -81,12 +81,12 @@ public class ReturnResponseDTO {
         this.action = action;
     }
 
-    public long getProductId() {
-        return productId;
+    public long getCombinationId() {
+        return combinationId;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setCombinationId(long combinationId) {
+        this.combinationId = combinationId;
     }
 
     public long getOrderId() {
@@ -129,7 +129,7 @@ public class ReturnResponseDTO {
                 ", requestDate='" + requestDate + '\'' +
                 ", requestTime='" + requestTime + '\'' +
                 ", action='" + action + '\'' +
-                ", productId=" + productId +
+                ", combinationId=" + combinationId +
                 ", orderId=" + orderId +
                 ", productName='" + productName + '\'' +
                 ", qty=" + qty +

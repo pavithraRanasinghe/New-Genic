@@ -8,26 +8,26 @@ import lk.robot.newgenic.entity.UserEntity;
 
 public class EntityToDto {
 
-    public static ProductDTO productEntityToDto(ProductEntity productEntity){
-        return new ProductDTO(
-                productEntity.getProductId(),
-                productEntity.getProductCode(),
-                productEntity.getName(),
-                productEntity.getDescription(),
-                productEntity.getStock(),
-                productEntity.getColor(),
-                productEntity.getSize(),
-                productEntity.getGender(),
-                productEntity.getWeight(),
-                productEntity.getBuyingPrice(),
-                productEntity.getSalePrice(),
-                productEntity.getRetailPrice(),
-                productEntity.getAddedDate(),
-                productEntity.isActive(),
-                productEntity.isFreeShipping(),
-                productEntity.getDealEntity().getDiscount()
-        );
-    }
+//    public static ProductDTO productEntityToDto(ProductEntity productEntity){
+//        return new ProductDTO(
+//                productEntity.getProductId(),
+//                productEntity.getProductCode(),
+//                productEntity.getName(),
+//                productEntity.getDescription(),
+//                productEntity.getStock(),
+//                productEntity.getColor(),
+//                productEntity.getSize(),
+//                productEntity.getGender(),
+//                productEntity.getWeight(),
+//                productEntity.getBuyingPrice(),
+//                productEntity.getSalePrice(),
+//                productEntity.getRetailPrice(),
+//                productEntity.getAddedDate(),
+//                productEntity.isActive(),
+//                productEntity.isFreeShipping(),
+//                productEntity.getDealEntity().getDiscount()
+//        );
+//    }
 
     public static UserFeedbackDTO userEntityToUserFeedbackDto(UserEntity userEntity){
         return new UserFeedbackDTO(
@@ -46,7 +46,6 @@ public class EntityToDto {
         userEntity.setGmail(userSignUpDTO.getGmail());
         userEntity.setMobile(userSignUpDTO.getMobile());
         userEntity.setDob(DateConverter.stringToDate(userSignUpDTO.getDob()));
-        userEntity.setPassword(userSignUpDTO.getPassword());
         userEntity.setRole(userSignUpDTO.getRole());
 
         return userEntity;

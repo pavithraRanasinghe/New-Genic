@@ -16,8 +16,8 @@ public class OrderDetailEntity {
     @Column(name = "order_price")
     private double orderPrice;
     @ManyToOne
-    @JoinColumn(name = "fk_product_id")
-    private ProductEntity productEntity;
+    @JoinColumn(name = "fk_combination_id")
+    private CombinationEntity combinationEntity;
     @ManyToOne
     @JoinColumn(name = "fk_order_id")
     private OrderEntity orderEntity;
@@ -32,13 +32,13 @@ public class OrderDetailEntity {
     public OrderDetailEntity(long orderDetailId,
                              int quantity,
                              double orderPrice,
-                             ProductEntity productEntity,
+                             CombinationEntity combinationEntity,
                              OrderEntity orderEntity,
                              ReturnDetailEntity returnDetailEntity) {
         this.orderDetailId = orderDetailId;
         this.quantity = quantity;
         this.orderPrice = orderPrice;
-        this.productEntity = productEntity;
+        this.combinationEntity = combinationEntity;
         this.orderEntity = orderEntity;
         this.returnDetailEntity = returnDetailEntity;
     }
@@ -67,12 +67,12 @@ public class OrderDetailEntity {
         this.orderPrice = orderPrice;
     }
 
-    public ProductEntity getProductEntity() {
-        return productEntity;
+    public CombinationEntity getCombinationEntity() {
+        return combinationEntity;
     }
 
-    public void setProductEntity(ProductEntity productEntity) {
-        this.productEntity = productEntity;
+    public void setCombinationEntity(CombinationEntity combinationEntity) {
+        this.combinationEntity = combinationEntity;
     }
 
     public OrderEntity getOrderEntity() {
@@ -97,7 +97,7 @@ public class OrderDetailEntity {
                 "orderDetailId=" + orderDetailId +
                 ", quantity=" + quantity +
                 ", orderPrice=" + orderPrice +
-                ", productEntity=" + productEntity +
+                ", combinationEntity=" + combinationEntity +
                 ", orderEntity=" + orderEntity +
                 ", returnDetailEntity=" + returnDetailEntity +
                 '}';

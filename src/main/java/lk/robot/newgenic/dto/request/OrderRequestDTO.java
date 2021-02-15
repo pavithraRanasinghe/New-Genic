@@ -1,9 +1,8 @@
 package lk.robot.newgenic.dto.request;
 
 public class OrderRequestDTO {
-    private long productId;
+    private long combinationId;
     private int qty;
-    private double retailPrice;
     private long deliveryId;
     private double deliveryCost;
     private BillingDetail billingDetail;
@@ -12,28 +11,26 @@ public class OrderRequestDTO {
     public OrderRequestDTO() {
     }
 
-    public OrderRequestDTO(long productId,
+    public OrderRequestDTO(long combinationId,
                            int qty,
-                           double retailPrice,
                            long deliveryId,
                            double deliveryCost,
                            BillingDetail billingDetail,
                            ShippingDetail shippingDetail) {
-        this.productId = productId;
+        this.combinationId = combinationId;
         this.qty = qty;
-        this.retailPrice = retailPrice;
         this.deliveryId = deliveryId;
         this.deliveryCost = deliveryCost;
         this.billingDetail = billingDetail;
         this.shippingDetail = shippingDetail;
     }
 
-    public long getProductId() {
-        return productId;
+    public long getCombinationId() {
+        return combinationId;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setCombinationId(long combinationId) {
+        this.combinationId = combinationId;
     }
 
     public int getQty() {
@@ -42,14 +39,6 @@ public class OrderRequestDTO {
 
     public void setQty(int qty) {
         this.qty = qty;
-    }
-
-    public double getRetailPrice() {
-        return retailPrice;
-    }
-
-    public void setRetailPrice(double retailPrice) {
-        this.retailPrice = retailPrice;
     }
 
     public BillingDetail getBillingDetail() {
@@ -87,13 +76,12 @@ public class OrderRequestDTO {
     @Override
     public String toString() {
         return "OrderRequestDTO{" +
-                "productId=" + productId +
+                "combinationId=" + combinationId +
                 ", qty=" + qty +
-                ", retailPrice=" + retailPrice +
                 ", deliveryId=" + deliveryId +
                 ", deliveryCost=" + deliveryCost +
-                ", billingDetailDTO=" + billingDetail +
-                ", shippingDetailDTO=" + shippingDetail +
+                ", billingDetail=" + billingDetail +
+                ", shippingDetail=" + shippingDetail +
                 '}';
     }
 }

@@ -40,10 +40,10 @@ public class UserController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> userSignUp(@RequestBody UserSignUpDTO userSignUpDTO, @RequestParam("image") MultipartFile profilePicture) {
+    public ResponseEntity<?> userSignUp(@RequestBody UserSignUpDTO userSignUpDTO) {
         LOGGER.info("request - publicUser | userSignUp | userSignUpDetails:{}", userSignUpDTO);
-        ResponseEntity<?> responseEntity = userService.signUp(userSignUpDTO,profilePicture);
-        LOGGER.info("response - publicUser | userSignUp | userSignUpResponse:{}", responseEntity.getBody().toString());
+        ResponseEntity<?> responseEntity = userService.signUp(userSignUpDTO);
+        LOGGER.info("response - publicUser | userSignUp | userSignUpResponse:{}", responseEntity.getBody());
         return responseEntity;
     }
 
@@ -51,10 +51,9 @@ public class UserController {
     public ResponseEntity<?> userLogin(@RequestBody AuthenticationRequest authenticationRequest) {
         LOGGER.info("request - registeredUser | userSignIn | authenticationRequest:{}", authenticationRequest);
         ResponseEntity<?> responseEntity = userService.logIn(authenticationRequest);
-        LOGGER.info("response - registeredUser | userSignIn | userSignIn:{}", responseEntity.getBody().toString());
+        LOGGER.info("response - registeredUser | userSignIn | userSignIn:{}", responseEntity.getBody());
         return responseEntity;
     }
-
     @PatchMapping("/update")
     public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO,
                                           @RequestParam("image") MultipartFile profilePicture,
@@ -62,7 +61,7 @@ public class UserController {
         LOGGER.info("request - registeredUser | userUpdate | userDetail: {},userId: {}", userDetailDTO, principal.getName());
         String userId = principal.getName();
         ResponseEntity<?> updateUser = userService.updateUser(userDetailDTO, userId,profilePicture);
-        LOGGER.info("response - registeredUser | userUpdate | updatedUser:{}",updateUser.getBody().toString());
+        LOGGER.info("response - registeredUser | userUpdate | updatedUser:{}",updateUser.getBody());
         return updateUser;
     }
 
@@ -71,7 +70,7 @@ public class UserController {
         LOGGER.info("request | getProfile | userId:{}",principal.getName());
         String userId = principal.getName();
         ResponseEntity<?> profile = userService.getProfile(userId);
-        LOGGER.info("response | getProfile | profile: {}",profile.getBody().toString());
+        LOGGER.info("response | getProfile | profile: {}",profile.getBody());
         return profile;
     }
 

@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface OrderService {
 
-    ResponseEntity<?> placeOrder(OrderRequestDTO orderRequestDTO,long userId);
+    ResponseEntity<?> placeOrder(OrderRequestDTO orderRequestDTO,String userId);
 
-    ResponseEntity<?> cartOrderPlace(CartOrderRequestDTO cartOrderRequestDTO,long userId);
+    ResponseEntity<?> cartOrderPlace(CartOrderRequestDTO cartOrderRequestDTO,String userId);
 
-    ResponseEntity<?> getOrders(long userId);
+    ResponseEntity<?> getOrders(String userId);
 }

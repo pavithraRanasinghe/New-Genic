@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-    ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO, MultipartFile profilePicture);
+    ResponseEntity<?> signUp(UserSignUpDTO userSignUpDTO);
 
     ResponseEntity<?> logIn(AuthenticationRequest authenticationRequest);
 

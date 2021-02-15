@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface WishlistService {
 
-    ResponseEntity<?> addToWishlist(long productId,long userId);
+    ResponseEntity<?> addToWishlist(String productId,String userId);
 
-    ResponseEntity<?> getWishList(long userId);
+    ResponseEntity<?> getWishList(String userId);
 }

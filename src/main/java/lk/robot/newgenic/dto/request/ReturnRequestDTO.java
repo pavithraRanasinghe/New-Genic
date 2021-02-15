@@ -2,8 +2,8 @@ package lk.robot.newgenic.dto.request;
 
 public class ReturnRequestDTO {
 
-    private long orderId;
-    private long productId;
+    private String orderId;
+    private long combinationId;
     private String reason;
     private int returnQty;
 
@@ -11,30 +11,30 @@ public class ReturnRequestDTO {
 
     }
 
-    public ReturnRequestDTO(long orderId,
-                            long productId,
+    public ReturnRequestDTO(String orderId,
+                            long combinationId,
                             String reason,
                             int returnQty) {
         this.orderId = orderId;
-        this.productId = productId;
+        this.combinationId = combinationId;
         this.reason = reason;
         this.returnQty = returnQty;
     }
 
-    public long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
-    public long getProductId() {
-        return productId;
+    public long getCombinationId() {
+        return combinationId;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setCombinationId(long combinationId) {
+        this.combinationId = combinationId;
     }
 
     public String getReason() {
@@ -57,7 +57,7 @@ public class ReturnRequestDTO {
     public String toString() {
         return "ReturnRequestDTO{" +
                 "orderId=" + orderId +
-                ", productId=" + productId +
+                ", combinationId=" + combinationId +
                 ", reason='" + reason + '\'' +
                 ", returnQty=" + returnQty +
                 '}';

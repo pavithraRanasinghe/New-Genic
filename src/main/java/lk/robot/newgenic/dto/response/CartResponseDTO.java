@@ -6,14 +6,14 @@ import java.util.List;
 
 public class CartResponseDTO {
 
-    private List<CartProductDTO> productList;
+    private List<SingleProductResponseDTO> productList;
     private double totalWeight;
     private double totalProductPrice;
 
     public CartResponseDTO() {
     }
 
-    public CartResponseDTO(List<CartProductDTO> productList,
+    public CartResponseDTO(List<SingleProductResponseDTO> productList,
                            double totalWeight,
                            double totalProductPrice) {
         this.productList = productList;
@@ -21,11 +21,11 @@ public class CartResponseDTO {
         this.totalProductPrice = totalProductPrice;
     }
 
-    public List<CartProductDTO> getProductList() {
+    public List<SingleProductResponseDTO> getProductList() {
         return productList;
     }
 
-    public void setProductList(List<CartProductDTO> productList) {
+    public void setProductList(List<SingleProductResponseDTO> productList) {
         this.productList = productList;
     }
 

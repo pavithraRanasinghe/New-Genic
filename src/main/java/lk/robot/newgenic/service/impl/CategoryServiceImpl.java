@@ -1,18 +1,15 @@
 package lk.robot.newgenic.service.impl;
 
+import lk.robot.newgenic.dto.CombinationDTO;
 import lk.robot.newgenic.dto.ProductDTO;
 import lk.robot.newgenic.dto.SubCategoryDTO;
+import lk.robot.newgenic.dto.VariationDTO;
 import lk.robot.newgenic.dto.response.CategoryResponseDTO;
 import lk.robot.newgenic.dto.response.MainSubCategoryResponseDTO;
-import lk.robot.newgenic.entity.MainCategoryEntity;
-import lk.robot.newgenic.entity.MainSubCategoryEntity;
-import lk.robot.newgenic.entity.ProductEntity;
-import lk.robot.newgenic.entity.SubCategoryEntity;
+import lk.robot.newgenic.dto.response.ProductResponseDTO;
+import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.exception.CustomException;
-import lk.robot.newgenic.repository.CategoryRepository;
-import lk.robot.newgenic.repository.MainSubCategoryRepository;
-import lk.robot.newgenic.repository.ProductRepository;
-import lk.robot.newgenic.repository.SubCategoryRepository;
+import lk.robot.newgenic.repository.*;
 import lk.robot.newgenic.service.CategoryService;
 import lk.robot.newgenic.util.EntityToDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +29,27 @@ public class CategoryServiceImpl implements CategoryService {
     private MainSubCategoryRepository mainSubCategoryRepository;
     private SubCategoryRepository subCategoryRepository;
     private ProductRepository productRepository;
+    private VariationRepository variationRepository;
+    private VariationDetailRepository variationDetailRepository;
+    private VariationCombinationDetailRepository variationCombinationDetailRepository;
 
     @Autowired
-    public CategoryServiceImpl(
-            CategoryRepository categoryRepository,
-            MainSubCategoryRepository mainSubCategoryRepository,
-            SubCategoryRepository subCategoryRepository,
-            ProductRepository productRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository,
+                               MainSubCategoryRepository mainSubCategoryRepository,
+                               SubCategoryRepository subCategoryRepository,
+                               ProductRepository productRepository,
+                               VariationRepository variationRepository,
+                               VariationDetailRepository variationDetailRepository,
+                               VariationCombinationDetailRepository variationCombinationDetailRepository) {
         this.categoryRepository = categoryRepository;
         this.mainSubCategoryRepository = mainSubCategoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.productRepository = productRepository;
+        this.variationRepository = variationRepository;
+        this.variationDetailRepository = variationDetailRepository;
+        this.variationCombinationDetailRepository = variationCombinationDetailRepository;
     }
+
 
     @Override
     public ResponseEntity<?> getAll() {
@@ -111,13 +117,13 @@ public class CategoryServiceImpl implements CategoryService {
                 if (mainSubCategory.isPresent()) {
                     List<SubCategoryEntity> subCategoryList = subCategoryRepository.findByMainSubCategoryEntity(mainSubCategory.get());
                     if (!subCategoryList.isEmpty()) {
-                        List<ProductDTO> productList = new ArrayList<>();
+                        List<ProductResponseDTO> productList = new ArrayList<>();
                         for (SubCategoryEntity subCategoryEntity : subCategoryList) {
                             List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity, true, PageRequest.of(index, size));
                             if (!productEntityList.isEmpty()) {
                                 for (ProductEntity productEntity : productEntityList) {
-                                    ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
-                                    productList.add(productDTO);
+                                    ProductResponseDTO productResponseDTO = setProductDetails(productEntity);
+                                    productList.add(productResponseDTO);
                                 }
                             } else {
                                 return new ResponseEntity<>("Product list not found", HttpStatus.NOT_FOUND);
@@ -145,10 +151,10 @@ public class CategoryServiceImpl implements CategoryService {
             if (subCategoryEntity.isPresent()) {
                 List<ProductEntity> productEntityList = productRepository.findBySubCategoryEntityAndActive(subCategoryEntity.get(), true, PageRequest.of(index, size));
                 if (!productEntityList.isEmpty()) {
-                    List<ProductDTO> productList = new ArrayList<>();
+                    List<ProductResponseDTO> productList = new ArrayList<>();
                     for (ProductEntity productEntity : productEntityList) {
-                        ProductDTO productDTO = EntityToDto.productEntityToDto(productEntity);
-                        productList.add(productDTO);
+                        ProductResponseDTO productResponseDTO = setProductDetails(productEntity);
+                        productList.add(productResponseDTO);
                     }
                     return new ResponseEntity<>(productList, HttpStatus.OK);
                 } else {
@@ -160,5 +166,63 @@ public class CategoryServiceImpl implements CategoryService {
         } else {
             return new ResponseEntity<>("Sub category id required", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private ProductResponseDTO setProductDetails(ProductEntity productEntity) {
+        List<CombinationDTO> combinationList = new ArrayList<>();
+        List<VariationEntity> variationList = variationRepository.findByProductEntity(productEntity);
+        for (VariationEntity variationEntity :
+                variationList) {
+            List<VariationDetailEntity> byVariationEntity = variationDetailRepository.findByVariationEntity(variationEntity);
+            for (VariationDetailEntity variationDetailEntity :
+                    byVariationEntity) {
+
+                List<VariationCombinationDetailEntity> variationCombinationDetailList = variationCombinationDetailRepository.findByVariationDetailEntity(variationDetailEntity);
+
+                for (VariationCombinationDetailEntity variationCombinationDetailEntity :
+                        variationCombinationDetailList) {
+                    CombinationEntity combinationEntity = variationCombinationDetailEntity.getCombinationEntity();
+
+                    CombinationDTO combinationDTO = new CombinationDTO();
+                    combinationDTO.setCombinationId(combinationEntity.getCombinationId());
+                    combinationDTO.setStock(combinationEntity.getStock());
+                    combinationDTO.setWeight(combinationEntity.getWeight());
+                    combinationDTO.setSalePrice(combinationEntity.getSalePrice());
+                    combinationDTO.setRetailPrice(combinationEntity.getRetailPrice());
+
+                    VariationDTO variationDTO = new VariationDTO();
+                    VariationDetailEntity variationDetail = variationCombinationDetailEntity.getVariationDetailEntity();
+                    variationDTO.setVariationDetailId(variationDetail.getVariationDetailId());
+                    variationDTO.setValue(variationDetail.getValue());
+                    variationDTO.setVariationId(variationDetail.getVariationEntity().getVariationId());
+                    variationDTO.setVariationName(variationDetail.getVariationEntity().getVariationName());
+
+                    if (combinationList.isEmpty()){
+                        combinationList.add(combinationDTO);
+                    }
+
+                    for (CombinationDTO combination :
+                            combinationList) {
+                        if (combination.getCombinationId() == combinationEntity.getCombinationId()){
+                            combination.getVariationList().add(variationDTO);
+                        }else{
+                            List<VariationDTO> allVariationList = new ArrayList<>();
+                            allVariationList.add(variationDTO);
+                            combinationDTO.setVariationList(allVariationList);
+                            combinationList.add(combinationDTO);
+                        }
+                    }
+                }
+            }
+        }
+        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+        productResponseDTO.setUuid(productEntity.getUuid());
+        productResponseDTO.setName(productEntity.getName());
+        productResponseDTO.setDescription(productEntity.getDescription());
+        productResponseDTO.setBrand(productEntity.getBrand());
+        productResponseDTO.setFreeShipping(productEntity.isFreeShipping());
+        productResponseDTO.setVariationList(combinationList);
+
+        return productResponseDTO;
     }
 }

@@ -1,5 +1,6 @@
 package lk.robot.newgenic.repository;
 
+import lk.robot.newgenic.entity.CombinationEntity;
 import lk.robot.newgenic.entity.OrderDetailEntity;
 import lk.robot.newgenic.entity.OrderEntity;
 import lk.robot.newgenic.entity.ProductEntity;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetailEntity,Long> {
 
-    OrderDetailEntity findByOrderEntityAndProductEntity(OrderEntity orderEntity, ProductEntity productEntity);
+    OrderDetailEntity findByOrderEntityAndCombinationEntity(OrderEntity orderEntity, CombinationEntity combinationEntity);
 
     List<OrderDetailEntity> findByOrderEntity(OrderEntity orderEntity);
 

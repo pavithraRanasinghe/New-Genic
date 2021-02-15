@@ -27,17 +27,15 @@ public class ReturnController {
     public ResponseEntity<?> returnRequest(@RequestBody List<ReturnRequestDTO> returnRequestDTOList,
                                            Principal principal) {
         LOGGER.info("request - registeredUser | returnRequest | returnRequestList: {} | userId: {} |",returnRequestDTOList,principal.getName());
-        long userId = Long.parseLong(principal.getName());
-        ResponseEntity<?> responseEntity = returnService.returnRequest(returnRequestDTOList, userId);
-        LOGGER.info("request - registeredUser | searchProducts | r: {} | userId: {}",responseEntity.getBody().toString());
+        ResponseEntity<?> responseEntity = returnService.returnRequest(returnRequestDTOList, principal.getName());
+        LOGGER.info("request - registeredUser | searchProducts | response: {} | userId: {}",responseEntity.getBody().toString());
         return responseEntity;
     }
 
     @GetMapping
     public ResponseEntity<?> getReturn(Principal principal) {
         LOGGER.info("request - registeredUser | getReturnOrders | userID: {}",principal.getName());
-        long userId = Long.parseLong(principal.getName());
-        ResponseEntity<?> returnOrders = returnService.getReturn(userId);
+        ResponseEntity<?> returnOrders = returnService.getReturn(principal.getName());
         LOGGER.info("response - registeredUser | getReturnOrders | returnOrders: {}",returnOrders.getStatusCode());
         return returnOrders;
     }

@@ -3,13 +3,13 @@ package lk.robot.newgenic.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "variation_value")
+@Table(name = "variation_detail")
 public class VariationDetailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "variation_value_id")
-    private long variationValueId;
+    @Column(name = "variation_detail_id")
+    private long variationDetailId;
     private String value;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_variation_id")
@@ -18,20 +18,20 @@ public class VariationDetailEntity {
     public VariationDetailEntity() {
     }
 
-    public VariationDetailEntity(long variationValueId,
+    public VariationDetailEntity(long variationDetailId,
                                  String value,
                                  VariationEntity variationEntity) {
-        this.variationValueId = variationValueId;
+        this.variationDetailId = variationDetailId;
         this.value = value;
         this.variationEntity = variationEntity;
     }
 
-    public long getVariationValueId() {
-        return variationValueId;
+    public long getVariationDetailId() {
+        return variationDetailId;
     }
 
-    public void setVariationValueId(long variationValueId) {
-        this.variationValueId = variationValueId;
+    public void setVariationDetailId(long variationDetailId) {
+        this.variationDetailId = variationDetailId;
     }
 
     public String getValue() {
@@ -52,8 +52,8 @@ public class VariationDetailEntity {
 
     @Override
     public String toString() {
-        return "VariationValueEntity{" +
-                "variationValueId=" + variationValueId +
+        return "VariationDetailEntity{" +
+                "variationDetailId=" + variationDetailId +
                 ", value='" + value + '\'' +
                 ", variationEntity=" + variationEntity +
                 '}';
