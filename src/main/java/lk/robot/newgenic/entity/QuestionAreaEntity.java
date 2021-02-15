@@ -1,6 +1,7 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "question_area")
@@ -16,6 +17,8 @@ public class QuestionAreaEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_product_id")
     private ProductEntity productEntity;
+    @OneToMany(mappedBy = "questionAreaEntity")
+    private List<QuestionEntity> questionEntityList;
 
     public QuestionAreaEntity() {
     }
@@ -59,5 +62,13 @@ public class QuestionAreaEntity {
                 ", userEntity=" + userEntity +
                 ", productEntity=" + productEntity +
                 '}';
+    }
+
+    public List<QuestionEntity> getQuestionEntityList() {
+        return questionEntityList;
+    }
+
+    public void setQuestionEntityList(List<QuestionEntity> questionEntityList) {
+        this.questionEntityList = questionEntityList;
     }
 }

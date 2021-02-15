@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 public interface QuestionService {
 
     ResponseEntity<?> askQuestion(QuestionRequestDTO questionRequestDTO,String userId);
+
+    ResponseEntity<?> getQuestion(String productId);
 }

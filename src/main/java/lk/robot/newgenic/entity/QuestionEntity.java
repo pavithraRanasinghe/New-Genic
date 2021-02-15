@@ -3,6 +3,7 @@ package lk.robot.newgenic.entity;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.List;
 
 @Entity
 @Table(name = "question")
@@ -18,10 +19,12 @@ public class QuestionEntity {
     @Column(name = "question_time")
     private Time questionTime;
     @Column(name = "is_approve")
-    private boolean isApprove;
+    private boolean approve;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_question_area")
     private QuestionAreaEntity questionAreaEntity;
+    @OneToMany(mappedBy = "questionEntity")
+    private List<AnswerEntity> answerEntityList;
 
     public QuestionEntity() {
     }
@@ -30,13 +33,13 @@ public class QuestionEntity {
                           String question,
                           Date questionDate,
                           Time questionTime,
-                          boolean isApprove,
+                          boolean approve,
                           QuestionAreaEntity questionAreaEntity) {
         this.questionId = questionId;
         this.question = question;
         this.questionDate = questionDate;
         this.questionTime = questionTime;
-        this.isApprove = isApprove;
+        this.approve = approve;
         this.questionAreaEntity = questionAreaEntity;
     }
 
@@ -73,11 +76,11 @@ public class QuestionEntity {
     }
 
     public boolean isApprove() {
-        return isApprove;
+        return approve;
     }
 
     public void setApprove(boolean approve) {
-        isApprove = approve;
+        approve = approve;
     }
 
     public QuestionAreaEntity getQuestionAreaEntity() {
@@ -88,6 +91,14 @@ public class QuestionEntity {
         this.questionAreaEntity = questionAreaEntity;
     }
 
+    public List<AnswerEntity> getAnswerEntityList() {
+        return answerEntityList;
+    }
+
+    public void setAnswerEntityList(List<AnswerEntity> answerEntityList) {
+        this.answerEntityList = answerEntityList;
+    }
+
     @Override
     public String toString() {
         return "QuestionEntity{" +
@@ -95,7 +106,7 @@ public class QuestionEntity {
                 ", question='" + question + '\'' +
                 ", questionDate=" + questionDate +
                 ", questionTime=" + questionTime +
-                ", isApprove=" + isApprove +
+                ", isApprove=" + approve +
                 ", questionAreaEntity=" + questionAreaEntity +
                 '}';
     }
