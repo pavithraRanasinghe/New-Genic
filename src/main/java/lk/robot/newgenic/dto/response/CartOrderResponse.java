@@ -6,7 +6,7 @@ import lk.robot.newgenic.dto.ProductDTO;
 import java.util.List;
 
 public class CartOrderResponse {
-    private List<ProductDTO> productDTOList;
+    private List<SingleProductResponseDTO> productDTOList;
     private List<DeliveryDTO> deliveryDTOList;
     private boolean isCartFreeShipping;
     private double discount;
@@ -16,7 +16,7 @@ public class CartOrderResponse {
     public CartOrderResponse() {
     }
 
-    public CartOrderResponse(List<ProductDTO> productDTOList,
+    public CartOrderResponse(List<SingleProductResponseDTO> productDTOList,
                              List<DeliveryDTO> deliveryDTOList,
                              boolean isCartFreeShipping,
                              double discount,
@@ -30,11 +30,11 @@ public class CartOrderResponse {
         this.totalWeight = totalWeight;
     }
 
-    public List<ProductDTO> getProductDTOList() {
+    public List<SingleProductResponseDTO> getProductDTOList() {
         return productDTOList;
     }
 
-    public void setProductDTOList(List<ProductDTO> productDTOList) {
+    public void setProductDTOList(List<SingleProductResponseDTO> productDTOList) {
         this.productDTOList = productDTOList;
     }
 

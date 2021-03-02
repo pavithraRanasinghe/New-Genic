@@ -1,6 +1,8 @@
 package lk.robot.newgenic.controller;
 
+import lk.robot.newgenic.dto.CartUpdateDetailRequestDTO;
 import lk.robot.newgenic.dto.request.CartRequestDTO;
+import lk.robot.newgenic.dto.request.CartUpdateRequestDTO;
 import lk.robot.newgenic.service.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +46,16 @@ public class CartController {
     @GetMapping("/cartOrderDetail")
     public ResponseEntity<?> cartOrderDetail(Principal principal){
         LOGGER.info("request  - registeredUser | getCaryOrderDetails | userId : {}", principal.getName());
-        String userId = principal.getName();
-        ResponseEntity<?> responseEntity = cartService.cartOrder(userId);
+        ResponseEntity<?> responseEntity = cartService.cartOrder(principal.getName());
         LOGGER.info("response - registeredUser | getCaryOrderDetails | cartDetails: {}",responseEntity.getStatusCode());
+        return responseEntity;
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateCart(@RequestBody CartUpdateRequestDTO detailRequestDTO, Principal principal){
+        LOGGER.info("request - registeredUser | updateCart | cartUpdateDetailRequest: {} | userId: {}",detailRequestDTO,principal.getName());
+        ResponseEntity<?> responseEntity = cartService.updateCart(detailRequestDTO,principal.getName());
+        LOGGER.info("response - registeredUser | updateCart | response; {}",responseEntity.getBody());
         return responseEntity;
     }
 }

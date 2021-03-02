@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
     @Query("select p from ProductEntity p WHERE p.brand = :brand AND p.productCode >= :minPrice AND p.addedDate <= :maxPrice AND p.addedTime =:color")
     List<ProductEntity> filterProducts(String brand,double minPrice,double maxPrice,String color);
 
-    @Query(value="SELECT * FROM product WHERE MATCH(name,description,brand,color) AGAINST(?1)",nativeQuery = true)
+    @Query(value="SELECT * FROM product WHERE MATCH(name,description,brand) AGAINST(?1)",nativeQuery = true)
     List<ProductEntity> searchProducts(String keyword);
 
     List<ProductEntity> findByDealEntity(DealEntity dealEntity,Pageable pageable);

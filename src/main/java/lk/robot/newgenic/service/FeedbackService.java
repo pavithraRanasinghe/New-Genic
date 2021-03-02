@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface FeedbackService {
 
-    ResponseEntity<?> getFeedback(long productId,int index,int size);
+    ResponseEntity<?> getFeedback(String productId,int index,int size);
 
-    ResponseEntity<?> writeFeedback(FeedbackRequestDTO feedbackRequestDTO,long userId);
+    ResponseEntity<?> writeFeedback(FeedbackRequestDTO feedbackRequestDTO,String userId);
 }

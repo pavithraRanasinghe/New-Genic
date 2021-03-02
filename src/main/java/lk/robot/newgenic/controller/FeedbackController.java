@@ -24,7 +24,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<?> getFeedback(@PathVariable long productId,
+    public ResponseEntity<?> getFeedback(@PathVariable String productId,
                                          @RequestParam int index,
                                          @RequestParam int size){
         LOGGER.info("request - allUser | getFeedback | productId: {} | index: {} | size: {}",productId,index,size);
@@ -36,9 +36,8 @@ public class FeedbackController {
     @PostMapping
     public ResponseEntity<?> writeFeedback(@RequestBody FeedbackRequestDTO feedbackRequestDTO,
                                            Principal principal){
-        LOGGER.info("request - registeredUser | writeFeedback | feedbackRequest: {} | userId: {} | size: {}",feedbackRequestDTO,principal.getName());
-        long userId = Long.parseLong(principal.getName());
-        ResponseEntity<?> feedbackResponse = feedbackService.writeFeedback(feedbackRequestDTO, userId);
+        LOGGER.info("request - registeredUser | writeFeedback | feedbackRequest: {} | userId: {}",feedbackRequestDTO,principal.getName());
+        ResponseEntity<?> feedbackResponse = feedbackService.writeFeedback(feedbackRequestDTO, principal.getName());
         LOGGER.info("response - registeredUser | writeFeedback | feedback: {}",feedbackResponse.getStatusCode());
         return feedbackResponse;
     }

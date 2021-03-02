@@ -14,7 +14,9 @@ public interface UserService {
 
     ResponseEntity<?> logIn(AuthenticationRequest authenticationRequest);
 
-    ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO,String userId, MultipartFile profilePicture);
+    ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO,String userId);
+
+    ResponseEntity<?> updateProfilePicture(MultipartFile multipartFile,String userId);
 
     ResponseEntity<?> getProfile(String userId);
 

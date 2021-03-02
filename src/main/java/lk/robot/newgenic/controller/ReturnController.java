@@ -24,10 +24,10 @@ public class ReturnController {
     }
 
     @PostMapping
-    public ResponseEntity<?> returnRequest(@RequestBody List<ReturnRequestDTO> returnRequestDTOList,
+    public ResponseEntity<?> returnRequest(@RequestBody ReturnRequestDTO returnRequest,
                                            Principal principal) {
-        LOGGER.info("request - registeredUser | returnRequest | returnRequestList: {} | userId: {} |",returnRequestDTOList,principal.getName());
-        ResponseEntity<?> responseEntity = returnService.returnRequest(returnRequestDTOList, principal.getName());
+        LOGGER.info("request - registeredUser | returnRequest | returnRequestList: {} | userId: {} |",returnRequest,principal.getName());
+        ResponseEntity<?> responseEntity = returnService.returnRequest(returnRequest, principal.getName());
         LOGGER.info("request - registeredUser | searchProducts | response: {} | userId: {}",responseEntity.getBody().toString());
         return responseEntity;
     }

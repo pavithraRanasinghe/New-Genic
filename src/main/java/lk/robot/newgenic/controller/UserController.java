@@ -31,8 +31,6 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private JavaMailSender mailSender;
-    @Autowired
-    private AmazonS3 s3Client;
 
     @Autowired
     public UserController(UserService userService) {
@@ -56,13 +54,20 @@ public class UserController {
     }
     @PatchMapping("/update")
     public ResponseEntity<?> updateDetail(@RequestBody UserDetailDTO userDetailDTO,
-                                          @RequestParam("image") MultipartFile profilePicture,
                                           Principal principal) {
         LOGGER.info("request - registeredUser | userUpdate | userDetail: {},userId: {}", userDetailDTO, principal.getName());
         String userId = principal.getName();
-        ResponseEntity<?> updateUser = userService.updateUser(userDetailDTO, userId,profilePicture);
+        ResponseEntity<?> updateUser = userService.updateUser(userDetailDTO, userId);
         LOGGER.info("response - registeredUser | userUpdate | updatedUser:{}",updateUser.getBody());
         return updateUser;
+    }
+
+    @PostMapping("/updateProfilePicture")
+    public ResponseEntity<?> updateProfilePicture(@RequestBody MultipartFile multipartFile,Principal principal){
+        LOGGER.info("request - registeredUser | updateProfilePicture | userId: {}",principal.getName());
+        ResponseEntity<?> updateProfilePicture = userService.updateProfilePicture(multipartFile, principal.getName());
+        LOGGER.info("response - registeredUser | updateProfilePicture | response: {}",updateProfilePicture.getBody());
+        return updateProfilePicture;
     }
 
     @GetMapping("/profile")

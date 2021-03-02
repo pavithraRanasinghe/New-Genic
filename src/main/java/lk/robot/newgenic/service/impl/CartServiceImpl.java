@@ -2,6 +2,7 @@ package lk.robot.newgenic.service.impl;
 
 import lk.robot.newgenic.dto.*;
 import lk.robot.newgenic.dto.request.CartRequestDTO;
+import lk.robot.newgenic.dto.request.CartUpdateRequestDTO;
 import lk.robot.newgenic.dto.response.*;
 import lk.robot.newgenic.entity.*;
 import lk.robot.newgenic.enums.DiscountType;
@@ -129,22 +130,7 @@ public class CartServiceImpl implements CartService {
             if (orderEntity != null) {
                 List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
                 if (!orderDetailList.isEmpty()) {
-                    List<SingleProductResponseDTO> productList = new ArrayList<>();
-                    double totalWeight = 0;
-                    double totalProductPrice = 0;
-                    for (OrderDetailEntity orderDetailEntity :
-                            orderDetailList) {
-                        SingleProductResponseDTO productResponseDTO = setProductDetails(orderDetailEntity);
-                        totalWeight += productResponseDTO.getCombinationDTO().getWeight();
-                        totalProductPrice += productResponseDTO.getCombinationDTO().getRetailPrice();
-
-                        productList.add(productResponseDTO);
-                    }
-                    CartResponseDTO cartResponseDTO = new CartResponseDTO(
-                            productList,
-                            totalWeight,
-                            totalProductPrice
-                    );
+                    CartResponseDTO cartResponseDTO = setCart(orderDetailList);
                     return new ResponseEntity<>(cartResponseDTO, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>("No cart for " + userEntity.get().getUsername(), HttpStatus.NOT_FOUND);
@@ -161,16 +147,19 @@ public class CartServiceImpl implements CartService {
     @Override
     public ResponseEntity<?> cartOrder(String userId) {
         try {
-            ResponseEntity<?> cartResponse = getCart(userId);
-            List<ProductDTO> cart = (List<ProductDTO>) cartResponse.getBody();
+            Optional<UserEntity> userEntity = userRepository.findByUserUuid(userId);
+            OrderEntity orderEntity = orderRepository.
+                    findByUserEntityAndStatus(userEntity.get(), OrderStatus.CART.toString());
+            List<OrderDetailEntity> orderDetailList = orderDetailRepository.findByOrderEntity(orderEntity);
+            CartResponseDTO cartResponseDTO = setCart(orderDetailList);
             List<DeliveryEntity> allDeliveries = deliveryRepository.findAll();
             CartOrderResponse cartOrderResponse = new CartOrderResponse();
             double cartPrice = 0;
             double totalWeight = 0;
-            for (ProductDTO productDTO :
-                    cart) {
-                cartPrice = cartPrice + productDTO.getRetailPrice();
-                totalWeight = totalWeight + productDTO.getWeight();
+            for (SingleProductResponseDTO productDTO :
+                    cartResponseDTO.getProductList()) {
+                cartPrice = cartPrice + productDTO.getCombinationDTO().getRetailPrice();
+                totalWeight = totalWeight + productDTO.getCombinationDTO().getWeight();
                 if (!productDTO.isFreeShipping()) {
                     cartOrderResponse.setCartFreeShipping(false);
                 }
@@ -187,12 +176,52 @@ public class CartServiceImpl implements CartService {
 
             List<DeliveryDTO> deliveryDTOList = setDeliveryEntityToDto(allDeliveries);
             cartOrderResponse.setDeliveryDTOList(deliveryDTOList);
-            cartOrderResponse.setProductDTOList(cart);
+            cartOrderResponse.setProductDTOList(cartResponseDTO.getProductList());
             cartOrderResponse.setCartPrice(cartPrice);
             cartOrderResponse.setTotalWeight(totalWeight);
             return new ResponseEntity<>(cartOrderResponse, HttpStatus.OK);
         } catch (Exception e) {
-            throw new CustomException("Failed to load cart order");
+            throw new CustomException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> updateCart(CartUpdateRequestDTO cartUpdateRequestDTO,String userId) {
+        try{
+            Optional<UserEntity> user = userRepository.findByUserUuid(userId);
+            if (cartUpdateRequestDTO != null && user.isPresent()){
+                Optional<OrderEntity> order = orderRepository.findByOrderUuid(cartUpdateRequestDTO.getOrderId());
+                if (order.isPresent() && order.get().getUserEntity().equals(user.get())){
+                    if (!cartUpdateRequestDTO.getUpdateDetailRequestList().isEmpty()){
+                        for (CartUpdateDetailRequestDTO detailRequestDTO :
+                                cartUpdateRequestDTO.getUpdateDetailRequestList()) {
+                            Optional<CombinationEntity> combination = combinationRepository.findById(detailRequestDTO.getCombinationId());
+                            OrderDetailEntity orderDetail = orderDetailRepository.findByOrderEntityAndCombinationEntity(order.get(), combination.get());
+                            if (orderDetail != null){
+                                orderDetail.setQuantity(detailRequestDTO.getQty());
+                                orderDetail.setOrderPrice(combination.get().getRetailPrice() * detailRequestDTO.getQty());
+                            }
+                        }
+                    }
+                    if (!cartUpdateRequestDTO.getRemovedCombinationList().isEmpty()){
+                        for (long combinationId :
+                                cartUpdateRequestDTO.getRemovedCombinationList()) {
+                            Optional<CombinationEntity> combination = combinationRepository.findById(combinationId);
+                            OrderDetailEntity orderDetail = orderDetailRepository.findByOrderEntityAndCombinationEntity(order.get(), combination.get());
+                            if (orderDetail != null){
+                                orderDetailRepository.delete(orderDetail);
+                            }
+                        }
+                    }
+                    return new ResponseEntity<>("Cart updated",HttpStatus.OK);
+                }else {
+                    return new ResponseEntity<>("Cart not found",HttpStatus.BAD_REQUEST);
+                }
+            }else {
+                return new ResponseEntity<>("Cart update detail not found",HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+            throw new CustomException(e.getMessage());
         }
     }
 
@@ -288,5 +317,24 @@ public class CartServiceImpl implements CartService {
         } else {
             return null;
         }
+    }
+
+    private CartResponseDTO setCart(List<OrderDetailEntity> orderDetailList){
+        List<SingleProductResponseDTO> productList = new ArrayList<>();
+        double totalWeight = 0;
+        double totalProductPrice = 0;
+        for (OrderDetailEntity orderDetailEntity :
+                orderDetailList) {
+            SingleProductResponseDTO productResponseDTO = setProductDetails(orderDetailEntity);
+            totalWeight += productResponseDTO.getCombinationDTO().getWeight();
+            totalProductPrice += productResponseDTO.getCombinationDTO().getRetailPrice();
+
+            productList.add(productResponseDTO);
+        }
+        return new CartResponseDTO(
+                productList,
+                totalWeight,
+                totalProductPrice
+        );
     }
 }

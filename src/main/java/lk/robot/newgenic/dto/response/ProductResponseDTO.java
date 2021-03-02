@@ -12,7 +12,7 @@ public class ProductResponseDTO {
     private String description;
     private String brand;
     private boolean freeShipping;
-    private List<CombinationDTO> variationList;
+    private List<CombinationDTO> combinationList;
 
     public ProductResponseDTO() {
     }
@@ -23,14 +23,14 @@ public class ProductResponseDTO {
                               String description,
                               String brand,
                               boolean freeShipping,
-                              List<CombinationDTO> variationList) {
+                              List<CombinationDTO> combinationList) {
         this.uuid = uuid;
         this.productCode = productCode;
         this.name = name;
         this.description = description;
         this.brand = brand;
         this.freeShipping = freeShipping;
-        this.variationList = variationList;
+        this.combinationList = combinationList;
     }
 
 
@@ -82,12 +82,12 @@ public class ProductResponseDTO {
         this.freeShipping = freeShipping;
     }
 
-    public List<CombinationDTO> getVariationList() {
-        return variationList;
+    public List<CombinationDTO> getCombinationList() {
+        return combinationList;
     }
 
-    public void setVariationList(List<CombinationDTO> variationList) {
-        this.variationList = variationList;
+    public void setCombinationList(List<CombinationDTO> combinationList) {
+        this.combinationList = combinationList;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ProductResponseDTO {
                 ", description='" + description + '\'' +
                 ", brand='" + brand + '\'' +
                 ", freeShipping=" + freeShipping +
-                ", variationList=" + variationList +
+                ", combinationList=" + combinationList +
                 '}';
     }
 }

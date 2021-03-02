@@ -12,6 +12,7 @@ import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.*;
 import lk.robot.newgenic.service.CategoryService;
 import lk.robot.newgenic.util.EntityToDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     private VariationRepository variationRepository;
     private VariationDetailRepository variationDetailRepository;
     private VariationCombinationDetailRepository variationCombinationDetailRepository;
+    private ModelMapper modelMapper;
 
     @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository,
@@ -40,7 +42,8 @@ public class CategoryServiceImpl implements CategoryService {
                                ProductRepository productRepository,
                                VariationRepository variationRepository,
                                VariationDetailRepository variationDetailRepository,
-                               VariationCombinationDetailRepository variationCombinationDetailRepository) {
+                               VariationCombinationDetailRepository variationCombinationDetailRepository,
+                               ModelMapper modelMapper) {
         this.categoryRepository = categoryRepository;
         this.mainSubCategoryRepository = mainSubCategoryRepository;
         this.subCategoryRepository = subCategoryRepository;
@@ -48,6 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
         this.variationRepository = variationRepository;
         this.variationDetailRepository = variationDetailRepository;
         this.variationCombinationDetailRepository = variationCombinationDetailRepository;
+        this.modelMapper = modelMapper;
     }
 
 
@@ -173,22 +177,13 @@ public class CategoryServiceImpl implements CategoryService {
         List<VariationEntity> variationList = variationRepository.findByProductEntity(productEntity);
         for (VariationEntity variationEntity :
                 variationList) {
-            List<VariationDetailEntity> byVariationEntity = variationDetailRepository.findByVariationEntity(variationEntity);
             for (VariationDetailEntity variationDetailEntity :
-                    byVariationEntity) {
-
-                List<VariationCombinationDetailEntity> variationCombinationDetailList = variationCombinationDetailRepository.findByVariationDetailEntity(variationDetailEntity);
-
+                    variationEntity.getVariationDetailEntityList()) {
                 for (VariationCombinationDetailEntity variationCombinationDetailEntity :
-                        variationCombinationDetailList) {
+                        variationDetailEntity.getVariationCombinationList()) {
                     CombinationEntity combinationEntity = variationCombinationDetailEntity.getCombinationEntity();
 
-                    CombinationDTO combinationDTO = new CombinationDTO();
-                    combinationDTO.setCombinationId(combinationEntity.getCombinationId());
-                    combinationDTO.setStock(combinationEntity.getStock());
-                    combinationDTO.setWeight(combinationEntity.getWeight());
-                    combinationDTO.setSalePrice(combinationEntity.getSalePrice());
-                    combinationDTO.setRetailPrice(combinationEntity.getRetailPrice());
+                    CombinationDTO combinationDTO = modelMapper.map(combinationEntity, CombinationDTO.class);
 
                     VariationDTO variationDTO = new VariationDTO();
                     VariationDetailEntity variationDetail = variationCombinationDetailEntity.getVariationDetailEntity();
@@ -198,6 +193,7 @@ public class CategoryServiceImpl implements CategoryService {
                     variationDTO.setVariationName(variationDetail.getVariationEntity().getVariationName());
 
                     if (combinationList.isEmpty()){
+                        combinationDTO.setVariationList(new ArrayList<>());
                         combinationList.add(combinationDTO);
                     }
 
@@ -221,8 +217,9 @@ public class CategoryServiceImpl implements CategoryService {
         productResponseDTO.setDescription(productEntity.getDescription());
         productResponseDTO.setBrand(productEntity.getBrand());
         productResponseDTO.setFreeShipping(productEntity.isFreeShipping());
-        productResponseDTO.setVariationList(combinationList);
+        productResponseDTO.setCombinationList(combinationList);
 
         return productResponseDTO;
     }
+
 }

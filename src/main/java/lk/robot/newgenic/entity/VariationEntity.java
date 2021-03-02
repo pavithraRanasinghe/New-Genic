@@ -1,6 +1,7 @@
 package lk.robot.newgenic.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "variation")
@@ -17,6 +18,8 @@ public class VariationEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_product_id")
     private ProductEntity productEntity;
+    @OneToMany(mappedBy = "variationEntity", fetch = FetchType.LAZY)
+    private List<VariationDetailEntity> variationDetailEntityList;
 
     public VariationEntity() {
     }
@@ -61,6 +64,14 @@ public class VariationEntity {
 
     public void setProductEntity(ProductEntity productEntity) {
         this.productEntity = productEntity;
+    }
+
+    public List<VariationDetailEntity> getVariationDetailEntityList() {
+        return variationDetailEntityList;
+    }
+
+    public void setVariationDetailEntityList(List<VariationDetailEntity> variationDetailEntityList) {
+        this.variationDetailEntityList = variationDetailEntityList;
     }
 
     @Override

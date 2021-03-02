@@ -1,5 +1,6 @@
 package lk.robot.newgenic.service.impl;
 
+import lk.robot.newgenic.dto.ReturnDetailDTO;
 import lk.robot.newgenic.dto.request.ReturnRequestDTO;
 import lk.robot.newgenic.dto.response.ReturnResponseDTO;
 import lk.robot.newgenic.entity.*;
@@ -51,40 +52,49 @@ public class ReturnServiceImpl implements ReturnService {
     }
 
     @Override
-    public ResponseEntity<?> returnRequest(List<ReturnRequestDTO> returnRequestDTOList, String userId) {
+    public ResponseEntity<?> returnRequest(ReturnRequestDTO returnRequest, String userId) {
         try {
-            if (!returnRequestDTOList.isEmpty()) {
-                for (ReturnRequestDTO returnRequestDTO :
-                        returnRequestDTOList) {
-                    Optional<OrderEntity> order = orderRepository.findByOrderUuid(returnRequestDTO.getOrderId());
-                    Optional<CombinationEntity> combinationEntity = combinationRepository.findById(returnRequestDTO.getCombinationId());
+            if (returnRequest != null) {
+                for (ReturnDetailDTO returnDetailDTO :
+                        returnRequest.getRequestList()) {
+                    Optional<OrderEntity> order = orderRepository.findByOrderUuid(returnRequest.getOrderId());
+                    Optional<CombinationEntity> combinationEntity = combinationRepository.findById(returnDetailDTO.getCombinationId());
                     if (order.isPresent() && combinationEntity.isPresent()) {
-                        OrderDetailEntity orderDetailEntity = orderDetailRepository.findByOrderEntityAndCombinationEntity(order.get(), combinationEntity.get());
-                        if (orderDetailEntity != null) {
-                            ReturnEntity returnEntity = new ReturnEntity();
-                            returnEntity.setRequestDate(DateConverter.localDateToSql(LocalDate.now()));
-                            returnEntity.setRequestTime(DateConverter.localTimeToSql(LocalTime.now()));
-                            returnEntity.setAction(ReturnAction.PENDING.toString());
-                            ReturnEntity returnSaved = returnRepository.save(returnEntity);
-                            if (returnSaved != null) {
-                                ReturnDetailEntity returnDetailEntity = new ReturnDetailEntity();
-                                returnDetailEntity.setReason(returnRequestDTO.getReason());
-                                returnDetailEntity.setReturnQty(returnRequestDTO.getReturnQty());
-                                returnDetailEntity.setReturnEntity(returnSaved);
+                        if (order.get().getReturnEntity() == null) {
+                            OrderDetailEntity orderDetailEntity = orderDetailRepository.findByOrderEntityAndCombinationEntity(order.get(), combinationEntity.get());
+                            if (orderDetailEntity != null) {
+                                if (orderDetailEntity.getQuantity() >= returnDetailDTO.getQty()) {
+                                    ReturnEntity returnEntity = new ReturnEntity();
+                                    returnEntity.setRequestDate(DateConverter.localDateToSql(LocalDate.now()));
+                                    returnEntity.setRequestTime(DateConverter.localTimeToSql(LocalTime.now()));
+                                    returnEntity.setAction(ReturnAction.PENDING.toString());
+                                    ReturnEntity returnSaved = returnRepository.save(returnEntity);
+                                    if (returnSaved != null) {
+                                        ReturnDetailEntity returnDetailEntity = new ReturnDetailEntity();
+                                        returnDetailEntity.setReason(returnDetailDTO.getReason());
+                                        returnDetailEntity.setReturnQty(returnDetailDTO.getQty());
+                                        returnDetailEntity.setReturnEntity(returnSaved);
 
-                                ReturnDetailEntity detailEntity = returnDetailRepository.save(returnDetailEntity);
-                                if (detailEntity != null){
-                                    orderDetailEntity.setReturnDetailEntity(detailEntity);
+                                        ReturnDetailEntity returnDetail = returnDetailRepository.save(returnDetailEntity);
+                                        if (returnDetail != null) {
+                                            orderDetailEntity.setReturnDetailEntity(returnDetail);
 
-                                    orderDetailRepository.save(orderDetailEntity);
-                                }else {
-                                    return new ResponseEntity<>("Return detail request not save", HttpStatus.BAD_REQUEST);
+                                            orderDetailRepository.save(orderDetailEntity);
+                                            order.get().setReturnEntity(returnSaved);
+                                            orderRepository.save(order.get());
+                                        } else {
+                                            return new ResponseEntity<>("Return detail request not save", HttpStatus.BAD_REQUEST);
+                                        }
+
+                                    } else {
+                                        return new ResponseEntity<>("Return request not save", HttpStatus.BAD_REQUEST);
+                                    }
                                 }
                             } else {
-                                return new ResponseEntity<>("Return request not save", HttpStatus.BAD_REQUEST);
+                                return new ResponseEntity<>("Order Detail not found", HttpStatus.NOT_FOUND);
                             }
-                        } else {
-                            return new ResponseEntity<>("Order Detail not found", HttpStatus.NOT_FOUND);
+                        }else {
+                            return new ResponseEntity<>("Order already returned",HttpStatus.ALREADY_REPORTED);
                         }
                     } else {
                         return new ResponseEntity<>("Order not found", HttpStatus.NOT_FOUND);
@@ -114,7 +124,7 @@ public class ReturnServiceImpl implements ReturnService {
                         ReturnDetailEntity returnEntity = orderDetailEntity.getReturnDetailEntity();
                         if (returnEntity != null) {
                             ReturnResponseDTO returnResponseDTO = setReturnDetails(returnEntity, orderDetailEntity);
-                            if (returnResponseDTO != null){
+                            if (returnResponseDTO != null) {
                                 responseList.add(returnResponseDTO);
                             }
                         }
@@ -132,9 +142,9 @@ public class ReturnServiceImpl implements ReturnService {
     private ReturnResponseDTO setReturnDetails(ReturnDetailEntity returnEntity, OrderDetailEntity detailEntity) {
 
         ProductEntity product = getProductFromCombination(detailEntity.getCombinationEntity());
-        if (product == null){
+        if (product == null) {
             return null;
-        }else{
+        } else {
             return new ReturnResponseDTO(
                     returnEntity.getReturnEntity().getReturnRequestId(),
                     returnEntity.getReason(),

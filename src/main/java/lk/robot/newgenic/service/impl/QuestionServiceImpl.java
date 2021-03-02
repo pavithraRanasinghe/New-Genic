@@ -107,28 +107,33 @@ public class QuestionServiceImpl implements QuestionService {
                         List<QuestionEntity> questionEntityList = questionAreaEntity.getQuestionEntityList();
                         for (QuestionEntity questionEntity :
                                 questionEntityList) {
-                            QuestionDTO questionDTO = new QuestionDTO();
-                            questionDTO.setQuestionId(questionEntity.getQuestionId());
-                            questionDTO.setQuestion(questionEntity.getQuestion());
-                            questionDTO.setQuestionDate(questionEntity.getQuestionDate());
-                            questionDTO.setQuestionTime(questionEntity.getQuestionTime());
+                            if (questionEntity.isApprove()){
+                                QuestionDTO questionDTO = new QuestionDTO();
+                                questionDTO.setQuestionId(questionEntity.getQuestionId());
+                                questionDTO.setQuestion(questionEntity.getQuestion());
+                                questionDTO.setQuestionDate(questionEntity.getQuestionDate());
+                                questionDTO.setQuestionTime(questionEntity.getQuestionTime());
 
-                            List<AnswerDTO> answerList = new ArrayList<>();
+                                List<AnswerDTO> answerList = new ArrayList<>();
 
-                            List<AnswerEntity> answerEntityList = questionEntity.getAnswerEntityList();
-                            for (AnswerEntity answerEntity :
-                                    answerEntityList) {
-                                answerList.add(new AnswerDTO(
-                                        answerEntity.getAnswerId(),
-                                        answerEntity.getAnswer(),
-                                        answerEntity.getAnswerDate(),
-                                        answerEntity.getAnswerTime()
-                                ));
+                                List<AnswerEntity> answerEntityList = questionEntity.getAnswerEntityList();
+                                for (AnswerEntity answerEntity :
+                                        answerEntityList) {
+                                    answerList.add(new AnswerDTO(
+                                            answerEntity.getAnswerId(),
+                                            answerEntity.getAnswer(),
+                                            answerEntity.getAnswerDate(),
+                                            answerEntity.getAnswerTime()
+                                    ));
+                                }
+                                questionDTO.setAnswerList(answerList);
+                                questionList.add(questionDTO);
                             }
-                            questionDTO.setAnswerList(answerList);
                         }
-                        questionResponseDTO.setQuestionList(questionList);
-                        questionResponseList.add(questionResponseDTO);
+                        if (!questionList.isEmpty()){
+                            questionResponseDTO.setQuestionList(questionList);
+                            questionResponseList.add(questionResponseDTO);
+                        }
                     }
                     return new ResponseEntity(questionResponseList,HttpStatus.OK);
                 }else {

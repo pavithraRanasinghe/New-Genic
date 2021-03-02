@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface FeedbackRepository extends JpaRepository<ProductFeedbackEntity,Long> {
 
-    List<ProductFeedbackEntity> findByProductEntityAndApproved(ProductEntity productEntity, boolean approve, Pageable pageable);
+    List<ProductFeedbackEntity> findByProductEntityAndApprovedTrue(ProductEntity productEntity, Pageable pageable);
 
 }

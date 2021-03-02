@@ -153,7 +153,7 @@ public class WishlistServiceImpl implements WishlistService {
         productResponseDTO.setDescription(productEntity.getDescription());
         productResponseDTO.setBrand(productEntity.getBrand());
         productResponseDTO.setFreeShipping(productEntity.isFreeShipping());
-        productResponseDTO.setVariationList(combinationList);
+        productResponseDTO.setCombinationList(combinationList);
 
         return productResponseDTO;
     }

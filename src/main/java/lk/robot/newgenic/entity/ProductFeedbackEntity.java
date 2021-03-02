@@ -21,7 +21,7 @@ public class ProductFeedbackEntity {
     @Column(name = "added_time")
     private Time addedTime;
     @Column(name = "is_approved")
-    private boolean isApproved;
+    private boolean approved;
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
     private UserEntity userEntity;
@@ -37,7 +37,7 @@ public class ProductFeedbackEntity {
                                  String message,
                                  Date addedDate,
                                  Time addedTime,
-                                 boolean isApproved,
+                                 boolean approved,
                                  UserEntity userEntity,
                                  ProductEntity productEntity) {
         this.productFeedbackId = productFeedbackId;
@@ -45,7 +45,7 @@ public class ProductFeedbackEntity {
         this.message = message;
         this.addedDate = addedDate;
         this.addedTime = addedTime;
-        this.isApproved = isApproved;
+        this.approved = approved;
         this.userEntity = userEntity;
         this.productEntity = productEntity;
     }
@@ -91,11 +91,11 @@ public class ProductFeedbackEntity {
     }
 
     public boolean isApproved() {
-        return isApproved;
+        return approved;
     }
 
     public void setApproved(boolean approved) {
-        isApproved = approved;
+        approved = approved;
     }
 
     public UserEntity getUserEntity() {
@@ -122,7 +122,7 @@ public class ProductFeedbackEntity {
                 ", message='" + message + '\'' +
                 ", addedDate=" + addedDate +
                 ", addedTime=" + addedTime +
-                ", isApproved=" + isApproved +
+                ", isApproved=" + approved +
                 ", userEntity=" + userEntity +
                 ", productEntity=" + productEntity +
                 '}';

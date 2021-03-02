@@ -10,6 +10,7 @@ import lk.robot.newgenic.enums.DealStatus;
 import lk.robot.newgenic.exception.CustomException;
 import lk.robot.newgenic.repository.*;
 import lk.robot.newgenic.service.ProductService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,18 +26,24 @@ public class ProductServiceImpl implements ProductService {
     private VariationDetailRepository variationDetailRepository;
     private VariationRepository variationRepository;
     private VariationCombinationDetailRepository variationCombinationDetailRepository;
+    private ProductImageRepository productImageRepository;
+    private ModelMapper modelMapper;
 
 
     public ProductServiceImpl(ProductRepository productRepository,
                               DealRepository dealRepository,
                               VariationDetailRepository variationDetailRepository,
                               VariationRepository variationRepository,
-                              VariationCombinationDetailRepository variationCombinationDetailRepository) {
+                              VariationCombinationDetailRepository variationCombinationDetailRepository,
+                              ProductImageRepository productImageRepository,
+                              ModelMapper modelMapper) {
         this.productRepository = productRepository;
         this.dealRepository = dealRepository;
         this.variationDetailRepository = variationDetailRepository;
         this.variationRepository = variationRepository;
         this.variationCombinationDetailRepository = variationCombinationDetailRepository;
+        this.productImageRepository = productImageRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -141,6 +148,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<?> searchProduct(String keyword, int index, int size) {
         try {
+
             if (keyword != null) {
                 List<ProductEntity> productEntityList = productRepository.searchProducts(keyword);
                 if (!productEntityList.isEmpty()) {
@@ -164,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<?> getSaleProducts(int index, int size) {
         try {
-            DealEntity dealEntity = dealRepository.findByDealStatus(DealStatus.ACTIVE.toString());
+            DealEntity dealEntity = dealRepository.findByDealStatus(DealStatus.ACTIVE);
             if (dealEntity != null) {
                 List<ProductEntity> products = productRepository.findByDealEntity(dealEntity, PageRequest.of(index, size));
                 if (!products.isEmpty()) {
@@ -201,55 +209,67 @@ public class ProductServiceImpl implements ProductService {
         List<VariationEntity> variationList = variationRepository.findByProductEntity(productEntity);
         for (VariationEntity variationEntity :
                 variationList) {
-            List<VariationDetailEntity> byVariationEntity = variationDetailRepository.findByVariationEntity(variationEntity);
             for (VariationDetailEntity variationDetailEntity :
-                    byVariationEntity) {
+                    variationEntity.getVariationDetailEntityList()) {
 
-                List<VariationCombinationDetailEntity> variationCombinationDetailList = variationCombinationDetailRepository.findByVariationDetailEntity(variationDetailEntity);
+                List<ProductImageEntity> imageList = productImageRepository.findByVariationDetailEntity(variationDetailEntity);
+                List<String> productImageList = new ArrayList<>();
+                if (!imageList.isEmpty()){
+                    for (ProductImageEntity productImageEntity :
+                            imageList) {
+                        productImageList.add(productImageEntity.getUrl());
+                    }
+                }
 
                 for (VariationCombinationDetailEntity variationCombinationDetailEntity :
-                        variationCombinationDetailList) {
+                        variationDetailEntity.getVariationCombinationList()) {
                     CombinationEntity combinationEntity = variationCombinationDetailEntity.getCombinationEntity();
 
-                    CombinationDTO combinationDTO = new CombinationDTO();
-                    combinationDTO.setCombinationId(combinationEntity.getCombinationId());
-                    combinationDTO.setStock(combinationEntity.getStock());
-                    combinationDTO.setWeight(combinationEntity.getWeight());
-                    combinationDTO.setSalePrice(combinationEntity.getSalePrice());
-                    combinationDTO.setRetailPrice(combinationEntity.getRetailPrice());
+                    VariationDTO variationDTO = new VariationDTO(
+                            variationCombinationDetailEntity.getVariationDetailEntity().getVariationEntity().getVariationId(),
+                            variationCombinationDetailEntity.getVariationDetailEntity().getVariationEntity().getVariationName(),
+                            variationCombinationDetailEntity.getVariationDetailEntity().getVariationDetailId(),
+                            variationCombinationDetailEntity.getVariationDetailEntity().getValue()
+                    );
 
-                    VariationDTO variationDTO = new VariationDTO();
-                    VariationDetailEntity variationDetail = variationCombinationDetailEntity.getVariationDetailEntity();
-                    variationDTO.setVariationDetailId(variationDetail.getVariationDetailId());
-                    variationDTO.setValue(variationDetail.getValue());
-                    variationDTO.setVariationId(variationDetail.getVariationEntity().getVariationId());
-                    variationDTO.setVariationName(variationDetail.getVariationEntity().getVariationName());
-
-                    if (combinationList.isEmpty()){
-                        combinationList.add(combinationDTO);
+                    if (!productImageList.isEmpty()){
+                        variationDTO.setImageList(productImageList);
                     }
 
-                    for (CombinationDTO combination :
-                            combinationList) {
-                           if (combination.getCombinationId() == combinationEntity.getCombinationId()){
-                               combination.getVariationList().add(variationDTO);
-                           }else{
-                               List<VariationDTO> allVariationList = new ArrayList<>();
-                               allVariationList.add(variationDTO);
-                               combinationDTO.setVariationList(allVariationList);
-                               combinationList.add(combinationDTO);
-                           }
+                    if (combinationList.isEmpty()) {
+                        CombinationDTO combinationDTO = modelMapper.map(combinationEntity, CombinationDTO.class);
+                        List<VariationDTO> allVariationList = new ArrayList<>();
+                        allVariationList.add(variationDTO);
+                        combinationDTO.setVariationList(allVariationList);
+                        combinationList.add(combinationDTO);
+                    } else {
+                        boolean combinationSet = true;
+                        for (CombinationDTO combination :
+                                combinationList) {
+                            if (combination.getCombinationId() == combinationEntity.getCombinationId()) {
+                                combination.getVariationList().add(variationDTO);
+                                combinationSet = false;
+                            }
+                        }
+                        if (combinationSet) {
+                            CombinationDTO combinationDTO = modelMapper.map(combinationEntity, CombinationDTO.class);
+                            List<VariationDTO> allVariationList = new ArrayList<>();
+                            allVariationList.add(variationDTO);
+                            combinationDTO.setVariationList(allVariationList);
+                            combinationList.add(combinationDTO);
+                        }
                     }
                 }
             }
         }
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
         productResponseDTO.setUuid(productEntity.getUuid());
+        productResponseDTO.setProductCode(productEntity.getProductCode());
         productResponseDTO.setName(productEntity.getName());
         productResponseDTO.setDescription(productEntity.getDescription());
         productResponseDTO.setBrand(productEntity.getBrand());
         productResponseDTO.setFreeShipping(productEntity.isFreeShipping());
-        productResponseDTO.setVariationList(combinationList);
+        productResponseDTO.setCombinationList(combinationList);
 
         return productResponseDTO;
     }

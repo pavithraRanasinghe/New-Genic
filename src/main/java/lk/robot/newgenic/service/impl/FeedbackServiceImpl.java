@@ -41,11 +41,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public ResponseEntity<?> getFeedback(long productId, int index, int size) {
+    public ResponseEntity<?> getFeedback(String productId, int index, int size) {
         try {
-            Optional<ProductEntity> productEntity = productRepository.findById(productId);
+            Optional<ProductEntity> productEntity = productRepository.findByUuid(productId);
             if (productEntity.isPresent()) {
-                List<ProductFeedbackEntity> productFeedbackList = feedbackRepository.findByProductEntityAndApproved(productEntity.get(), true, PageRequest.of(index, size));
+                List<ProductFeedbackEntity> productFeedbackList = feedbackRepository.findByProductEntityAndApprovedTrue(productEntity.get(), PageRequest.of(index, size));
                 if (!productFeedbackList.isEmpty()) {
                     List<ProductFeedbackResponseDTO> feedbackList = new ArrayList<>();
                     for (ProductFeedbackEntity feedbackEntity : productFeedbackList) {
@@ -73,11 +73,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public ResponseEntity<?> writeFeedback(FeedbackRequestDTO feedbackRequestDTO, long userId) {
+    public ResponseEntity<?> writeFeedback(FeedbackRequestDTO feedbackRequestDTO, String userId) {
         try {
             if (feedbackRequestDTO != null) {
-                Optional<UserEntity> userEntity = userRepository.findById(userId);
-                Optional<ProductEntity> productEntity = productRepository.findById(feedbackRequestDTO.getProductId());
+                Optional<UserEntity> userEntity = userRepository.findByUserUuid(userId);
+                Optional<ProductEntity> productEntity = productRepository.findByUuid(feedbackRequestDTO.getProductId());
                 if (productEntity.isPresent()) {
                     ProductFeedbackEntity feedbackEntity = new ProductFeedbackEntity();
                     feedbackEntity.setRate(feedbackRequestDTO.getRate());

@@ -12,6 +12,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/question")
+@CrossOrigin
 public class QuestionController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QuestionController.class);

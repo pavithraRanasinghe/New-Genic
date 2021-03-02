@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                feedback permissions
                 .antMatchers(HttpMethod.GET,"/feedback/**").permitAll()
 //                Question permissions
-                .antMatchers(HttpMethod.GET,"/question/getQuestion").permitAll()
+                .antMatchers(HttpMethod.GET,"/question/getQuestion/**").permitAll()
 //                oauth2
                 .antMatchers("/oauth2/**").permitAll()
                 .anyRequest()

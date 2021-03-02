@@ -27,9 +27,9 @@ public class DeliveryEntity {
     private Date registrationDate;
     @Column(name = "registration_time")
     private Time registrationTime;
-    @Column(name = "update_date",nullable = false)
+    @Column(name = "update_date")
     private Date updateDate;
-    @Column(name = "update_time",nullable = false)
+    @Column(name = "update_time")
     private Time updateTime;
     @Column(name = "registration_number")
     private String registrationNumber;

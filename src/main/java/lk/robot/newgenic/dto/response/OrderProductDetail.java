@@ -1,33 +1,38 @@
 package lk.robot.newgenic.dto.response;
 
+import lk.robot.newgenic.dto.CombinationDTO;
+
 public class OrderProductDetail {
 
-    private long productId;
+    private String productId;
     private String productName;
     private String productCode;
     private int qty;
     private double orderPrice;
+    private CombinationDTO combinationDTO;
 
     public OrderProductDetail() {
     }
 
-    public OrderProductDetail(long productId,
+    public OrderProductDetail(String productId,
                               String productName,
                               String productCode,
                               int qty,
-                              double orderPrice) {
+                              double orderPrice,
+                              CombinationDTO combinationDTO) {
         this.productId = productId;
         this.productName = productName;
         this.productCode = productCode;
         this.qty = qty;
         this.orderPrice = orderPrice;
+        this.combinationDTO = combinationDTO;
     }
 
-    public long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -63,14 +68,23 @@ public class OrderProductDetail {
         this.orderPrice = orderPrice;
     }
 
+    public CombinationDTO getCombinationDTO() {
+        return combinationDTO;
+    }
+
+    public void setCombinationDTO(CombinationDTO combinationDTO) {
+        this.combinationDTO = combinationDTO;
+    }
+
     @Override
     public String toString() {
         return "OrderProductDetail{" +
-                "productId=" + productId +
+                "productId='" + productId + '\'' +
                 ", productName='" + productName + '\'' +
                 ", productCode='" + productCode + '\'' +
                 ", qty=" + qty +
                 ", orderPrice=" + orderPrice +
+                ", combinationDTO=" + combinationDTO +
                 '}';
     }
 }

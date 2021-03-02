@@ -3,14 +3,14 @@ package lk.robot.newgenic.dto.request;
 public class FeedbackRequestDTO {
     private int rate;
     private String message;
-    private long productId;
+    private String productId;
 
     public FeedbackRequestDTO() {
     }
 
     public FeedbackRequestDTO(int rate,
                               String message,
-                              long productId) {
+                              String productId) {
         this.rate = rate;
         this.message = message;
         this.productId = productId;
@@ -32,11 +32,11 @@ public class FeedbackRequestDTO {
         this.message = message;
     }
 
-    public long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 

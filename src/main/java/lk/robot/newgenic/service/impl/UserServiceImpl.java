@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO, String userId, MultipartFile profilePicture) {
+    public ResponseEntity<?> updateUser(UserDetailDTO userDetailDTO, String userId) {
         try {
             if (userDetailDTO != null) {
                 Optional<UserEntity> userEntity = userRepository.findByUserUuid(userId);
@@ -153,10 +153,6 @@ public class UserServiceImpl implements UserService {
                 userEntity.get().setGmail(userDetailDTO.getGmail());
                 userEntity.get().setMobile(userDetailDTO.getMobile());
                 userEntity.get().setDob(DateConverter.stringToDate(userDetailDTO.getDob()));
-                if (!profilePicture.isEmpty()){
-                    uploadFile(profilePicture);
-                    userEntity.get().setProfilePicture(getFileUrl(profilePicture));
-                }
                 UserEntity user = userRepository.save(userEntity.get());
                 if (user != null) {
 
@@ -207,6 +203,29 @@ public class UserServiceImpl implements UserService {
             }
         } catch (Exception e) {
             throw new CustomException("User update failed");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> updateProfilePicture(MultipartFile multipartFile, String userId) {
+        try{
+            Optional<UserEntity> user = userRepository.findByUserUuid(userId);
+            if (!multipartFile.isEmpty() && user.isPresent()){
+                String url = getFileUrl(multipartFile);
+                if (url != null){
+                    uploadFile(multipartFile);
+                    user.get().setProfilePicture(url);
+                    userRepository.save(user.get());
+
+                    return new ResponseEntity<>("User profile picture changed",HttpStatus.OK);
+                }else {
+                    return new ResponseEntity<>("Profile picture not saved",HttpStatus.BAD_REQUEST);
+                }
+            }else {
+                return new ResponseEntity<>("User details not found",HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+            throw new CustomException(e.getMessage());
         }
     }
 
