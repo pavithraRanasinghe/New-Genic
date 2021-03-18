@@ -1,6 +1,5 @@
 package lk.robot.newgenic.controller;
 
-import com.amazonaws.services.s3.AmazonS3;
 import lk.robot.newgenic.dto.request.UserDetailDTO;
 import lk.robot.newgenic.dto.request.UserSignUpDTO;
 import lk.robot.newgenic.entity.UserEntity;

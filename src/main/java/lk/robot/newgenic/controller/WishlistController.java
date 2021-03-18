@@ -4,6 +4,7 @@ import lk.robot.newgenic.service.WishlistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/wishlist")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class WishlistController {
 
     private WishlistService wishlistService;
@@ -39,6 +40,11 @@ public class WishlistController {
         ResponseEntity<?> wishList = wishlistService.getWishList(userId);
         LOGGER.info("response - registeredUser | getWishList | wishlist: {}",wishList.getBody().toString());
         return wishList;
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> get(){
+        return new ResponseEntity<String>("Back end", HttpStatus.OK);
     }
 
 }

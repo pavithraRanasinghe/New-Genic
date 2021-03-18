@@ -58,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                user permissions
                 .antMatchers("/signUp").permitAll()
                 .antMatchers("/logIn").permitAll()
+                .antMatchers("/users/logIn").permitAll()
 //                product permissions
                 .antMatchers("/product/**").permitAll()
 //                cart permissions
@@ -70,6 +71,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/question/getQuestion/**").permitAll()
 //                oauth2
                 .antMatchers("/oauth2/**").permitAll()
+//                swagger
+                .antMatchers("/swagger-ui.html/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+
+                .antMatchers("/wishlist/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
